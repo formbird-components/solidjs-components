@@ -1,0 +1,15 @@
+{
+  "name": "@solidjs-components/user-picker",
+  "version": "0.1.0",
+  "private": true,
+  "description": "<solid-user-picker>: Assignee / reporter / watchers picker with avatars and 'Assign to me'.",
+  "type": "module",
+  "dependencies": {
+    "@solidjs-components/kit": "workspace:*",
+    "@solidjs/web": "catalog:",
+    "solid-js": "catalog:"
+  },
+  "formbird": {
+    "tag": "solid-user-picker"
+  }
+}

@@ -1,0 +1,10 @@
+{
+  "name": "@solidjs-components-whs/root-cause",
+  "version": "0.1.0",
+  "private": true,
+  "description": "<solid-root-cause>: a five-whys tree for an investigation: the problem, answers to \"why?\" that can branch, root causes with categories, and what the analysis still needs.",
+  "type": "module",
+  "formbird": {
+    "tag": "solid-root-cause"
+  }
+}

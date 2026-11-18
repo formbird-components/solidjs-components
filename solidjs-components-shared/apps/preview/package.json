@@ -1,0 +1,14 @@
+{
+  "name": "@solidjs-components/preview",
+  "version": "0.1.0",
+  "private": true,
+  "description": "Gallery of the shared elements against the in-memory Formbird host (pnpm dev). Plain DOM shell: it only sets element properties, like the real host.",
+  "type": "module",
+  "dependencies": {
+    "@solidjs-components/kit": "workspace:*",
+    "@solidjs-components/testing": "workspace:*",
+    "@solidjs/element": "catalog:",
+    "@solidjs/web": "catalog:",
+    "solid-js": "catalog:"
+  }
+}

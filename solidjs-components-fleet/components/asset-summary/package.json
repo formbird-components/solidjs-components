@@ -1,0 +1,10 @@
+{
+  "name": "@solidjs-components-fleet/asset-summary",
+  "version": "0.1.0",
+  "private": true,
+  "description": "<solid-asset-summary>: the header of an asset: type, ID, registration, lifecycle and hire status, meter, service due (date and meter) and registration warnings, with quick actions that start a booking, a Daily Driver check or a fault report for it.",
+  "type": "module",
+  "formbird": {
+    "tag": "solid-asset-summary"
+  }
+}

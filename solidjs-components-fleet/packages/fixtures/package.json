@@ -1,0 +1,7 @@
+{
+  "name": "@solidjs-components-fleet/fixtures",
+  "version": "0.1.0",
+  "private": true,
+  "description": "A small fleet (assets, locations, bookings, a workshop request, a check sheet, materials) and component definitions for the preview and the browser test, in the fleet demo's data model. Built as a test-only bundle (global FleetFixtures); never deployed.",
+  "type": "module"
+}

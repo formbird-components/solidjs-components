@@ -1,0 +1,129 @@
+{
+  "settings": {
+    "index" : {
+      "mapping" : {
+        "total_fields.limit": 100000,
+        "depth.limit" : 50,
+        "nested_fields.limit" : 500,
+        "nested_objects.limit": 2000
+      }
+    },
+    "analysis": {
+      "tokenizer":{
+        "formbird_tokenizer": {
+          "type":"char_group",
+          "tokenize_on_chars": [
+            "whitespace",
+            "punctuation",
+            "symbol",
+            "."
+          ]
+        }
+      },
+      "analyzer": {
+        "formbird_text_search": {
+          "type":"custom",
+          "tokenizer": "formbird_tokenizer",
+          "filter": [
+            "lowercase"
+          ]
+        },
+        "formbird_keyword_lower": {
+          "type":"custom",
+          "tokenizer": "keyword",
+          "filter": ["lowercase"]
+        }
+      }
+    ,
+      "normalizer": {
+        "formbird_lowercaser": {
+          "type": "custom",
+          "filter": [
+            "lowercase"
+          ]
+        }
+      }
+    }
+  },
+  "mappings": {
+    "properties": {
+      "systemHeader.summaryName": {
+        "type": "text",
+        "analyzer":"formbird_text_search",
+        "fielddata": true,
+        "copy_to": "system_text_search",
+        "fields": {
+          "lcase": {
+            "type": "keyword",
+            "normalizer": "formbird_lowercaser",
+            "ignore_above": 32000
+          }
+        }
+      },
+      "systemHeader.summaryDescription": {
+        "type": "text",
+        "analyzer": "formbird_text_search",
+        "fielddata": true,
+        "copy_to": "system_text_search"
+      },
+      "system_text_search": {
+        "type": "text",
+        "fielddata": true,
+        "analyzer": "formbird_text_search"
+      }
+    },
+    "date_detection": true,
+    "dynamic_templates": [
+      {
+        "string_match_date": {
+          "match_mapping_type": "date",
+          "mapping": {
+            "type": "date",
+            "format":"strict_date_optional_time||epoch_millis"
+          }
+        }
+      },
+      {
+        "geo_index": {
+          "match": "*geometry",
+          "mapping": {
+            "type": "geo_shape"
+          }
+        }
+      },
+      {
+        "double_smasher": {
+          "match_mapping_type": "double",
+          "mapping": {
+            "type": "float"
+          }
+        }
+      },
+      {
+        "long_smasher": {
+          "match_mapping_type": "long",
+          "mapping": {
+            "type": "float"
+          }
+        }
+      },
+      {
+        "string_match_all": {
+          "match": "*",
+          "match_mapping_type": "string",
+          "mapping": {
+            "type": "keyword",
+            "ignore_above": 32000,
+            "fields": {
+              "lcase": {
+                "type": "keyword",
+                "normalizer": "formbird_lowercaser",
+                "ignore_above": 32000
+              }
+            }
+          }
+        }
+      }
+    ]
+  }
+}

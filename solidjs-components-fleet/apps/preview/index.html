@@ -1,0 +1,27 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Fleet elements</title>
+    <link rel="icon" href="data:," />
+  </head>
+  <body>
+    <header class="pv-bar">
+      <strong>Fleet elements</strong>
+      <span class="pv-sub">solidjs-components-fleet · mock host</span>
+      <label class="pv-toggle"><input type="checkbox" id="dark" /> Dark</label>
+    </header>
+    <main class="pv">
+      <section class="pv-card pv-wide"><h2>Overview</h2><div id="slot-tiles"></div></section>
+      <section class="pv-card pv-wide"><h2>Booking calendar</h2><div id="slot-calendar"></div></section>
+      <section class="pv-card"><h2>New booking</h2><div id="slot-period"></div><div id="slot-availability"></div></section>
+      <section class="pv-card"><h2>Asset</h2><div id="slot-summary"></div><div id="slot-location"></div></section>
+      <section class="pv-card pv-wide"><h2>Fleet map</h2><div id="slot-map"></div></section>
+      <section class="pv-card"><h2>Daily Driver</h2><div id="slot-meter"></div><div id="slot-checks"></div></section>
+      <section class="pv-card"><h2>Work order</h2><div id="slot-lines"></div></section>
+      <section class="pv-card pv-wide"><h2>Host log</h2><pre id="log"></pre></section>
+    </main>
+    <script type="module" src="./src/main.ts"></script>
+  </body>
+</html>

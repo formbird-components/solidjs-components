@@ -1,0 +1,7 @@
+{
+  "name": "@solidjs-components-fleet/preview",
+  "version": "0.1.0",
+  "private": true,
+  "description": "Gallery of the fleet elements against the in-memory Formbird host (pnpm dev). Plain DOM shell: it only sets element properties, like the real host.",
+  "type": "module"
+}

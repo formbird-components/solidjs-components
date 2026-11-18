@@ -1,0 +1,257 @@
+/* <solid-comments>: tokens and shared classes (.sj-count, .sj-empty, .sj-markdown) come from the kit. */
+
+.cm {
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+  min-width: 0;
+}
+
+.cm-head {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  min-height: 28px;
+}
+
+.cm-title {
+  margin: 0;
+  font-size: var(--sj-text-lg);
+  font-weight: 650;
+  letter-spacing: -0.005em;
+}
+
+.cm-order {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  height: 28px;
+  margin-left: auto;
+  padding: 0 8px;
+  border: 0;
+  border-radius: var(--sj-radius-sm);
+  background: none;
+  color: var(--sj-text-muted);
+  font-size: var(--sj-text-sm);
+  font-weight: 550;
+  cursor: pointer;
+}
+
+.cm-order:hover {
+  background: var(--sj-hover);
+  color: var(--sj-text);
+}
+
+.cm-order:focus-visible,
+.cm-action:focus-visible,
+.cm-vote:focus-visible,
+.cm-prompt:focus-visible {
+  outline: none;
+  box-shadow: var(--sj-ring);
+}
+
+/* ---------- Composer and editors ---------- */
+
+.cm-composer {
+  display: flex;
+  align-items: flex-start;
+  gap: 12px;
+}
+
+.cm-prompt {
+  flex: 1;
+  min-width: 0;
+  height: 40px;
+  padding: 0 12px;
+  border: 1px solid var(--sj-border);
+  border-radius: var(--sj-radius);
+  background: var(--sj-surface);
+  color: var(--sj-text-subtle);
+  text-align: start;
+  cursor: text;
+  transition: border-color var(--sj-fast) var(--sj-ease);
+}
+
+.cm-prompt:hover {
+  border-color: var(--sj-border-strong);
+}
+
+.cm-editor {
+  display: flex;
+  flex: 1;
+  flex-direction: column;
+  min-width: 0;
+  border: 1px solid var(--sj-border-strong);
+  border-radius: var(--sj-radius);
+  background: var(--sj-surface);
+  transition: border-color var(--sj-fast) var(--sj-ease), box-shadow var(--sj-fast) var(--sj-ease);
+}
+
+.cm-editor:focus-within {
+  border-color: var(--sj-accent);
+  box-shadow: var(--sj-ring);
+}
+
+.cm-textarea {
+  display: block;
+  width: 100%;
+  min-height: 84px;
+  max-height: 360px;
+  padding: 10px 12px;
+  border: 0;
+  outline: none;
+  background: transparent;
+  line-height: 1.5;
+  resize: vertical;
+  field-sizing: content;
+}
+
+.cm-textarea::placeholder {
+  color: var(--sj-text-subtle);
+}
+
+.cm-editor__bar {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  padding: 6px 6px 6px 12px;
+  border-top: 1px solid var(--sj-border);
+  border-radius: 0 0 var(--sj-radius) var(--sj-radius);
+  background: var(--sj-surface-sunken);
+}
+
+.cm-hint {
+  margin-right: auto;
+  color: var(--sj-text-subtle);
+  font-size: var(--sj-text-xs);
+}
+
+/* ---------- Thread ---------- */
+
+.cm-list,
+.cm-replies {
+  display: flex;
+  flex-direction: column;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.cm-list {
+  gap: 20px;
+}
+
+.cm-note,
+.cm-reply {
+  display: flex;
+  align-items: flex-start;
+  gap: 12px;
+}
+
+.cm-main {
+  flex: 1;
+  min-width: 0;
+}
+
+.cm-meta {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  gap: 2px 8px;
+  margin-bottom: 3px;
+  font-size: var(--sj-text-sm);
+}
+
+.cm-author {
+  color: var(--sj-text);
+  font-weight: 650;
+}
+
+.cm-time,
+.cm-edited {
+  color: var(--sj-text-subtle);
+}
+
+.cm-edited {
+  cursor: help;
+}
+
+.cm-unsaved {
+  display: inline-flex;
+  align-items: center;
+  height: 18px;
+  padding: 0 7px;
+  border-radius: var(--sj-radius-pill);
+  background: color-mix(in oklab, #e5a000 var(--sj-mix-tint), transparent);
+  color: color-mix(in oklab, #e5a000 55%, var(--sj-text));
+  font-size: var(--sj-text-xs);
+  font-weight: 650;
+  align-self: center;
+}
+
+.cm-body {
+  color: var(--sj-text);
+}
+
+.cm-plain {
+  margin: 0;
+  white-space: pre-wrap;
+  overflow-wrap: anywhere;
+}
+
+.cm-actions {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 2px;
+  margin: 4px 0 0 -6px;
+}
+
+.cm-action,
+.cm-vote {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  height: 26px;
+  padding: 0 6px;
+  border: 0;
+  border-radius: var(--sj-radius-sm);
+  background: none;
+  color: var(--sj-text-muted);
+  font-size: var(--sj-text-sm);
+  font-weight: 550;
+  cursor: pointer;
+}
+
+.cm-action:hover,
+.cm-vote:hover:not(:disabled) {
+  background: var(--sj-hover);
+  color: var(--sj-text);
+}
+
+.cm-vote:disabled {
+  cursor: default;
+}
+
+.cm-vote[aria-pressed='true'] {
+  background: var(--sj-accent-soft);
+  color: var(--sj-accent-text);
+}
+
+.cm-votes {
+  display: inline-flex;
+  gap: 2px;
+}
+
+.cm-replies {
+  gap: 12px;
+  margin-top: 10px;
+  padding-left: 14px;
+  border-left: 2px solid var(--sj-border);
+}
+
+.cm-empty {
+  padding: 18px 16px;
+  border: 1px dashed var(--sj-border);
+  border-radius: var(--sj-radius);
+}

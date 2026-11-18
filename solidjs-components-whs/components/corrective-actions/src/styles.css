@@ -1,0 +1,545 @@
+/* <solid-corrective-actions>: progress header, action rows, the add form. */
+
+.ca {
+  container-type: inline-size;
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  gap: 10px;
+  min-width: 0;
+}
+
+/* ------------------------------------------------------------------ header */
+
+.ca-head {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 8px 16px;
+}
+
+.ca-progress {
+  display: grid;
+  gap: 5px;
+  flex: 1 1 180px;
+  min-width: 140px;
+}
+
+.ca-progress__text {
+  font-size: var(--sj-text-sm);
+  color: var(--sj-text-muted);
+  font-variant-numeric: tabular-nums;
+}
+
+.ca-progress__text strong {
+  color: var(--sj-text);
+}
+
+.ca-facts {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 8px 14px;
+}
+
+.ca-strongest {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  font-size: var(--sj-text-sm);
+  color: var(--sj-text-muted);
+}
+
+.ca-strongest strong {
+  color: var(--sj-text);
+  font-weight: 600;
+}
+
+/* ------------------------------------------------------------------ control strength bars */
+
+.ca-strength {
+  --ca-strength: var(--sj-text-subtle);
+  display: inline-flex;
+  align-items: flex-end;
+  gap: 1.5px;
+  flex: none;
+  height: 14px;
+}
+
+.ca-strength[data-rank='1'],
+.ca-strength[data-rank='2'] {
+  --ca-strength: var(--sj-success);
+}
+
+.ca-strength[data-rank='3'],
+.ca-strength[data-rank='4'] {
+  --ca-strength: var(--sj-info);
+}
+
+.ca-strength[data-rank='5'],
+.ca-strength[data-rank='6'] {
+  --ca-strength: var(--sj-warning);
+}
+
+.ca-strength__bar {
+  width: 3px;
+  border-radius: 1px;
+  background: var(--sj-border);
+}
+
+.ca-strength__bar:nth-child(1) {
+  height: 4px;
+}
+.ca-strength__bar:nth-child(2) {
+  height: 6px;
+}
+.ca-strength__bar:nth-child(3) {
+  height: 8px;
+}
+.ca-strength__bar:nth-child(4) {
+  height: 10px;
+}
+.ca-strength__bar:nth-child(5) {
+  height: 12px;
+}
+.ca-strength__bar:nth-child(6) {
+  height: 14px;
+}
+
+.ca-strength__bar--on {
+  background: var(--ca-strength);
+}
+
+/* ------------------------------------------------------------------ rows */
+
+.ca-list {
+  display: grid;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  border: 1px solid var(--sj-border);
+  border-radius: var(--sj-radius);
+  overflow: hidden;
+}
+
+.ca-row {
+  display: grid;
+  grid-template-columns: 136px minmax(0, 1fr) minmax(0, 150px) 156px 112px;
+  grid-template-areas: 'level main owner due status';
+  align-items: center;
+  gap: 4px 12px;
+  padding: 8px 12px;
+  border-top: 1px solid var(--sj-border);
+  background: var(--sj-surface);
+}
+
+.ca-row:first-child {
+  border-top: 0;
+}
+
+.ca-row--done .ca-title,
+.ca-row--cancelled .ca-title {
+  color: var(--sj-text-muted);
+}
+
+.ca-row--cancelled .ca-title {
+  text-decoration: line-through;
+  text-decoration-color: color-mix(in oklab, currentColor 50%, transparent);
+}
+
+.ca-row--overdue {
+  box-shadow: inset 3px 0 0 var(--sj-danger);
+}
+
+.ca-row--dueSoon {
+  box-shadow: inset 3px 0 0 var(--sj-warning);
+}
+
+.ca-level {
+  grid-area: level;
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+  min-width: 0;
+  font-size: var(--sj-text-sm);
+  color: var(--sj-text-muted);
+}
+
+.ca-level__name,
+.ca-level__none {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.ca-level__none {
+  color: var(--sj-text-subtle);
+}
+
+.ca-row__link {
+  grid-area: main;
+  display: flex;
+  align-items: baseline;
+  gap: 8px;
+  min-width: 0;
+  border-radius: 4px;
+  color: var(--sj-text);
+  text-decoration: none;
+}
+
+.ca-row__link:hover .ca-title {
+  color: var(--sj-accent-text);
+  text-decoration: underline;
+  text-underline-offset: 2px;
+}
+
+.ca-row__link:focus-visible {
+  outline: none;
+  box-shadow: var(--sj-ring);
+}
+
+.ca-ref {
+  flex: none;
+  color: var(--sj-text-muted);
+  font-size: var(--sj-text-sm);
+  font-weight: 650;
+  font-variant-numeric: tabular-nums;
+}
+
+.ca-title {
+  min-width: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  font-weight: 550;
+}
+
+.ca-owner {
+  grid-area: owner;
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  min-width: 0;
+  font-size: var(--sj-text-sm);
+}
+
+.ca-owner__name {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.ca-due {
+  grid-area: due;
+  display: grid;
+  grid-template-columns: auto 1fr;
+  grid-template-areas: 'icon date' 'icon text';
+  align-items: center;
+  column-gap: 5px;
+  font-size: var(--sj-text-sm);
+  line-height: 1.3;
+  font-variant-numeric: tabular-nums;
+}
+
+.ca-due > .sj-icon {
+  grid-area: icon;
+}
+
+.ca-due__date {
+  grid-area: date;
+}
+
+.ca-due__text {
+  grid-area: text;
+  color: var(--sj-text-subtle);
+  font-size: var(--sj-text-xs);
+}
+
+.ca-due--overdue,
+.ca-due--overdue .ca-due__text {
+  color: var(--sj-danger);
+}
+
+.ca-due--overdue .ca-due__text {
+  font-weight: 650;
+}
+
+.ca-due--dueSoon .ca-due__text {
+  color: var(--sj-warning);
+  font-weight: 650;
+}
+
+.ca-due--done,
+.ca-due--cancelled {
+  color: var(--sj-text-subtle);
+}
+
+.ca-due--done > .sj-icon {
+  color: var(--sj-success);
+}
+
+.ca-status {
+  grid-area: status;
+  justify-self: end;
+}
+
+/* Half-width forms: the title beside its level and status, owner and due date under the title. */
+@container (max-width: 780px) {
+  .ca-row {
+    grid-template-columns: 136px minmax(0, 1fr) auto;
+    grid-template-areas:
+      'level main status'
+      'level owner due';
+    align-items: start;
+  }
+
+  .ca-level {
+    align-self: center;
+  }
+
+  .ca-due {
+    justify-self: end;
+    text-align: right;
+  }
+
+  .ca-title {
+    white-space: normal;
+    overflow-wrap: break-word;
+  }
+}
+
+/* Narrow forms: the title on its own line, the rest under it. */
+@container (max-width: 520px) {
+  .ca-row {
+    grid-template-columns: minmax(0, 1fr) auto;
+    grid-template-areas:
+      'main main'
+      'level status'
+      'owner due';
+    align-items: center;
+  }
+
+  .ca-level {
+    align-self: auto;
+  }
+}
+
+/* ------------------------------------------------------------------ empty, loading, tools */
+
+.ca-empty {
+  display: grid;
+  gap: 4px;
+  padding: 14px;
+  border: 1px dashed var(--sj-border-strong);
+  border-radius: var(--sj-radius);
+}
+
+.ca-empty p {
+  margin: 0;
+}
+
+.ca-empty__title {
+  font-weight: 600;
+}
+
+.ca-empty__hint {
+  color: var(--sj-text-muted);
+  font-size: var(--sj-text-sm);
+}
+
+.ca-loading {
+  display: flex;
+  justify-content: center;
+  padding: 16px;
+  color: var(--sj-text-subtle);
+}
+
+.ca-tools {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 8px;
+}
+
+.ca-tools__spacer {
+  flex: 1;
+}
+
+.ca-toggle {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  height: 28px;
+  padding: 0 8px;
+  border: 0;
+  border-radius: var(--sj-radius);
+  background: transparent;
+  color: var(--sj-text-muted);
+  font-size: 13px;
+  cursor: pointer;
+}
+
+.ca-toggle:hover {
+  background: var(--sj-hover);
+  color: var(--sj-text);
+}
+
+.ca-toggle:focus-visible {
+  outline: none;
+  box-shadow: var(--sj-ring);
+}
+
+.ca-toggle__box {
+  display: inline-grid;
+  place-items: center;
+  width: 14px;
+  height: 14px;
+  border: 1.5px solid var(--sj-border-strong);
+  border-radius: 4px;
+  color: var(--sj-on-accent);
+}
+
+.ca-toggle[aria-pressed='true'] .ca-toggle__box {
+  border-color: var(--sj-accent);
+  background: var(--sj-accent);
+}
+
+/* ------------------------------------------------------------------ add form */
+
+.ca-form {
+  display: grid;
+  gap: 12px;
+  padding: 12px;
+  border: 1px solid var(--sj-border);
+  border-radius: var(--sj-radius);
+  background: var(--sj-surface-sunken);
+}
+
+.ca-field {
+  display: grid;
+  gap: 4px;
+  min-width: 0;
+}
+
+.ca-field__label {
+  padding: 0;
+  font-size: var(--sj-text-sm);
+  font-weight: 600;
+  color: var(--sj-text-muted);
+}
+
+.ca-field__hint {
+  color: var(--sj-text-subtle);
+  font-size: var(--sj-text-xs);
+}
+
+.ca-field__error {
+  color: var(--sj-danger);
+  font-size: var(--sj-text-sm);
+}
+
+.ca-form__row {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(150px, 190px);
+  align-items: start;
+  gap: 12px;
+}
+
+.ca-owner-field .sj-trigger {
+  margin: 0;
+  width: 100%;
+  border: 1px solid var(--sj-border);
+  background: var(--sj-surface);
+}
+
+.ca-form__buttons {
+  display: flex;
+  gap: 8px;
+}
+
+.ca-levels {
+  display: grid;
+  gap: 6px;
+  min-width: 0;
+  margin: 0;
+  padding: 0;
+  border: 0;
+}
+
+.ca-levels__options {
+  display: grid;
+  grid-template-columns: repeat(6, minmax(0, 1fr));
+  gap: 4px;
+}
+
+.ca-levels__option {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 4px;
+  min-width: 0;
+  padding: 7px 4px 6px;
+  border: 1px solid var(--sj-border);
+  border-radius: var(--sj-radius);
+  background: var(--sj-surface);
+  color: var(--sj-text-muted);
+  font-size: var(--sj-text-sm);
+  font-weight: 550;
+  cursor: pointer;
+  transition: border-color var(--sj-fast) var(--sj-ease), background-color var(--sj-fast) var(--sj-ease);
+}
+
+.ca-levels__option:hover {
+  border-color: var(--sj-border-strong);
+  color: var(--sj-text);
+}
+
+.ca-levels__option input {
+  position: absolute;
+  opacity: 0;
+  pointer-events: none;
+}
+
+.ca-levels__option:has(input:focus-visible) {
+  box-shadow: var(--sj-ring);
+}
+
+.ca-levels__option--checked {
+  border-color: var(--sj-accent);
+  background: var(--sj-accent-soft);
+  color: var(--sj-accent-text);
+}
+
+.ca-levels__name {
+  max-width: 100%;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.ca-levels__hint {
+  min-height: 1.45em;
+  margin: 0;
+  color: var(--sj-text-muted);
+  font-size: var(--sj-text-sm);
+}
+
+.ca-levels__hint strong {
+  color: var(--sj-text);
+  font-weight: 600;
+}
+
+.ca-levels:disabled .ca-levels__option {
+  cursor: default;
+  opacity: 0.7;
+}
+
+@container (max-width: 520px) {
+  .ca-levels__options {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+  }
+
+  .ca-form__row {
+    grid-template-columns: minmax(0, 1fr);
+  }
+}

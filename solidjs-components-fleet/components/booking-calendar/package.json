@@ -1,0 +1,10 @@
+{
+  "name": "@solidjs-components-fleet/booking-calendar",
+  "version": "0.1.0",
+  "private": true,
+  "description": "<solid-booking-calendar>: the fleet booking calendar (assets by location × day or week, bookings by status, Hire Overdue, workshop block-outs; drag across free time to book) and, on a booking form, an availability assistant that shows clashes and offers free assets.",
+  "type": "module",
+  "formbird": {
+    "tag": "solid-booking-calendar"
+  }
+}

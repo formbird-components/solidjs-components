@@ -1,0 +1,15 @@
+{
+  "name": "@solidjs-components/record-key",
+  "version": "0.1.0",
+  "private": true,
+  "description": "<solid-record-key>: a record's reference number (TRK-12, REQ-0041) with its type icon and a copy-link button. Display only; the server assigns the number.",
+  "type": "module",
+  "dependencies": {
+    "@solidjs-components/kit": "workspace:*",
+    "@solidjs/web": "catalog:",
+    "solid-js": "catalog:"
+  },
+  "formbird": {
+    "tag": "solid-record-key"
+  }
+}

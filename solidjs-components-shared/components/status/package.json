@@ -1,0 +1,15 @@
+{
+  "name": "@solidjs-components/status",
+  "version": "0.1.0",
+  "private": true,
+  "description": "<solid-status>: a workflow status as a coloured lozenge button offering only the allowed transitions, with an optional second step (resolution, cancellation reason) and transitions guarded by access keys.",
+  "type": "module",
+  "dependencies": {
+    "@solidjs-components/kit": "workspace:*",
+    "@solidjs/web": "catalog:",
+    "solid-js": "catalog:"
+  },
+  "formbird": {
+    "tag": "solid-status"
+  }
+}

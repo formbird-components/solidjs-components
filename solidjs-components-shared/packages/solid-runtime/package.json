@@ -1,0 +1,12 @@
+{
+  "name": "@solidjs-components/solid-runtime",
+  "version": "0.1.0",
+  "private": true,
+  "description": "TEST ONLY. Sets the SolidJS / SolidJSWeb / SolidElement globals so built bundles can be smoke-tested. Production pages get these from formbird-sc-components' solid-vendor. Never deployed.",
+  "type": "module",
+  "dependencies": {
+    "@solidjs/element": "catalog:",
+    "@solidjs/web": "catalog:",
+    "solid-js": "catalog:"
+  }
+}

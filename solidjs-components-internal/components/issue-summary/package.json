@@ -1,0 +1,10 @@
+{
+  "name": "@solidjs-components/issue-summary",
+  "version": "0.1.0",
+  "private": true,
+  "description": "<solid-issue-summary>: Inline-editable issue title.",
+  "type": "module",
+  "formbird": {
+    "tag": "solid-issue-summary"
+  }
+}

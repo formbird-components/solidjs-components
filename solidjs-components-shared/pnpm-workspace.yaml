@@ -1,0 +1,25 @@
+packages:
+  - packages/*
+  - components/*
+  - apps/*
+
+# Install scripts pnpm may run. esbuild's verifies its platform binary (used by Vite).
+allowBuilds:
+  esbuild: true
+
+# One place to pin the Solid runtime every package builds against. Components externalise these
+# to the SolidJS / SolidJSWeb / SolidElement globals, so they must match the runtime on the page
+# (formbird-sc-components `solid-vendor` on main: Solid 2.0.0-rc.3).
+catalog:
+  solid-js: 2.0.0-rc.3
+  '@solidjs/web': 2.0.0-rc.3
+  '@solidjs/element': 2.0.0-rc.3
+  '@formbird/types': 5.1.11
+
+# The same transitive versions formbird-sc-components' lockfile resolved for Solid 2.0.0-rc.3.
+# Without these, caret ranges pull a newer JSX compiler / signals core than the rc.3 runtime.
+overrides:
+  '@solidjs/signals': 2.0.0-rc.10
+  babel-preset-solid: 2.0.0-rc.2
+  '@dom-expressions/babel-plugin-jsx': 0.50.0-next.44
+  '@dom-expressions/compiler': 0.50.0-next.44

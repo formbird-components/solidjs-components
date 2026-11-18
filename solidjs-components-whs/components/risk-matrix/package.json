@@ -1,0 +1,10 @@
+{
+  "name": "@solidjs-components-whs/risk-matrix",
+  "version": "0.1.0",
+  "private": true,
+  "description": "<solid-risk-matrix>: a 5 × 5 likelihood × consequence matrix. Assess mode rates a risk field (rating, score and what the rating asks for), with the risk before controls as a ghost marker; heatmap mode counts records per cell and lists them.",
+  "type": "module",
+  "formbird": {
+    "tag": "solid-risk-matrix"
+  }
+}

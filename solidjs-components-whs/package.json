@@ -1,0 +1,40 @@
+{
+  "name": "solidjs-components-whs",
+  "private": true,
+  "version": "0.1.0",
+  "description": "Work health and safety on Formbird (fieldtec-web): incidents, hazards, corrective actions and workplace inspections, with SolidJS elements for the risk matrix, five-whys root cause analysis and corrective actions, and a demo database. Builds on ../solidjs-components-shared, which provides the map, checklist, stat tiles, photo capture and image pins (the body map).",
+  "type": "module",
+  "packageManager": "pnpm@12.4.1",
+  "engines": {
+    "node": ">=22"
+  },
+  "solidComponents": {
+    "browserTest": "test/browser.mjs",
+    "previewPort": 5182,
+    "testBundles": [
+      {
+        "name": "whs-fixtures",
+        "entry": "packages/fixtures/src/index.ts",
+        "globalName": "WhsFixtures"
+      }
+    ]
+  },
+  "scripts": {
+    "build": "solid-components build --with-shared",
+    "build:test-assets": "solid-components build --with-shared --test-assets",
+    "typecheck": "solid-components typecheck",
+    "test": "solid-components test",
+    "test:browser": "solid-components build --with-shared --test-assets && solid-components browser-test",
+    "check": "pnpm typecheck && pnpm test && pnpm test:browser",
+    "dev": "solid-components dev",
+    "deploy:fieldtec": "solid-components deploy",
+    "docs": "solid-components build --with-shared && solid-components docs",
+    "db:setup": "node setup-db.mjs",
+    "demo:server": "node demo/server.mjs",
+    "demo:e2e": "node demo/test/e2e.mjs"
+  },
+  "devDependencies": {
+    "@solidjs-components/platform": "link:../solidjs-components-shared/packages/platform",
+    "@solidjs-components/tools": "link:../solidjs-components-shared/packages/tools"
+  }
+}

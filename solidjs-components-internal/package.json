@@ -1,0 +1,28 @@
+{
+  "name": "solidjs-components-internal",
+  "private": true,
+  "version": "0.1.0",
+  "description": "The internal SDMS-style issue tracker on Formbird (fieldtec-web): its issue-specific SolidJS element (solid-issue-summary) and a Jira-style demo database with templates, rules, users, projects and issues. Builds on ../solidjs-components-shared.",
+  "type": "module",
+  "packageManager": "pnpm@12.4.1",
+  "engines": {
+    "node": ">=22"
+  },
+  "solidComponents": {
+    "browserTest": "test/browser.mjs"
+  },
+  "scripts": {
+    "build": "solid-components build --with-shared",
+    "typecheck": "solid-components typecheck",
+    "test:browser": "solid-components build --with-shared --test-assets && solid-components browser-test",
+    "check": "pnpm typecheck && pnpm test:browser",
+    "deploy:fieldtec": "solid-components deploy",
+    "docs": "solid-components build --with-shared && solid-components docs",
+    "db:setup": "node setup-db.mjs",
+    "demo:server": "node demo/server.mjs"
+  },
+  "devDependencies": {
+    "@solidjs-components/platform": "link:../solidjs-components-shared/packages/platform",
+    "@solidjs-components/tools": "link:../solidjs-components-shared/packages/tools"
+  }
+}

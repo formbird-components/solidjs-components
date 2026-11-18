@@ -1,0 +1,15 @@
+{
+  "name": "@solidjs-components/checklist",
+  "version": "0.1.0",
+  "private": true,
+  "description": "<solid-checklist>: a check sheet (Daily Driver pre-start, service checks) answered Pass / Fail / N/A with comments, grouped by category, with progress and the sheet's result. Checks come from the definition or from a check sheet document the record points to (e.g. through its asset).",
+  "type": "module",
+  "dependencies": {
+    "@solidjs-components/kit": "workspace:*",
+    "@solidjs/web": "catalog:",
+    "solid-js": "catalog:"
+  },
+  "formbird": {
+    "tag": "solid-checklist"
+  }
+}

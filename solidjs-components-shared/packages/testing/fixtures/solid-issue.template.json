@@ -1,0 +1,206 @@
+{
+  "documentId": "4d0f6b52-8f0e-4c55-9a43-6c1c51f2e7a1",
+  "systemHeader": {
+    "systemType": "template",
+    "templateId": "5f6000a0-0828-11e6-9b64-1b27992111e1",
+    "summaryName": "Issue (Solid components)",
+    "currentVersion": true,
+    "keyIds": []
+  },
+  "name": "Issue (Solid components)",
+  "description": "SDMS Item fields rendered with solidjs-components. Field names, filters and relatedFields match the SDMS 'New Item' template, so the same documents work with both.",
+  "components": [
+    {
+      "componentName": "solid-record-key",
+      "name": "itemRef",
+      "label": "Key",
+      "type": "Reference No",
+      "counterDocumentId": "8fa2ce09-89c3-4e83-87ec-43b985c8ebb4",
+      "counterFieldName": "itemReferenceCounter",
+      "format": "#",
+      "prefix": "SDMS",
+      "enabled": false,
+      "newText": "New issue"
+    },
+    {
+      "componentName": "solid-issue-summary",
+      "name": "summary",
+      "label": "Summary",
+      "mandatory": true,
+      "fullWidth": true,
+      "maxLength": 255
+    },
+    {
+      "componentName": "solid-status",
+      "name": "statusRel",
+      "label": "Status",
+      "mandatory": true,
+      "filter": "{'sort':[{'indexNum':'asc'},{'systemHeader.summaryName':'asc'}],'query':{'bool':{'filter':[{'term':{'systemHeader.systemType':'document'}},{'term':{'appTags':'status'}},{'term':{'appTags':'sdms'}}],'must_not':[{'term':{'inactiveBool':true}}]}}}",
+      "relatedFields": {
+        "projectRel": "projectRel",
+        "isGlobalDefaultBool": "isGlobalDefaultBool",
+        "disableItemBool": "disableItemBool",
+        "indexNum": "indexNum"
+      },
+      "transitions": {
+        "New": [
+          "Acknowledged",
+          "Assigned",
+          "In Progress",
+          "Won't Fix"
+        ],
+        "Acknowledged": [
+          "Assigned",
+          "In Progress",
+          "Won't Fix"
+        ],
+        "Assigned": [
+          "In Progress",
+          "Acknowledged"
+        ],
+        "In Progress": [
+          "In Review",
+          "Assigned",
+          "Resolved"
+        ],
+        "In Review": [
+          "In Progress",
+          "Testing",
+          "Resolved"
+        ],
+        "Testing": [
+          "In Progress",
+          "Resolved"
+        ],
+        "Resolved": [
+          "Closed",
+          "In Progress"
+        ],
+        "Closed": [
+          "In Progress"
+        ],
+        "Won't Fix": [
+          "New"
+        ]
+      },
+      "resolution": {
+        "fieldName": "resolutionRel",
+        "label": "Resolution",
+        "requiredFor": [
+          "done"
+        ],
+        "filter": "{'sort':[{'indexNum':'asc'},{'systemHeader.summaryName':'asc'}],'query':{'bool':{'filter':[{'term':{'systemHeader.systemType':'document'}},{'term':{'appTags':'resolution'}},{'term':{'appTags':'sdms'}}],'must_not':[{'term':{'inactiveBool':true}}]}}}",
+        "relatedFields": {
+          "projectRel": "projectRel",
+          "isGlobalDefaultBool": "isGlobalDefaultBool"
+        }
+      }
+    },
+    {
+      "componentName": "solid-lookup-picker",
+      "name": "typeRel",
+      "label": "Type",
+      "mandatory": true,
+      "singleSelection": true,
+      "showDropDown": true,
+      "filter": "{'sort':[{'indexNum':'asc'},{'systemHeader.summaryName':'asc'}],'query':{'bool':{'filter':[{'term':{'systemHeader.systemType':'document'}},{'term':{'appTags':'type'}},{'term':{'appTags':'sdms'}}],'must_not':[{'term':{'inactiveBool':true}}]}}}",
+      "relatedFields": {
+        "projectRel": "projectRel",
+        "isGlobalDefaultBool": "isGlobalDefaultBool"
+      }
+    },
+    {
+      "componentName": "solid-lookup-picker",
+      "name": "priorityRel",
+      "label": "Priority",
+      "singleSelection": true,
+      "showDropDown": true,
+      "filter": "{'sort':[{'indexNum':'asc'},{'systemHeader.summaryName':'asc'}],'query':{'bool':{'filter':[{'term':{'systemHeader.systemType':'document'}},{'term':{'appTags':'priority'}},{'term':{'appTags':'sdms'}}],'must_not':[{'term':{'inactiveBool':true}}]}}}",
+      "relatedFields": {
+        "projectRel": "projectRel",
+        "isGlobalDefaultBool": "isGlobalDefaultBool",
+        "indexNum": "indexNum"
+      }
+    },
+    {
+      "componentName": "solid-lookup-picker",
+      "name": "severityRel",
+      "label": "Severity",
+      "singleSelection": true,
+      "showDropDown": true,
+      "filter": "{'sort':[{'indexNum':'asc'},{'systemHeader.summaryName':'asc'}],'query':{'bool':{'filter':[{'term':{'systemHeader.systemType':'document'}},{'term':{'appTags':'severity'}},{'term':{'appTags':'sdms'}}],'must_not':[{'term':{'inactiveBool':true}}]}}}",
+      "relatedFields": {
+        "projectRel": "projectRel",
+        "isGlobalDefaultBool": "isGlobalDefaultBool",
+        "indexNum": "indexNum"
+      }
+    },
+    {
+      "componentName": "solid-user-picker",
+      "name": "assigneeRel",
+      "label": "Assignee",
+      "singleSelection": true,
+      "showDropDown": true,
+      "relatedFields": {
+        "email": "email"
+      },
+      "filter": "{'sort':[{'systemHeader.summaryName':'asc'}],'query':{'bool':{'filter':[{'term':{'systemHeader.systemType':'account'}},{'term':{'appRel.documentId':'db625088-19bf-4eb6-9783-5f0f11c5aede'}},{'term':{'sdmsProjectRel.documentId':'{{document.projectRel.0.documentId}}'}}],'must_not':[{'term':{'inactiveBool':true}}]}}}"
+    },
+    {
+      "componentName": "solid-user-picker",
+      "name": "reporterRel",
+      "label": "Reporter",
+      "mandatory": true,
+      "singleSelection": true,
+      "showDropDown": true,
+      "relatedFields": {
+        "email": "email"
+      },
+      "filter": "{'sort':[{'systemHeader.summaryName':'asc'}],'query':{'bool':{'filter':[{'term':{'systemHeader.systemType':'account'}},{'term':{'appRel.documentId':'db625088-19bf-4eb6-9783-5f0f11c5aede'}}],'must_not':[{'term':{'inactiveBool':true}}]}}}"
+    },
+    {
+      "componentName": "solid-lookup-picker",
+      "name": "tagsRel",
+      "label": "Labels",
+      "singleSelection": false,
+      "showDropDown": true,
+      "fullWidth": true,
+      "filter": "{'sort':[{'indexNum':'asc'},{'systemHeader.summaryName':'asc'}],'query':{'bool':{'filter':[{'term':{'systemHeader.systemType':'document'}},{'term':{'appTags':'tag'}},{'term':{'appTags':'sdms'}}],'must_not':[{'term':{'inactiveBool':true}}]}}}",
+      "relatedFields": {
+        "projectRel": "projectRel",
+        "isGlobalDefaultBool": "isGlobalDefaultBool"
+      }
+    },
+    {
+      "componentName": "solid-user-picker",
+      "name": "monitoringRel",
+      "label": "Watchers",
+      "singleSelection": false,
+      "showDropDown": false,
+      "fullWidth": true,
+      "relatedFields": {
+        "email": "email"
+      },
+      "filter": "{'sort':[{'systemHeader.summaryName':'asc'}],'query':{'bool':{'filter':[{'term':{'systemHeader.systemType':'account'}}],'must_not':[{'term':{'inactiveBool':true}}]}}}"
+    },
+    {
+      "componentName": "solid-lookup-picker",
+      "name": "resolutionRel",
+      "label": "Resolution",
+      "singleSelection": true,
+      "showDropDown": true,
+      "filter": "{'sort':[{'indexNum':'asc'},{'systemHeader.summaryName':'asc'}],'query':{'bool':{'filter':[{'term':{'systemHeader.systemType':'document'}},{'term':{'appTags':'resolution'}},{'term':{'appTags':'sdms'}}],'must_not':[{'term':{'inactiveBool':true}}]}}}",
+      "relatedFields": {
+        "projectRel": "projectRel",
+        "isGlobalDefaultBool": "isGlobalDefaultBool"
+      }
+    },
+    {
+      "componentName": "solid-comments",
+      "name": "notesCommentsArr",
+      "label": "Activity",
+      "fullWidth": true,
+      "textEditor": "markdown"
+    }
+  ]
+}

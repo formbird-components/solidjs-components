@@ -1,0 +1,10 @@
+{
+  "name": "@solidjs-components-fleet/meter-reading",
+  "version": "0.1.0",
+  "private": true,
+  "description": "<solid-meter-reading>: an odometer (km) or engine hours reading checked against the asset's current meter and an optional start reading, with the change since the asset's last reading.",
+  "type": "module",
+  "formbird": {
+    "tag": "solid-meter-reading"
+  }
+}

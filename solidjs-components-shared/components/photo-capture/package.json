@@ -1,0 +1,15 @@
+{
+  "name": "@solidjs-components/photo-capture",
+  "version": "0.1.0",
+  "private": true,
+  "description": "<solid-photo-capture>: photos (and optionally other files) on a record: take, upload or drop them, each uploads straight away (large photos scaled down first), with captions, when and by whom, and a lightbox. Stores fieldtec-web file records, and shows fieldtec-web's own file references (mode view). Replaces sc-uploader for photos.",
+  "type": "module",
+  "dependencies": {
+    "@solidjs-components/kit": "workspace:*",
+    "@solidjs/web": "catalog:",
+    "solid-js": "catalog:"
+  },
+  "formbird": {
+    "tag": "solid-photo-capture"
+  }
+}

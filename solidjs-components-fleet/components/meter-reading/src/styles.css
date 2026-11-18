@@ -1,0 +1,58 @@
+.mr {
+  display: grid;
+  gap: 6px;
+  max-width: 340px;
+}
+
+.mr-input {
+  font-weight: 600;
+}
+
+.mr-hint {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 4px 10px;
+  color: var(--sj-text-subtle);
+  font-size: var(--sj-text-sm);
+}
+
+.mr-asset {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  font-variant-numeric: tabular-nums;
+}
+
+.mr-when {
+  color: var(--sj-text-subtle);
+}
+
+.mr-delta {
+  padding: 0 7px;
+  border-radius: var(--sj-radius-pill);
+  background: color-mix(in oklab, var(--sj-success) 12%, transparent);
+  color: color-mix(in oklab, var(--sj-success) 80%, var(--sj-text));
+  font-weight: 600;
+  font-variant-numeric: tabular-nums;
+}
+
+.mr-use {
+  padding: 0;
+  border: 0;
+  background: none;
+  color: var(--sj-accent-text);
+  font-size: var(--sj-text-sm);
+  font-weight: 600;
+  cursor: pointer;
+}
+
+.mr-use:hover {
+  text-decoration: underline;
+}
+
+.mr-use:focus-visible {
+  outline: none;
+  border-radius: 4px;
+  box-shadow: var(--sj-ring);
+}

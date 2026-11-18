@@ -1,0 +1,159 @@
+{
+  "documentId": "6b1e3f52-0c7a-4d8e-9f21-5a4c2e7d9b10",
+  "systemHeader": {
+    "systemType": "template",
+    "templateId": "5f6000a0-0828-11e6-9b64-1b27992111e1",
+    "summaryName": "Issue lists (Solid components)",
+    "currentVersion": true,
+    "keyIds": []
+  },
+  "name": "Issue lists (Solid components)",
+  "description": "SDMS Items, people and the signed-in user's work in <solid-table>s. Filters follow the SDMS 'All Items' page; the column types are this repo's.",
+  "components": [
+    {
+      "componentName": "solid-table",
+      "name": "allItemsDt",
+      "label": "All issues",
+      "fullWidth": true,
+      "disableSave": true,
+      "rowsPerPage": 10,
+      "showSearch": true,
+      "searchPlaceholder": "Search issues",
+      "showReload": true,
+      "exportTypes": [
+        "CSV"
+      ],
+      "filter": "{'query':{'bool':{'filter':[{'term':{'systemHeader.systemType':'document'}},{'term':{'appTags':'item'}},{'term':{'appTags':'sdms'}}]}}}",
+      "searchBoxFilter": "{'bool':{'should':[{'wildcard':{'systemHeader.summaryName.lcase':{'value':'*{{{search}}}*','case_insensitive':true}}},{'wildcard':{'summary.lcase':{'value':'*{{{search}}}*','case_insensitive':true}}},{'wildcard':{'description.lcase':{'value':'*{{{search}}}*','case_insensitive':true}}},{'wildcard':{'notesCommentsArr.detail.lcase':{'value':'*{{{search}}}*','case_insensitive':true}}}],'minimum_should_match':1}}",
+      "statusFilter": "{'sort':[{'indexNum':'asc'}],'query':{'bool':{'filter':[{'term':{'systemHeader.systemType':'document'}},{'term':{'appTags':'status'}},{'term':{'appTags':'sdms'}}]}}}",
+      "gridColumns": [
+        {
+          "displayName": "Type",
+          "field": "typeRel",
+          "type": "issueType",
+          "iconOnly": true
+        },
+        {
+          "displayName": "Key",
+          "field": "systemHeader.summaryName",
+          "type": "key",
+          "width": "110px"
+        },
+        {
+          "displayName": "Summary",
+          "field": "summary",
+          "link": true
+        },
+        {
+          "displayName": "Status",
+          "field": "statusRel",
+          "type": "status"
+        },
+        {
+          "displayName": "Priority",
+          "field": "priorityRel",
+          "type": "priority",
+          "responsive": {
+            "xs": 0,
+            "sm": 0
+          }
+        },
+        {
+          "displayName": "Assignee",
+          "field": "assigneeRel",
+          "type": "user",
+          "responsive": {
+            "xs": 0
+          }
+        },
+        {
+          "displayName": "Labels",
+          "field": "tagsRel",
+          "type": "labels",
+          "responsive": {
+            "xs": 0,
+            "sm": 0,
+            "md": 0
+          }
+        },
+        {
+          "displayName": "Updated",
+          "field": "updatedDate",
+          "type": "date",
+          "sort": {
+            "direction": "desc",
+            "precedence": 1
+          },
+          "responsive": {
+            "xs": 0
+          }
+        }
+      ]
+    },
+    {
+      "componentName": "solid-table",
+      "name": "assignedToMeDt",
+      "label": "Assigned to me",
+      "fullWidth": true,
+      "disableSave": true,
+      "rowsPerPage": 5,
+      "emptyText": "Nothing assigned to you.",
+      "filter": "{'query':{'bool':{'filter':[{'term':{'systemHeader.systemType':'document'}},{'term':{'appTags':'item'}},{'term':{'assigneeRel.documentId':'{{account.documentId}}'}}]}}}",
+      "gridColumns": [
+        {
+          "displayName": "Key",
+          "field": "systemHeader.summaryName",
+          "type": "key",
+          "width": "110px"
+        },
+        {
+          "displayName": "Summary",
+          "field": "summary",
+          "link": true
+        },
+        {
+          "displayName": "Status",
+          "field": "statusRel",
+          "type": "status"
+        },
+        {
+          "displayName": "Updated",
+          "field": "updatedDate",
+          "type": "date",
+          "sort": {
+            "direction": "desc"
+          }
+        }
+      ]
+    },
+    {
+      "componentName": "solid-table",
+      "name": "peopleDt",
+      "label": "People",
+      "fullWidth": true,
+      "disableSave": true,
+      "rowsPerPage": 5,
+      "filter": "{'query':{'bool':{'filter':[{'term':{'systemHeader.systemType':'account'}}],'must_not':[{'term':{'inactiveBool':true}}]}}}",
+      "gridColumns": [
+        {
+          "displayName": "Name",
+          "field": "systemHeader.summaryName",
+          "link": true,
+          "sort": {
+            "direction": "asc"
+          }
+        },
+        {
+          "displayName": "Email",
+          "field": "email",
+          "type": "email"
+        },
+        {
+          "displayName": "Projects",
+          "field": "sdmsProjectRel",
+          "type": "labels"
+        }
+      ]
+    }
+  ]
+}

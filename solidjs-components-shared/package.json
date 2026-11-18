@@ -1,0 +1,44 @@
+{
+  "name": "solidjs-components-shared",
+  "private": true,
+  "version": "0.1.0",
+  "description": "What the SolidJS Formbird apps share: the kit (host bindings, design tokens, UI primitives), generic custom elements (table, comments, pickers, status, record key, map, checklist, stat tiles), the mock host for tests, the build/test/deploy CLI and the demo-database platform.",
+  "type": "module",
+  "packageManager": "pnpm@12.4.1",
+  "engines": {
+    "node": ">=22"
+  },
+  "solidComponents": {
+    "browserTest": "test/browser.mjs",
+    "previewPort": 5180,
+    "testBundles": [
+      {
+        "name": "openlayers",
+        "entry": "packages/test-openlayers/index.ts",
+        "globalName": "OpenLayersForTests"
+      }
+    ]
+  },
+  "scripts": {
+    "build": "solid-components build",
+    "build:test-assets": "solid-components build --test-assets",
+    "typecheck": "solid-components typecheck",
+    "test": "solid-components test",
+    "test:browser": "solid-components build --test-assets && solid-components browser-test",
+    "check": "pnpm typecheck && pnpm test && pnpm test:browser",
+    "dev": "solid-components dev",
+    "docs": "solid-components build && solid-components docs",
+    "deploy:fieldtec": "solid-components deploy"
+  },
+  "devDependencies": {
+    "@solidjs-components/tools": "workspace:*",
+    "@solidjs/element": "catalog:",
+    "@solidjs/web": "catalog:",
+    "@types/node": "^24.3.1",
+    "ol": "6.15.1",
+    "solid-js": "catalog:",
+    "typescript": "~5.9.3",
+    "vite": "6.4.3",
+    "vitest": "^3.2.4"
+  }
+}

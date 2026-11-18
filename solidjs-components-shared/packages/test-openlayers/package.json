@@ -1,0 +1,7 @@
+{
+  "name": "@solidjs-components/test-openlayers",
+  "version": "0.1.0",
+  "private": true,
+  "description": "TEST ONLY. Sets the same `OL` global formbird-sc-components' openlayers-shared sets (published in @formbird/angular-elements), built from ol 6.15.1, so the browser test and preview need no CDN. Production pages load the published openlayers-shared. Never deployed.",
+  "type": "module"
+}

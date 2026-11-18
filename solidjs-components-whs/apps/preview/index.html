@@ -1,0 +1,29 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Safety elements</title>
+    <link rel="icon" href="data:," />
+  </head>
+  <body>
+    <header class="pv-bar">
+      <strong>Safety elements</strong>
+      <span class="pv-sub">solidjs-components-whs · mock host</span>
+      <label class="pv-toggle"><input type="checkbox" id="dark" /> Dark</label>
+    </header>
+    <main class="pv">
+      <section class="pv-card pv-wide"><h2>Safety overview</h2><div id="slot-tiles"></div></section>
+      <section class="pv-card"><h2>Incident INC-12: risk</h2><div id="slot-matrix"></div></section>
+      <section class="pv-card"><h2>Hazard HAZ-7: residual risk</h2><div id="slot-residual"></div></section>
+      <section class="pv-card pv-wide"><h2>Dashboard: hazard heatmap</h2><div id="slot-heatmap"></div></section>
+      <section class="pv-card"><h2>Incident INC-12: root cause</h2><div id="slot-rootCause"></div></section>
+      <section class="pv-card"><h2>New incident: root cause</h2><div id="slot-rootCauseNew"></div></section>
+      <section class="pv-card pv-wide"><h2>Incident INC-12: corrective actions</h2><div id="slot-actions"></div></section>
+      <section class="pv-card"><h2>New incident: corrective actions</h2><div id="slot-actionsNew"></div></section>
+      <section class="pv-card"><h2>Hazard HAZ-7: controls</h2><div id="slot-hazardActions"></div></section>
+      <section class="pv-card pv-wide"><h2>Host log</h2><pre id="log"></pre></section>
+    </main>
+    <script type="module" src="./src/main.ts"></script>
+  </body>
+</html>

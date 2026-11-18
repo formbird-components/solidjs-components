@@ -1,0 +1,10 @@
+{
+  "name": "@solidjs-components-whs/corrective-actions",
+  "version": "0.1.0",
+  "private": true,
+  "description": "<solid-corrective-actions>: the corrective actions raised against an incident, hazard or inspection, listed live with their control level, owner, due date and status, and a quick form to raise one.",
+  "type": "module",
+  "formbird": {
+    "tag": "solid-corrective-actions"
+  }
+}

@@ -1,0 +1,23 @@
+{
+  "name": "@solidjs-components/platform",
+  "version": "0.1.0",
+  "private": true,
+  "description": "What every demo database needs besides its own app: Formbird platform documents (core/), accounts, the configuration document, building blocks for templates (form-parts), rulesets (rules) and demo records (seed-kit), the seed (Mongo + Elasticsearch + Redis), fieldtec-web's server config and start, and the one-command setup the app repos' setup-db.mjs runs.",
+  "type": "module",
+  "exports": {
+    "./documents": "./documents.mjs",
+    "./seed": "./seed.mjs",
+    "./services": "./services.mjs",
+    "./fieldtec": "./fieldtec.mjs",
+    "./setup": "./setup.mjs",
+    "./form-parts": "./form-parts.mjs",
+    "./rules": "./rules.mjs",
+    "./seed-kit": "./seed-kit.mjs",
+    "./e2e": "./e2e.mjs"
+  },
+  "dependencies": {
+    "@solidjs-components/tools": "workspace:*",
+    "bcryptjs": "^3.0.3",
+    "mongodb": "^6.21.0"
+  }
+}

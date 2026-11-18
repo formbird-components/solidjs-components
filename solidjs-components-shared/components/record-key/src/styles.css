@@ -1,0 +1,49 @@
+.rk {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  min-height: 28px;
+}
+
+.rk-key {
+  font-size: 13px;
+  font-weight: 650;
+  letter-spacing: 0.03em;
+  font-variant-numeric: tabular-nums;
+  color: var(--sj-text-muted);
+}
+
+.rk-pending {
+  display: inline-flex;
+  align-items: center;
+  height: 22px;
+  padding: 0 8px;
+  border-radius: var(--sj-radius-pill);
+  background: var(--sj-accent-soft);
+  color: var(--sj-accent-text);
+  font-size: var(--sj-text-sm);
+  font-weight: 600;
+}
+
+.rk-copy {
+  opacity: 0;
+  transition: opacity var(--sj-fast) var(--sj-ease), color var(--sj-fast) var(--sj-ease),
+    background-color var(--sj-fast) var(--sj-ease);
+}
+
+.rk:hover .rk-copy,
+.rk-copy:focus-visible,
+.rk-copy--done {
+  opacity: 1;
+}
+
+.rk-copy--done,
+.rk-copy--done:hover {
+  color: var(--sj-success);
+}
+
+@media (hover: none) {
+  .rk-copy {
+    opacity: 1;
+  }
+}

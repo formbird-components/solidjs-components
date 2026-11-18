@@ -1,0 +1,15 @@
+{
+  "name": "@solidjs-components/image-pins",
+  "version": "0.1.0",
+  "private": true,
+  "description": "<solid-image-pins>: numbered pins on a built-in body figure (front and back views made of named regions: where someone was hurt) or on any image (a floor plan, a drawing with defects). Each pin stores its position as fractions of the view, the region under it, a kind (its colour) and a note.",
+  "type": "module",
+  "dependencies": {
+    "@solidjs-components/kit": "workspace:*",
+    "@solidjs/web": "catalog:",
+    "solid-js": "catalog:"
+  },
+  "formbird": {
+    "tag": "solid-image-pins"
+  }
+}

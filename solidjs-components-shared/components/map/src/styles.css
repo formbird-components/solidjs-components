@@ -1,0 +1,333 @@
+.mp {
+  display: grid;
+  gap: 10px;
+}
+
+.mp--list {
+  grid-template-columns: minmax(0, 1fr) 220px;
+}
+
+.mp-stage {
+  position: relative;
+  min-width: 0;
+}
+
+.mp-map {
+  position: relative;
+  width: 100%;
+  min-height: 220px;
+  overflow: hidden;
+  border: 1px solid var(--sj-border);
+  border-radius: var(--sj-radius-lg);
+  background: var(--sj-surface-sunken);
+}
+
+.mp-map:focus-within {
+  border-color: var(--sj-border-strong);
+}
+
+/* Tiles read as a dark map in the dark theme. */
+:host([data-sj-theme='dark']) .sj-map-tiles {
+  filter: invert(1) hue-rotate(180deg) brightness(0.92) contrast(0.88) saturate(0.6);
+}
+
+/* ------------------------------------------------------------------ OpenLayers' own controls
+   openlayers-shared ships no stylesheet, and the shadow root keeps page styles out. */
+
+.mp-map .ol-viewport {
+  touch-action: none;
+}
+
+.mp-map .ol-overlaycontainer-stopevent {
+  pointer-events: none;
+}
+
+.mp-map .ol-control {
+  position: absolute;
+  pointer-events: auto;
+}
+
+.mp-map .ol-zoom {
+  top: 10px;
+  left: 10px;
+  display: grid;
+  overflow: hidden;
+  border: 1px solid var(--sj-border);
+  border-radius: var(--sj-radius);
+  background: var(--sj-surface-raised);
+  box-shadow: var(--sj-shadow-sm);
+}
+
+.mp-map .ol-zoom button {
+  width: 30px;
+  height: 30px;
+  border: 0;
+  background: transparent;
+  color: var(--sj-text);
+  font-size: 18px;
+  line-height: 1;
+  cursor: pointer;
+}
+
+.mp-map .ol-zoom button + button {
+  border-top: 1px solid var(--sj-border);
+}
+
+.mp-map .ol-zoom button:hover {
+  background: var(--sj-hover);
+}
+
+.mp-map .ol-zoom button:focus-visible {
+  outline: none;
+  box-shadow: inset var(--sj-ring);
+}
+
+.mp-map .ol-attribution {
+  right: 6px;
+  bottom: 6px;
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  max-width: calc(100% - 12px);
+  padding: 2px 6px;
+  border-radius: var(--sj-radius-sm);
+  background: color-mix(in oklab, var(--sj-surface) 85%, transparent);
+  font-size: 11px;
+}
+
+.mp-map .ol-attribution ul {
+  display: inline;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.mp-map .ol-attribution li {
+  display: inline;
+}
+
+.mp-map .ol-attribution a {
+  color: var(--sj-text-muted);
+}
+
+.mp-map .ol-attribution button {
+  width: 18px;
+  height: 18px;
+  padding: 0;
+  border: 0;
+  border-radius: 4px;
+  background: transparent;
+  color: var(--sj-text-muted);
+  cursor: pointer;
+}
+
+.mp-map .ol-attribution.ol-collapsed ul {
+  display: none;
+}
+
+.mp-map .ol-hidden {
+  display: none;
+}
+
+.mp-map .ol-unselectable {
+  user-select: none;
+}
+
+/* ------------------------------------------------------------------ layers panel */
+
+.mp-panel {
+  position: absolute;
+  top: 10px;
+  right: 10px;
+  display: grid;
+  gap: 4px;
+  min-width: 170px;
+  padding: 8px 10px;
+  border: 1px solid var(--sj-border);
+  border-radius: var(--sj-radius);
+  background: color-mix(in oklab, var(--sj-surface-raised) 94%, transparent);
+  box-shadow: var(--sj-shadow-sm);
+  font-size: var(--sj-text-sm);
+}
+
+.mp-layer {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  cursor: pointer;
+}
+
+.mp-layer__count {
+  margin-left: auto;
+  padding: 0 6px;
+  border-radius: var(--sj-radius-pill);
+  background: var(--sj-surface-sunken);
+  color: var(--sj-text-muted);
+  font-size: var(--sj-text-xs);
+  font-variant-numeric: tabular-nums;
+}
+
+.mp-tools {
+  display: flex;
+  align-items: center;
+  gap: 2px;
+  margin-top: 2px;
+  padding-top: 6px;
+  border-top: 1px solid var(--sj-border);
+}
+
+/* ------------------------------------------------------------------ popup */
+
+.mp-popup[hidden] {
+  display: none;
+}
+
+.mp-popup__card {
+  position: relative;
+  display: grid;
+  gap: 8px;
+  width: 260px;
+  padding: 10px 12px 12px;
+  border: 1px solid var(--sj-border);
+  border-radius: var(--sj-radius-lg);
+  background: var(--sj-surface-raised);
+  box-shadow: var(--sj-shadow-pop);
+  pointer-events: auto;
+}
+
+.mp-popup__card::after {
+  content: '';
+  position: absolute;
+  left: 50%;
+  bottom: -7px;
+  width: 12px;
+  height: 12px;
+  margin-left: -6px;
+  border-right: 1px solid var(--sj-border);
+  border-bottom: 1px solid var(--sj-border);
+  background: var(--sj-surface-raised);
+  transform: rotate(45deg);
+}
+
+.mp-popup__head {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 8px;
+  line-height: 1.35;
+}
+
+.mp-popup__fields {
+  display: grid;
+  gap: 4px;
+  margin: 0;
+}
+
+.mp-popup__fields div {
+  display: flex;
+  justify-content: space-between;
+  gap: 10px;
+  font-size: var(--sj-text-sm);
+}
+
+.mp-popup__fields dt {
+  color: var(--sj-text-muted);
+}
+
+.mp-popup__fields dd {
+  margin: 0;
+  text-align: right;
+  font-variant-numeric: tabular-nums;
+}
+
+.mp-popup__actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+}
+
+/* ------------------------------------------------------------------ list */
+
+.mp-list {
+  display: grid;
+  align-content: start;
+  gap: 1px;
+  max-height: 440px;
+  margin: 0;
+  padding: 4px;
+  overflow-y: auto;
+  list-style: none;
+  border: 1px solid var(--sj-border);
+  border-radius: var(--sj-radius-lg);
+  background: var(--sj-surface);
+}
+
+.mp-list__empty {
+  padding: 12px;
+  color: var(--sj-text-subtle);
+  font-size: var(--sj-text-sm);
+}
+
+.mp-item {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  width: 100%;
+  padding: 6px 8px;
+  border: 0;
+  border-radius: var(--sj-radius-sm);
+  background: transparent;
+  text-align: left;
+  cursor: pointer;
+}
+
+.mp-item:hover {
+  background: var(--sj-hover);
+}
+
+.mp-item--selected {
+  background: var(--sj-accent-soft);
+}
+
+.mp-item:focus-visible {
+  outline: none;
+  box-shadow: var(--sj-ring);
+}
+
+.mp-item__dot {
+  flex: none;
+  width: 9px;
+  height: 9px;
+  border-radius: 50%;
+}
+
+.mp-item__name {
+  overflow: hidden;
+  font-size: var(--sj-text-sm);
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+/* ------------------------------------------------------------------ editing */
+
+.mp-edit {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 8px;
+  margin-top: 8px;
+}
+
+.mp-edit__value {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  margin-right: auto;
+  color: var(--sj-text-muted);
+  font-size: var(--sj-text-sm);
+  font-variant-numeric: tabular-nums;
+}
+
+.mp-edit__when {
+  color: var(--sj-text-subtle);
+}

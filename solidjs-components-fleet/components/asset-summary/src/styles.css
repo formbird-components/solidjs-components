@@ -1,0 +1,151 @@
+.as {
+  display: grid;
+  gap: 14px;
+  padding: 16px 18px;
+}
+
+.as-main {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: flex-start;
+  gap: 14px;
+}
+
+.as-icon .sj-type-icon {
+  width: 44px;
+  height: 44px;
+}
+
+.as-icon__empty {
+  display: block;
+  width: 44px;
+  height: 44px;
+  border-radius: 10px;
+  border: 1px dashed var(--sj-border-strong);
+}
+
+.as-heading {
+  display: grid;
+  gap: 6px;
+  flex: 1 1 260px;
+  min-width: 0;
+}
+
+.as-title {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  gap: 4px 10px;
+  margin: 0;
+  font-size: var(--sj-text-xl);
+  font-weight: 700;
+  line-height: 1.25;
+  letter-spacing: -0.015em;
+}
+
+.as-id {
+  font-variant-numeric: tabular-nums;
+}
+
+.as-name {
+  color: var(--sj-text-muted);
+  font-weight: 600;
+}
+
+.as-year {
+  color: var(--sj-text-subtle);
+  font-size: var(--sj-text-lg);
+  font-weight: 500;
+}
+
+.as-new {
+  color: var(--sj-text-muted);
+}
+
+.as-tags {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 6px;
+}
+
+.as-plate {
+  display: inline-flex;
+  align-items: center;
+  height: 22px;
+  padding: 0 8px;
+  border: 1.5px solid var(--sj-text);
+  border-radius: 4px;
+  background: #fdfcf7;
+  color: #111;
+  font-family: var(--sj-font-mono);
+  font-size: 12px;
+  font-weight: 700;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+}
+
+.as-tag {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  height: 22px;
+  padding: 0 8px;
+  border-radius: var(--sj-radius-pill);
+  background: var(--sj-surface-sunken);
+  color: var(--sj-text-muted);
+  font-size: var(--sj-text-sm);
+}
+
+.as-status {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+  margin-left: auto;
+}
+
+.as-facts {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(170px, 1fr));
+  gap: 10px;
+  padding-top: 12px;
+  border-top: 1px solid var(--sj-border);
+}
+
+.as-fact {
+  display: grid;
+  gap: 2px;
+}
+
+.as-fact__label {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  color: var(--sj-text-subtle);
+  font-size: var(--sj-text-xs);
+  font-weight: 700;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+}
+
+.as-fact__value {
+  font-size: var(--sj-text-lg);
+  font-weight: 650;
+  font-variant-numeric: tabular-nums;
+}
+
+.as-fact__hint {
+  color: var(--sj-text-subtle);
+  font-size: var(--sj-text-sm);
+}
+
+.as-muted {
+  color: var(--sj-text-subtle);
+  font-weight: 500;
+}
+
+.as-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+}

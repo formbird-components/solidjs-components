@@ -1,0 +1,40 @@
+{
+  "name": "solidjs-components-fleet",
+  "private": true,
+  "version": "0.1.0",
+  "description": "A fleet management SaaS on Formbird (fieldtec-web): SolidJS elements for the booking calendar, booking times, meter readings, work order costs and asset summaries, and a demo database with assets, bookings, workshop requests, work orders, Daily Driver checks and fuel. Builds on ../solidjs-components-shared, which also provides the map, checklist and stat tiles.",
+  "type": "module",
+  "packageManager": "pnpm@12.4.1",
+  "engines": {
+    "node": ">=22"
+  },
+  "solidComponents": {
+    "browserTest": "test/browser.mjs",
+    "previewPort": 5181,
+    "testBundles": [
+      {
+        "name": "fleet-fixtures",
+        "entry": "packages/fixtures/src/index.ts",
+        "globalName": "FleetFixtures"
+      }
+    ]
+  },
+  "scripts": {
+    "build": "solid-components build --with-shared",
+    "build:test-assets": "solid-components build --with-shared --test-assets",
+    "typecheck": "solid-components typecheck",
+    "test": "solid-components test",
+    "test:browser": "solid-components build --with-shared --test-assets && solid-components browser-test",
+    "check": "pnpm typecheck && pnpm test && pnpm test:browser",
+    "dev": "solid-components dev",
+    "deploy:fieldtec": "solid-components deploy",
+    "docs": "solid-components build --with-shared && solid-components docs",
+    "db:setup": "node setup-db.mjs",
+    "demo:server": "node demo/server.mjs",
+    "demo:e2e": "node demo/test/e2e.mjs"
+  },
+  "devDependencies": {
+    "@solidjs-components/platform": "link:../solidjs-components-shared/packages/platform",
+    "@solidjs-components/tools": "link:../solidjs-components-shared/packages/tools"
+  }
+}

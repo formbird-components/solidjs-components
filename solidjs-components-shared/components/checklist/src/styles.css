@@ -1,0 +1,249 @@
+.cl {
+  display: grid;
+  gap: 12px;
+}
+
+.cl-empty {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 14px;
+  border: 1px dashed var(--sj-border-strong);
+  border-radius: var(--sj-radius);
+  color: var(--sj-text-subtle);
+  font-size: var(--sj-text-sm);
+}
+
+.cl-head {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px 16px;
+}
+
+.cl-progress {
+  display: grid;
+  gap: 6px;
+  flex: 1 1 220px;
+  min-width: 0;
+}
+
+.cl-progress__text {
+  color: var(--sj-text-muted);
+  font-size: var(--sj-text-sm);
+}
+
+.cl-progress__text strong {
+  color: var(--sj-text);
+}
+
+.cl-sheet {
+  color: var(--sj-text-subtle);
+}
+
+.cl-summary {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.cl-count {
+  color: var(--sj-text-muted);
+  font-size: var(--sj-text-sm);
+  font-weight: 600;
+  font-variant-numeric: tabular-nums;
+}
+
+.cl-count--pass {
+  color: color-mix(in oklab, var(--sj-success) 80%, var(--sj-text));
+}
+
+.cl-count--fail {
+  color: color-mix(in oklab, var(--sj-danger) 85%, var(--sj-text));
+}
+
+.cl-actions {
+  display: flex;
+  justify-content: flex-end;
+  margin-top: -6px;
+}
+
+.cl-group {
+  display: grid;
+  gap: 6px;
+}
+
+.cl-group__title {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin: 0;
+  color: var(--sj-text-muted);
+  font-size: var(--sj-text-xs);
+  font-weight: 700;
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+}
+
+.cl-group__count {
+  color: var(--sj-text-subtle);
+  font-weight: 600;
+  letter-spacing: 0;
+}
+
+.cl-items {
+  display: grid;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  border: 1px solid var(--sj-border);
+  border-radius: var(--sj-radius);
+  overflow: hidden;
+}
+
+.cl-item {
+  display: grid;
+  gap: 6px;
+  padding: 8px 10px 8px 12px;
+  border-left: 3px solid transparent;
+  background: var(--sj-surface);
+}
+
+.cl-item + .cl-item {
+  border-top: 1px solid var(--sj-border);
+}
+
+.cl-item--pass {
+  border-left-color: var(--sj-success);
+}
+
+.cl-item--fail {
+  border-left-color: var(--sj-danger);
+  background: color-mix(in oklab, var(--sj-danger) 5%, var(--sj-surface));
+}
+
+.cl-item--na {
+  border-left-color: var(--sj-border-strong);
+}
+
+.cl-item__main {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: 6px 12px;
+}
+
+.cl-item__question {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  flex: 1 1 220px;
+  min-width: 0;
+}
+
+.cl-item__instruction {
+  margin: 0;
+  padding: 6px 8px;
+  border-radius: var(--sj-radius-sm);
+  background: var(--sj-surface-sunken);
+  color: var(--sj-text-muted);
+  font-size: var(--sj-text-sm);
+}
+
+.cl-answer button[aria-pressed='true'].cl-answer--pass {
+  background: var(--sj-success);
+  color: #fff;
+}
+
+.cl-answer button[aria-pressed='true'].cl-answer--fail {
+  background: var(--sj-danger);
+  color: #fff;
+}
+
+.cl-answer button[aria-pressed='true'].cl-answer--na {
+  background: var(--sj-text-muted);
+  color: var(--sj-surface);
+}
+
+.cl-comment {
+  display: block;
+}
+
+.cl-link {
+  padding: 0;
+  border: 0;
+  background: none;
+  color: var(--sj-accent-text);
+  font-weight: 600;
+  cursor: pointer;
+  text-decoration: underline;
+}
+
+.cl-add {
+  display: flex;
+  gap: 8px;
+}
+
+.cl-add .sj-input {
+  flex: 1;
+}
+
+/* ------------------------------------------------------------------ define mode */
+
+.cl-defs {
+  display: grid;
+  gap: 8px;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.cl-def {
+  display: grid;
+  grid-template-columns: 22px minmax(0, 1fr) 160px auto auto;
+  align-items: center;
+  gap: 6px 8px;
+  padding: 8px;
+  border: 1px solid var(--sj-border);
+  border-radius: var(--sj-radius);
+  background: var(--sj-surface);
+}
+
+.cl-def__n {
+  color: var(--sj-text-subtle);
+  font-size: var(--sj-text-sm);
+  font-weight: 700;
+  text-align: right;
+}
+
+.cl-def__instruction {
+  grid-column: 2 / -1;
+}
+
+.cl-def__mandatory {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  color: var(--sj-text-muted);
+  font-size: var(--sj-text-sm);
+  white-space: nowrap;
+}
+
+.cl-def__tools {
+  display: inline-flex;
+}
+
+@media (max-width: 640px) {
+  .cl-def {
+    grid-template-columns: 22px minmax(0, 1fr);
+  }
+
+  .cl-def__category,
+  .cl-def__mandatory,
+  .cl-def__tools,
+  .cl-def__instruction {
+    grid-column: 2;
+  }
+}

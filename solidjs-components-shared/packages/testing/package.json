@@ -1,0 +1,10 @@
+{
+  "name": "@solidjs-components/testing",
+  "version": "0.1.0",
+  "private": true,
+  "description": "In-memory Formbird host (window.FormbirdServiceInjector) and SDMS-like fixtures for the preview app, unit tests and browser smoke tests.",
+  "type": "module",
+  "exports": {
+    ".": "./src/index.ts"
+  }
+}

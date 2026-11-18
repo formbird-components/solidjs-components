@@ -1,0 +1,15 @@
+{
+  "name": "@solidjs-components/stat-tiles",
+  "version": "0.1.0",
+  "private": true,
+  "description": "<solid-stat-tiles>: dashboard tiles, each a live Elasticsearch count (assets on hire, urgent defects, services due…) with a tone, a hint and a link to the list behind it.",
+  "type": "module",
+  "dependencies": {
+    "@solidjs-components/kit": "workspace:*",
+    "@solidjs/web": "catalog:",
+    "solid-js": "catalog:"
+  },
+  "formbird": {
+    "tag": "solid-stat-tiles"
+  }
+}

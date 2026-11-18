@@ -1,0 +1,35 @@
+{
+  // Compiler settings for solidjs-components-shared AND the app repos (internal, fleet), which extend
+  // this file by relative path. Paths are resolved from this directory, so every repo type-checks
+  // against one copy of the Solid runtime, the kit and the mock host: shared's.
+  "files": ["./packages/tools/env.d.ts"],
+  "compilerOptions": {
+    "target": "ES2022",
+    "module": "ESNext",
+    "moduleResolution": "bundler",
+    "lib": ["ES2022", "DOM", "DOM.Iterable"],
+    "jsx": "preserve",
+    "jsxImportSource": "@solidjs/web",
+    "strict": true,
+    "noEmit": true,
+    "skipLibCheck": true,
+    "isolatedModules": true,
+    "resolveJsonModule": true,
+    "allowImportingTsExtensions": true,
+    "noUnusedLocals": true,
+    "noUnusedParameters": true,
+    "noFallthroughCasesInSwitch": true,
+    "typeRoots": ["./node_modules/@types"],
+    "types": ["node"],
+    "paths": {
+      "@solidjs-components/kit": ["./packages/kit/src/index.ts"],
+      "@solidjs-components/testing": ["./packages/testing/src/index.ts"],
+      "solid-js": ["./node_modules/solid-js"],
+      "@solidjs/web": ["./node_modules/@solidjs/web"],
+      "@solidjs/web/jsx-runtime": ["./node_modules/@solidjs/web/types/jsx.d.ts"],
+      "@solidjs/web/jsx-dev-runtime": ["./node_modules/@solidjs/web/types/jsx.d.ts"],
+      "@solidjs/element": ["./node_modules/@solidjs/element"],
+      "vitest": ["./node_modules/vitest"]
+    }
+  }
+}

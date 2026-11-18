@@ -1,0 +1,125 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>solidjs-components preview</title>
+    <link rel="icon" href="data:," />
+  </head>
+  <body>
+    <header class="pv-top">
+      <div>
+        <h1>solidjs-components</h1>
+        <p>Formbird custom elements on the in-memory host. Everything below is set up the way fieldtec-web does it: element properties, ChangedDocumentService, SearchClientService.</p>
+      </div>
+      <div class="pv-top__actions">
+        <button type="button" class="pv-btn" id="toggle-theme">Dark theme</button>
+      </div>
+    </header>
+
+    <main class="pv-main">
+      <div class="pv-col">
+        <section class="pv-card pv-issue" aria-label="Issue view">
+          <div class="pv-issue__breadcrumb">
+            <span>Projects</span><span>/</span><span>SDMS</span><span>/</span><span id="slot-key"></span>
+          </div>
+          <div id="slot-summary"></div>
+          <div class="pv-issue__grid">
+            <div class="pv-issue__body">
+              <h2>Description</h2>
+              <p>
+                Switching projects on the Team Intrays Board re-renders every status lozenge twice: once with the
+                previous project's colours and again after the status query returns. Reproduces on slow connections.
+              </p>
+              <h2>Labels</h2>
+              <div id="slot-tagsRel"></div>
+              <div class="pv-activity">
+                <div id="slot-notesCommentsArr"></div>
+                <div class="pv-row">
+                  <button type="button" class="pv-btn" id="save-issue">Save issue (simulate)</button>
+                </div>
+              </div>
+            </div>
+            <aside class="pv-issue__side">
+              <div id="slot-statusRel"></div>
+              <div class="pv-details">
+                <div class="pv-details__title">Details</div>
+                <div id="slot-assigneeRel"></div>
+                <div id="slot-reporterRel"></div>
+                <div id="slot-typeRel"></div>
+                <div id="slot-priorityRel"></div>
+                <div id="slot-severityRel"></div>
+                <div id="slot-resolutionRel"></div>
+                <div id="slot-monitoringRel"></div>
+              </div>
+            </aside>
+          </div>
+        </section>
+
+        <section class="pv-card">
+          <h2 class="pv-card__title">Lists (<code>&lt;solid-table&gt;</code>)</h2>
+          <p class="pv-card__hint">
+            The tables of <code>formbird/templates/solid-issue-list.template.json</code>: sorting, paging and search run as
+            Elasticsearch queries against the in-memory host. Resize the window to see columns drop by the table's width.
+          </p>
+          <div class="pv-lists" id="slot-lists"></div>
+        </section>
+
+        <section class="pv-card">
+          <h2 class="pv-card__title">Photos and pins (<code>&lt;solid-photo-capture&gt;</code>, <code>&lt;solid-image-pins&gt;</code>)</h2>
+          <p class="pv-card__hint">
+            An incident: take, upload or drop photos (each uploads to the in-memory host straight away; large ones are
+            scaled down first), click one for the lightbox (← → to move, Esc to close). Below, where the person was hurt:
+            click the body to add a pin, drag pins to move them, or use Add pin with the keyboard.
+          </p>
+          <div class="pv-lists" id="slot-photos"></div>
+          <div class="pv-row">
+            <button type="button" class="pv-btn" id="refuse-upload">Refuse uploads (server says "File type not allowed")</button>
+          </div>
+          <div class="pv-lists pv-gap" id="slot-pins"></div>
+        </section>
+
+        <section class="pv-card">
+          <h2 class="pv-card__title">Read-only photos and pins, file references</h2>
+          <p class="pv-card__hint">
+            <code>mode: "view"</code>, <code>readOnly: true</code>, and fieldtec-web's own file reference documents
+            (<code>fileDetails</code>): an image shows as a photo, a PDF as a file with a download link.
+          </p>
+          <div class="pv-states" id="slot-files"></div>
+          <div class="pv-lists pv-gap" id="slot-readonly-pins"></div>
+        </section>
+
+        <section class="pv-card">
+          <h2 class="pv-card__title">New issue</h2>
+          <p class="pv-card__hint">Empty document: no key yet, empty status, unassigned. Required fields are validated like fieldtec-web does on save.</p>
+          <div class="pv-states" id="slot-new"></div>
+          <div class="pv-row">
+            <button type="button" class="pv-btn" id="validate-new">Validate (simulate save)</button>
+          </div>
+        </section>
+
+        <section class="pv-card">
+          <h2 class="pv-card__title">Read-only (<code>enabled: false</code>)</h2>
+          <div class="pv-states" id="slot-readonly"></div>
+        </section>
+
+        <section class="pv-card">
+          <h2 class="pv-card__title">Ruleset simulation</h2>
+          <p class="pv-card__hint">What SDMS rulesets do at runtime, through the same host streams.</p>
+          <div class="pv-row">
+            <button type="button" class="pv-btn" id="rule-disable">Toggle "Disable State" rule</button>
+            <button type="button" class="pv-btn" id="rule-filter">setFilter: assignee → Hana only</button>
+            <button type="button" class="pv-btn" id="rule-status">External change: status → Testing</button>
+          </div>
+        </section>
+      </div>
+
+      <aside class="pv-card pv-log" aria-label="Host log">
+        <h2 class="pv-card__title">Host writes</h2>
+        <p class="pv-card__hint">Calls the components made to <code>ChangedDocumentService</code> and other host services.</p>
+        <ol id="log"></ol>
+      </aside>
+    </main>
+    <script type="module" src="./src/main.ts"></script>
+  </body>
+</html>

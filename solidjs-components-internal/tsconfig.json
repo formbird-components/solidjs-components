@@ -1,0 +1,6 @@
+{
+  // Compiler settings, the Solid runtime, the kit and the mock host all come from
+  // solidjs-components-shared (checked out next to this repo).
+  "extends": "../solidjs-components-shared/tsconfig.base.json",
+  "include": ["components/*/src", "components/*/test"]
+}

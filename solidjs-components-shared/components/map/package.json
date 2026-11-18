@@ -1,0 +1,21 @@
+{
+  "name": "@solidjs-components/map",
+  "version": "0.1.0",
+  "private": true,
+  "description": "<solid-map>: OpenLayers map of Formbird documents. Layers mode shows live searches (assets by type and hire status, sites with their boundaries) with popups and actions; point and area modes edit a document's location or boundary. Uses the page's openlayers-shared (global OL).",
+  "type": "module",
+  "dependencies": {
+    "@solidjs-components/kit": "workspace:*",
+    "@solidjs/web": "catalog:",
+    "solid-js": "catalog:"
+  },
+  "formbird": {
+    "tag": "solid-map",
+    "vendorLibraries": [
+      {
+        "name": "openlayers-shared",
+        "fileName": "cdn:openlayers-shared/openlayers-shared.umd.js"
+      }
+    ]
+  }
+}

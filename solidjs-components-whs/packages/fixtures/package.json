@@ -1,0 +1,7 @@
+{
+  "name": "@solidjs-components-whs/fixtures",
+  "version": "0.1.0",
+  "private": true,
+  "description": "A small safety data set (people, a site, risk ratings, action statuses, control levels, an incident with its actions, hazards across the risk matrix) and component definitions for the preview and the browser test, in the safety demo's data model. Built as a test-only bundle (global WhsFixtures); never deployed.",
+  "type": "module"
+}

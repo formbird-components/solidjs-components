@@ -1,0 +1,7 @@
+{
+  "name": "@solidjs-components-whs/whs-kit",
+  "version": "0.1.0",
+  "private": true,
+  "description": "Safety logic shared by this repo's elements, its rulesets (embedded as source) and the demo seed: the risk matrix and responses, injury classes and notifiable incidents, the hierarchy of controls and corrective actions, five-whys trees and hazard reviews.",
+  "type": "module"
+}

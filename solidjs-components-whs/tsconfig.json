@@ -1,0 +1,7 @@
+{
+  // Compiler settings, the Solid runtime, the kit and the mock host all come from
+  // solidjs-components-shared (checked out next to this repo), as do the shared elements the
+  // preview loads (map, checklist, stat tiles, photo capture, image pins).
+  "extends": "../solidjs-components-shared/tsconfig.base.json",
+  "include": ["packages/*/src", "packages/*/test", "components/*/src", "components/*/test", "demo/test/*.ts", "apps/*/src"]
+}

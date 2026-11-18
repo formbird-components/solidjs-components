@@ -1,0 +1,503 @@
+/* <solid-risk-matrix>: the 5 × 5 matrix (assess and heatmap), the result line and the cell lists. */
+
+.rm {
+  container-type: inline-size;
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  gap: 10px;
+  min-width: 0;
+}
+
+/* A dashboard can be wide: past this, bigger cells only spread the counts apart. */
+.rm--heatmap {
+  max-width: 860px;
+}
+
+/* ------------------------------------------------------------------ the grid */
+
+.rm-board {
+  display: grid;
+  grid-template-columns: auto minmax(0, 1fr);
+  gap: 6px;
+  align-items: stretch;
+}
+
+.rm-axis-title {
+  font-size: var(--sj-text-xs);
+  font-weight: 700;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: var(--sj-text-subtle);
+}
+
+.rm-axis-title--x {
+  display: none;
+  grid-column: 2;
+  text-align: center;
+}
+
+.rm-axis-title--y {
+  writing-mode: vertical-rl;
+  transform: rotate(180deg);
+  text-align: center;
+  /* Centre it on the cells, below the column headings. */
+  padding-bottom: 0;
+  margin-top: 42px;
+}
+
+.rm-grid {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  min-width: 0;
+}
+
+.rm-row {
+  display: grid;
+  grid-template-columns: minmax(64px, 0.95fr) repeat(5, minmax(0, 1fr));
+  gap: 4px;
+}
+
+.rm-row--head {
+  align-items: end;
+}
+
+.rm-corner {
+  display: flex;
+  align-items: flex-end;
+  justify-content: flex-end;
+  padding: 0 6px 4px 0;
+}
+
+.rm-colhead,
+.rm-rowhead {
+  display: flex;
+  gap: 2px;
+  min-width: 0;
+  font-size: var(--sj-text-xs);
+  line-height: 1.2;
+  color: var(--sj-text-muted);
+  overflow-wrap: break-word;
+  cursor: default;
+}
+
+.rm-colhead {
+  flex-direction: column;
+  align-items: center;
+  justify-content: flex-end;
+  padding: 0 2px 4px;
+  text-align: center;
+}
+
+.rm-rowhead {
+  align-items: center;
+  justify-content: flex-end;
+  gap: 6px;
+  padding-right: 6px;
+  text-align: right;
+}
+
+.rm-level-num {
+  display: inline-grid;
+  place-items: center;
+  flex: none;
+  min-width: 18px;
+  height: 18px;
+  padding: 0 4px;
+  border-radius: var(--sj-radius-pill);
+  background: var(--sj-surface-sunken);
+  color: var(--sj-text-subtle);
+  font-size: 10px;
+  font-weight: 700;
+  font-variant-numeric: tabular-nums;
+}
+
+.rm-cell {
+  --rm-color: var(--sj-text-subtle);
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 1px;
+  min-width: 0;
+  min-height: 46px;
+  padding: 4px 2px;
+  border-radius: var(--sj-radius-sm);
+  border: 1px solid color-mix(in oklab, var(--rm-color) 26%, transparent);
+  background: color-mix(in oklab, var(--rm-color) var(--sj-mix-tint), var(--sj-surface));
+  color: color-mix(in oklab, var(--rm-color) 66%, var(--sj-text));
+  outline: none;
+  user-select: none;
+  transition: background-color var(--sj-fast) var(--sj-ease), box-shadow var(--sj-fast) var(--sj-ease),
+    border-color var(--sj-fast) var(--sj-ease);
+}
+
+.rm-cell--interactive {
+  cursor: pointer;
+}
+
+.rm-cell--interactive:hover {
+  background: color-mix(in oklab, var(--rm-color) calc(var(--sj-mix-tint) + 14%), var(--sj-surface));
+  border-color: color-mix(in oklab, var(--rm-color) 55%, transparent);
+}
+
+.rm-cell:focus-visible {
+  box-shadow: var(--sj-ring);
+  border-color: var(--sj-accent);
+}
+
+.rm-cell--draft {
+  border-color: color-mix(in oklab, var(--rm-color) 60%, transparent);
+}
+
+.rm-cell[aria-selected='true'] {
+  background: color-mix(in oklab, var(--rm-color) calc(var(--sj-mix-tint) + 32%), var(--sj-surface));
+  border-color: var(--rm-color);
+  box-shadow: inset 0 0 0 1px var(--rm-color);
+  color: color-mix(in oklab, var(--rm-color) 52%, var(--sj-text));
+}
+
+.rm-cell[aria-selected='true']:focus-visible {
+  box-shadow: inset 0 0 0 1px var(--rm-color), var(--sj-ring);
+}
+
+.rm-cell__rating {
+  max-width: 100%;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+}
+
+.rm-cell__score {
+  font-size: var(--sj-text-sm);
+  font-weight: 600;
+  font-variant-numeric: tabular-nums;
+  opacity: 0.85;
+}
+
+.rm-cell[aria-selected='true'] .rm-cell__score {
+  opacity: 1;
+}
+
+.rm-cell__mark {
+  position: absolute;
+  top: 3px;
+  right: 3px;
+  display: grid;
+  place-items: center;
+  width: 16px;
+  height: 16px;
+  border-radius: 50%;
+  background: var(--rm-color);
+  color: #fff;
+}
+
+:host([data-sj-theme='dark']) .rm-cell__mark {
+  color: #15151b;
+}
+
+/* The risk before controls, on the residual risk's matrix. */
+.rm-ghost {
+  position: absolute;
+  inset: 4px;
+  border: 2px dashed color-mix(in oklab, var(--sj-text) 50%, transparent);
+  border-radius: calc(var(--sj-radius-sm) - 2px);
+  pointer-events: none;
+}
+
+.rm-arrow {
+  position: absolute;
+  inset: 0;
+  overflow: visible;
+  pointer-events: none;
+  color: color-mix(in oklab, var(--sj-text) 62%, transparent);
+}
+
+.rm-arrow line {
+  stroke: currentColor;
+  stroke-width: 2;
+  stroke-linecap: round;
+}
+
+/* Keeps the arrow readable where it crosses a cell's text. */
+.rm-arrow .rm-arrow__halo {
+  stroke: var(--sj-surface);
+  stroke-width: 6;
+  opacity: 0.75;
+}
+
+.rm-arrow polygon {
+  fill: currentColor;
+}
+
+/* Heatmap: the fuller a cell, the deeper its tint. */
+.rm--heatmap .rm-cell:not(.rm-cell--empty) {
+  background: color-mix(in oklab, var(--rm-color) calc(var(--sj-mix-tint) + var(--rm-heat, 0) * 30%), var(--sj-surface));
+  border-color: color-mix(in oklab, var(--rm-color) 45%, transparent);
+}
+
+.rm--heatmap .rm-cell--interactive:not(.rm-cell--empty):hover {
+  background: color-mix(in oklab, var(--rm-color) calc(var(--sj-mix-tint) + var(--rm-heat, 0) * 30% + 10%), var(--sj-surface));
+}
+
+.rm-count {
+  font-size: var(--sj-text-lg);
+  font-weight: 700;
+  font-variant-numeric: tabular-nums;
+}
+
+.rm-cell--empty {
+  background: color-mix(in oklab, var(--rm-color) calc(var(--sj-mix-tint) / 2.5), var(--sj-surface));
+  border-color: color-mix(in oklab, var(--rm-color) 14%, transparent);
+  color: var(--sj-text-subtle);
+}
+
+.rm-cell--empty .rm-count {
+  font-weight: 500;
+}
+
+.rm--readonly .rm-cell {
+  cursor: default;
+}
+
+/* ------------------------------------------------------------------ hints, controls, result */
+
+.rm-hint {
+  display: flex;
+  flex-direction: column;
+  gap: 1px;
+  min-height: 3.6em;
+  margin: 0;
+  padding: 6px 10px;
+  border-radius: var(--sj-radius);
+  background: var(--sj-surface-sunken);
+  color: var(--sj-text-muted);
+  font-size: var(--sj-text-sm);
+  line-height: 1.4;
+}
+
+.rm-hint strong {
+  color: var(--sj-text);
+  font-weight: 600;
+}
+
+.rm-hint__empty {
+  align-self: flex-start;
+  margin: auto 0;
+}
+
+.rm-controls {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: flex-end;
+  gap: 10px;
+}
+
+.rm-select {
+  display: flex;
+  flex-direction: column;
+  gap: 3px;
+  flex: 1 1 150px;
+  min-width: 0;
+}
+
+.rm-select__label {
+  font-size: var(--sj-text-xs);
+  font-weight: 600;
+  color: var(--sj-text-muted);
+}
+
+.rm-select select {
+  padding-right: 6px;
+}
+
+.rm-clear {
+  flex: none;
+}
+
+.rm-result {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  min-height: 24px;
+}
+
+.rm-result__line {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 8px;
+}
+
+.rm-result__score {
+  font-weight: 650;
+  font-variant-numeric: tabular-nums;
+}
+
+.rm-result__levels {
+  color: var(--sj-text-muted);
+}
+
+.rm-response {
+  margin: 0;
+  color: var(--sj-text-muted);
+  font-size: var(--sj-text-sm);
+}
+
+.rm-compare {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin: 0;
+  color: var(--sj-text-muted);
+  font-size: var(--sj-text-sm);
+}
+
+.rm-compare__key {
+  flex: none;
+  width: 18px;
+  height: 14px;
+  border: 2px dashed color-mix(in oklab, var(--sj-text) 50%, transparent);
+  border-radius: 3px;
+}
+
+/* ------------------------------------------------------------------ heatmap summary and lists */
+
+.rm-summary {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.rm-summary__counts {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 4px 14px;
+  flex: 1;
+  min-width: 0;
+  font-size: var(--sj-text-sm);
+  color: var(--sj-text-muted);
+  font-variant-numeric: tabular-nums;
+}
+
+.rm-summary__total {
+  font-weight: 650;
+  color: var(--sj-text);
+}
+
+.rm-summary__rating {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+}
+
+.rm-summary__error {
+  color: var(--sj-danger);
+}
+
+.rm-dot {
+  --rm-color: var(--sj-text-subtle);
+  width: 9px;
+  height: 9px;
+  border-radius: 3px;
+  background: var(--rm-color);
+}
+
+.rm-limit {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  margin: 0;
+  color: var(--sj-text-subtle);
+  font-size: var(--sj-text-sm);
+}
+
+.rm-list {
+  display: flex;
+  flex-direction: column;
+  min-height: 0;
+  max-height: inherit;
+}
+
+.rm-list__head {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 10px 12px 8px;
+  border-bottom: 1px solid var(--sj-border);
+}
+
+.rm-list__title {
+  flex: 1;
+  min-width: 0;
+  font-weight: 600;
+  font-size: var(--sj-text-sm);
+}
+
+.rm-list__items {
+  margin: 0;
+  padding: 6px;
+  overflow-y: auto;
+  list-style: none;
+}
+
+.rm-list__link {
+  display: block;
+  padding: 7px 8px;
+  border-radius: var(--sj-radius-sm);
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.rm-list__link:hover {
+  background: var(--sj-hover);
+}
+
+/* ------------------------------------------------------------------ narrow forms */
+
+@container (max-width: 460px) {
+  .rm-cell__rating {
+    display: none;
+  }
+
+  .rm-cell {
+    min-height: 40px;
+  }
+
+  .rm-row {
+    grid-template-columns: 62px repeat(5, minmax(0, 1fr));
+  }
+
+  .rm-rowhead .rm-level-num {
+    display: none;
+  }
+
+  .rm-rowhead {
+    font-size: 10px;
+    padding-right: 4px;
+  }
+
+  /* Consequence names turn to read upwards; the axis title moves above the grid. */
+  .rm-colhead .rm-level-name {
+    writing-mode: vertical-rl;
+    transform: rotate(180deg);
+    white-space: nowrap;
+    font-size: 10px;
+  }
+
+  .rm-corner .rm-axis-title {
+    display: none;
+  }
+
+  .rm-axis-title--x {
+    display: block;
+  }
+}
