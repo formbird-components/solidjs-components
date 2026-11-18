@@ -1,0 +1,7 @@
+{
+  "name": "@solidjs-components-procurement/proc-kit",
+  "version": "0.1.0",
+  "private": true,
+  "description": "Procurement logic shared by this repo's elements, its rulesets (embedded as source) and the demo seed: who approves a purchase by amount, quotes needed and their problems, the cost centre budget position, invoice matching, and the financial year.",
+  "type": "module"
+}

@@ -54,6 +54,7 @@ export interface StatTile {
 }
 
 export interface StatTilesDefinition extends BaseDefinition {
+  /** The tiles: each an Elasticsearch count with its label, tone, hint and link. */
   tiles?: StatTile[];
   /** Count again every N seconds (0: only on load, on save and on refresh). */
   refreshSeconds?: number;

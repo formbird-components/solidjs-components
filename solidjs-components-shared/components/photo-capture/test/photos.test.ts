@@ -107,3 +107,25 @@ describe('stored files', () => {
     expect(removeEntry(list, 'zz')).toEqual(list);
   });
 });
+
+describe('documents', () => {
+  it('sets and clears a document type, leaving other fields alone', async () => {
+    const { patchEntry } = await import('../src/photos');
+    const list = [{ fileNo: 'a', fileName: 'quote.pdf', caption: 'Acme quote' }];
+    const typed = patchEntry(list, 'a', { kind: 'Quote' });
+    expect(typed[0]).toEqual({ fileNo: 'a', fileName: 'quote.pdf', caption: 'Acme quote', kind: 'Quote' });
+    expect(patchEntry(typed, 'a', { kind: '' })[0]).toEqual(list[0]);
+    expect(patchEntry(typed, 'a', { kind: 'Quote' })).not.toBe(typed);
+  });
+
+  it('tells PDFs apart and counts documents', async () => {
+    const { countText, isPdfEntry } = await import('../src/photos');
+    expect(isPdfEntry({ fileNo: 'a', fileName: 'INV-1042.PDF' })).toBe(true);
+    expect(isPdfEntry({ fileNo: 'a', fileName: 'scan', fileType: 'pdf' })).toBe(true);
+    expect(isPdfEntry({ fileNo: 'a', fileName: 'x', mimeDetailsObj: { contentType: 'application/pdf' } })).toBe(true);
+    expect(isPdfEntry({ fileNo: 'a', fileName: 'photo.jpg' })).toBe(false);
+    expect(countText([{ fileNo: 'a', fileName: 'a.pdf' }, { fileNo: 'b', fileName: 'b.jpg' }], true)).toBe('2 documents');
+    expect(countText([], true)).toBe('No documents yet');
+  });
+});
+

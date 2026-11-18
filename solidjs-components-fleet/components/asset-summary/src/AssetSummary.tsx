@@ -46,6 +46,7 @@ export interface AssetSummaryFields {
 }
 
 export interface AssetSummaryDefinition extends BaseDefinition {
+  /** Paths on the asset for what the header shows (ID, make, model, registration, meter, service due…), over the fleet defaults. */
   fields?: Partial<AssetSummaryFields>;
   /** Quick actions; `{ "$asset": { … } }` in `values` puts this asset on the new document (see RecordAction). */
   actions?: RecordAction[];

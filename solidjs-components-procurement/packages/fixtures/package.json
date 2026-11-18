@@ -1,0 +1,7 @@
+{
+  "name": "@solidjs-components-procurement/fixtures",
+  "version": "0.1.0",
+  "private": true,
+  "description": "A small procurement data set (people, two cost centres with budgets and requests, suppliers, quotes) and component definitions for the preview and the browser test, in the demo's data model. Built as a test-only bundle (global ProcFixtures); never deployed.",
+  "type": "module"
+}

@@ -85,14 +85,17 @@ export interface MapLayer {
 export interface MapDefinition extends BaseDefinition {
   /** "layers" (default): show documents; "point": edit this field's point; "area": edit this field's boundary. */
   mode?: 'layers' | 'point' | 'area';
+  /** Layers mode: the searches drawn on the map (assets, sites…), with their popups and actions. */
   layers?: MapLayer[];
   /** CSS height (default 440px, or 320px when editing). */
   height?: string;
   /** [lon, lat] when there is nothing to fit to (default Sydney). */
   center?: LonLat;
+  /** Zoom when there is nothing to fit to (default 11 for layers, 15 for a point or area). */
   zoom?: number;
   /** XYZ tile URL (default OpenStreetMap) and its attribution. */
   tileUrl?: string;
+  /** Attribution shown for `tileUrl`. */
   tileAttribution?: string;
   /** Show the list of features beside the map (layers mode; default true when wide). */
   showList?: boolean;

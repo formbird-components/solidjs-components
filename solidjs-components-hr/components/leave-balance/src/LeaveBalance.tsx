@@ -42,8 +42,11 @@ export interface LeaveBalanceDefinition extends BaseDefinition {
   leaveTypes?: LeaveTypeValue[];
   /** Request mode: fields of the request. Defaults employeeRel, leaveTypeRel, startDate, daysNum. Read once. */
   employeeField?: string;
+  /** The request's leave type (default "leaveTypeRel"). */
   typeField?: string;
+  /** The request's first day (default "startDate"). */
   startField?: string;
+  /** The request's working days, as `<solid-date-range>` writes them (default "daysNum"). */
   daysField?: string;
   /** Request mode: field the days available on the first day are written to, for the client rule. */
   availableField?: string;
@@ -51,7 +54,9 @@ export interface LeaveBalanceDefinition extends BaseDefinition {
   person?: 'me' | 'document';
   /** Fields on the person's account: the opening balance per balance key, its day, and FTE. */
   openingFields?: Record<string, string>;
+  /** The day of the opening balances (default "balanceDate"). */
   sinceField?: string;
+  /** The person's FTE, for pro rata accrual (default "fteNum"). */
   fteField?: string;
   /** Elasticsearch request for the person's leave; `{{employeeId}}` is the person. Default: their leave in the HR app. */
   leaveFilter?: string | Record<string, unknown>;

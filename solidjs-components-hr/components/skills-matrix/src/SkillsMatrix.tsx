@@ -35,13 +35,17 @@ export interface SkillsMatrixDefinition extends BaseDefinition {
   filter?: string | Record<string, unknown>;
   /** Paths on a certificate: its person's id, its type's id, expiry and issue dates. */
   personField?: string;
+  /** The certificate type's id (default "certTypeRel.documentId"). */
   typeField?: string;
+  /** The expiry date (default "expiryDate"). */
   expiryField?: string;
+  /** The issue date (default "issuedDate"). */
   issuedField?: string;
   /** Path on a person to the type ids their position requires ("positionRel.requiredCertIds"). */
   requiredField?: string;
   /** Group people by this path ("teamRel.name"), and a second line under each name ("jobTitle"). */
   groupField?: string;
+  /** A second line under each name ("jobTitle"). */
   detailField?: string;
   /** Field of a type with its short name for the header ("shortName"). */
   shortField?: string;
@@ -51,6 +55,7 @@ export interface SkillsMatrixDefinition extends BaseDefinition {
   templateId?: string;
   /** What a new certificate keeps of its person and type besides documentId and name. */
   personValueFields?: Record<string, string>;
+  /** What a new certificate keeps of its type besides documentId and name. */
   typeValueFields?: Record<string, string>;
   /** Show only people with something to fix at first. Default false. */
   gapsOnly?: boolean;
@@ -79,7 +84,7 @@ const ACTIVE_ACCOUNTS = {
   sort: [{ 'systemHeader.summaryName': 'asc' }],
   query: { bool: { filter: [{ term: { 'systemHeader.systemType': 'account' } }], must_not: [{ term: { inactiveBool: true } }] } },
 };
-const CERTIFICATES = { query: { bool: { filter: [{ term: { appTags: 'hr' } }, { term: { appTags: 'certificate' } }] } } };
+const CERTIFICATES = { query: { bool: { filter: [{ term: { 'systemHeader.systemType': 'document' } }, { term: { appTags: 'hr' } }, { term: { appTags: 'certificate' } }] } } };
 const text = (value: unknown) => (value === null || value === undefined ? '' : String(value));
 const first = (doc: unknown, path: string) => pathValues(doc, path)[0];
 const monthYear = (iso: string) => new Date(iso).toLocaleDateString(undefined, { month: 'short', year: '2-digit' });

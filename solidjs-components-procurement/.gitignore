@@ -1,0 +1,8 @@
+node_modules/
+dist/
+dist-dev/
+.smoke/
+*.log
+.DS_Store
+.vite/
+coverage/

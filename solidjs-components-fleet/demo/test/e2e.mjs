@@ -11,7 +11,7 @@ import { connectDemo } from '@solidjs-components/platform/e2e';
 
 const { T, ASSET_VALUE_FIELDS, TIME_ZONE, DEMO_PASSWORD } = await import('../lib/model.mjs');
 const { hireCost } = await import('../../packages/fleet-kit/src/logic/booking.ts');
-const { lineTotals } = await import('../../packages/fleet-kit/src/logic/money.ts');
+const { lineTotals } = await import('../../../solidjs-components-shared/packages/kit/src/domain/money.ts');
 const { nextServiceDue } = await import('../../packages/fleet-kit/src/logic/service.ts');
 
 const HOUR = 3_600_000;

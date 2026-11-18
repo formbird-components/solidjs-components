@@ -33,7 +33,9 @@ export interface DateRangeDefinition extends BaseDefinition {
   mode?: 'datetime' | 'days';
   /** Field the end is written to; this element's own field holds the start. */
   endField: string;
+  /** Label of the start (default "Starts"). */
   startLabel?: string;
+  /** Label of the end (default "Ends"). */
   endLabel?: string;
   /** What the range is of, in the messages: "The booking must end after it starts" (default "booking", or "leave" for days). */
   noun?: string;
@@ -66,6 +68,7 @@ export interface DateRangeDefinition extends BaseDefinition {
   workDays?: number[];
   /** Offer half days: "Starts at midday" and "Ends at midday", written to these boolean fields. */
   startHalfField?: string;
+  /** Boolean field: the last day ends at midday. */
   endHalfField?: string;
   /** Field the working-day count is written to (e.g. "daysNum"), so other fields and rules can use it. */
   daysField?: string;

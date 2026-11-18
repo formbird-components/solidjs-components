@@ -1,0 +1,10 @@
+{
+  "name": "@solidjs-components-procurement/quote-compare",
+  "version": "0.1.0",
+  "private": true,
+  "description": "<solid-quote-compare>: a purchase request's supplier quotes side by side: amount against the cheapest, lead time, validity, approved supplier, the quote document; how many quotes the amount needs; choose one; add a quote.",
+  "type": "module",
+  "formbird": {
+    "tag": "solid-quote-compare"
+  }
+}

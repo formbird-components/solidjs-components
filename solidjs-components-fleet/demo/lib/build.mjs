@@ -15,7 +15,7 @@ import { appDocuments, boxRing, companyClock, iso, pointGeo, polygonGeo, random,
 import { hireCost, hireHours } from '../../packages/fleet-kit/src/logic/booking.ts';
 import { checklistOutcome } from '../../../solidjs-components-shared/packages/kit/src/domain/checklist.ts';
 import { fuelCheck } from '../../packages/fleet-kit/src/logic/meter.ts';
-import { lineTotals } from '../../packages/fleet-kit/src/logic/money.ts';
+import { lineTotals } from '../../../solidjs-components-shared/packages/kit/src/domain/money.ts';
 import { nextServiceDue, serviceWarning } from '../../packages/fleet-kit/src/logic/service.ts';
 import {
   ASSET_TYPES, ASSETS, CHECK_SHEETS, DESTINATIONS, IN_WORKSHOP, LOCATIONS, LOOKUP_VALUES, MATERIALS, PEOPLE, POOLS, SERVICE_PLANS, STATUSES,

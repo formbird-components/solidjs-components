@@ -1,0 +1,10 @@
+{
+  "name": "@solidjs-components-procurement/budget-check",
+  "version": "0.1.0",
+  "private": true,
+  "description": "<solid-budget-check>: a cost centre's budget for the financial year: spent, committed, waiting for approval and what is left, as a bar with the request on it. On a request: whether it fits, and the finance override it needs when it doesn't. On a page: every cost centre against how far through the year it is.",
+  "type": "module",
+  "formbird": {
+    "tag": "solid-budget-check"
+  }
+}

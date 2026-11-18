@@ -41,7 +41,9 @@ export interface ItemsSource {
 export interface ChecklistDefinition extends BaseDefinition {
   /** "answer" (default): answer the checks; "define": edit the checks themselves (a check sheet, a service plan's tasks). */
   mode?: 'answer' | 'define';
+  /** The checks, when the definition lists them. */
   items?: CheckDefinition[];
+  /** Or: read the checks from a check sheet document this record points to (e.g. through its asset). */
   itemsFrom?: ItemsSource;
   /** A failed check needs a comment (default true). */
   commentOnFail?: boolean;

@@ -102,6 +102,7 @@ export * from './domain/lookups';
 export * from './domain/checklist';
 export * from './domain/range';
 export * from './domain/approval';
+export * from './domain/money';
 
 // UI
 export {

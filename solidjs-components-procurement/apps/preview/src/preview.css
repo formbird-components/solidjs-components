@@ -1,0 +1,80 @@
+:root {
+  color-scheme: light;
+  font-family: Inter, system-ui, sans-serif;
+}
+
+body {
+  margin: 0;
+  background: #f3f3f7;
+  color: #1b1b24;
+}
+
+body.dark-theme {
+  color-scheme: dark;
+  background: #121218;
+  color: #ececf3;
+}
+
+.pv-bar {
+  position: sticky;
+  top: 0;
+  z-index: 10;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 10px 20px;
+  background: inherit;
+  border-bottom: 1px solid rgb(127 127 150 / 0.25);
+}
+
+.pv-sub {
+  color: #8a8a99;
+  font-size: 13px;
+}
+
+.pv-toggle {
+  margin-left: auto;
+  font-size: 13px;
+}
+
+.pv {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(460px, 1fr));
+  gap: 16px;
+  padding: 16px 20px 40px;
+}
+
+.pv-wide {
+  grid-column: 1 / -1;
+}
+
+.pv-card {
+  display: grid;
+  align-content: start;
+  gap: 14px;
+  min-width: 0;
+  padding: 16px;
+  border-radius: 14px;
+  background: #fff;
+  box-shadow: 0 1px 2px rgb(16 16 40 / 0.06);
+}
+
+body.dark-theme .pv-card {
+  background: #1b1b23;
+}
+
+.pv-card h2 {
+  margin: 0;
+  color: #8a8a99;
+  font-size: 12px;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+}
+
+#log {
+  min-height: 60px;
+  margin: 0;
+  white-space: pre-wrap;
+  font: 12px/1.5 ui-monospace, monospace;
+  color: #5e5e6d;
+}

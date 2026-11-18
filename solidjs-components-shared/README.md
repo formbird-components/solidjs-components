@@ -15,6 +15,7 @@ Apps live in their own repos and link to this one:
 | [solidjs-components-fleet](../solidjs-components-fleet/README.md) | Fleet and asset management: bookings, workshop, Daily Driver checks, maps | `solidjs-fleet-demo` | http://localhost:3001 | 2 |
 | [solidjs-components-whs](../solidjs-components-whs/README.md) | Work health and safety: incidents, hazards, corrective actions, inspections | `solidjs-whs-demo` | http://localhost:3002 | 3 |
 | [solidjs-components-hr](../solidjs-components-hr/README.md) | HR: leave with balances and approvals, certificates, onboarding, the org chart | `solidjs-hr-demo` | http://localhost:3004 | 5 |
+| [solidjs-components-procurement](../solidjs-components-procurement/README.md) | Procurement: purchase requests, quotes, budgets per cost centre, approvals by amount, orders and invoice matching | `solidjs-procurement-demo` | http://localhost:3005 | 6 |
 
 Check out all of them side by side in one folder. The repos find each other by relative path, and
 find fieldtec-web beside that folder (or beside any folder above it; `FIELDTEC_WEB=/path` overrides):
@@ -23,11 +24,13 @@ find fieldtec-web beside that folder (or beside any folder above it; `FIELDTEC_W
 ~/git/fieldtec-web
 ~/git/solidjs-components/
   APP-IDEAS.md                    other apps this base suits, and the elements each would need
+  COMPONENTS.md                   every element: source, bundle, a picture and its options
   solidjs-components-shared/
   solidjs-components-internal/
   solidjs-components-fleet/
   solidjs-components-whs/
   solidjs-components-hr/
+  solidjs-components-procurement/
 ```
 
 Port 3003 and Redis database 4 are taken by `react-internal` (a React front end on another database).
@@ -45,18 +48,22 @@ Port 3003 and Redis database 4 are taken by `react-internal` (a React front end 
 | [`<solid-map>`](components/map/README.md) | the `sc-*` mapping components | OpenLayers map of live searches (icons or markers in a status colour, boundaries, popups with actions), or a record's own point or boundary to set |
 | [`<solid-checklist>`](components/checklist/README.md) | `sc-check-list` | Check sheets answered Pass / Fail / N/A, grouped, with comments on failures and the sheet's result; or the checks themselves, edited |
 | [`<solid-stat-tiles>`](components/stat-tiles/README.md) | | Dashboard tiles: live counts, or days since the latest match, with tones and links |
-| [`<solid-photo-capture>`](components/photo-capture/README.md) | `sc-uploader` for photos | Photos taken or uploaded, downscaled, captioned, in a gallery with a lightbox |
+| [`<solid-photo-capture>`](components/photo-capture/README.md) | `sc-uploader` | Photos taken or uploaded, downscaled, captioned, in a gallery with a lightbox; or documents as a list with a type each (quote, invoice), PDFs previewed in the lightbox |
+| [`<solid-line-items>`](components/line-items/README.md) | | Costs line by line with kinds of the app's own (parts and labour, goods and services), a catalogue to pick from, totals per kind, subtotal, tax and total |
 | [`<solid-image-pins>`](components/image-pins/README.md) | | Numbered pins on an image: a built-in body map (front and back, named regions), a floor plan or a drawing |
 | [`<solid-date-range>`](components/date-range/README.md) | two `sc-date-time` fields | Start and end with quick durations and the time range rules; or, in days mode, first and last day, half days and working days without weekends and public holidays |
 | [`<solid-approval-chain>`](components/approval-chain/README.md) | | Who approves a record, in order: approve or reject with a comment, hand a step to someone else; the rules check every decision against the saved version |
 | [`<solid-resource-schedule>`](components/resource-schedule/README.md) | | People or assets by day: records as bars, groups with who is left against a minimum, figures per row, drag across free days to start a record |
 
 App-specific elements stay in their app's repo: `solid-issue-summary` in internal; the booking
-calendar, line items and others in fleet; the risk matrix, five whys and corrective actions in whs;
-the leave balance, skills matrix and org chart in hr. An element moves here when a second app needs
-it: the map, checklist and stat tiles came from fleet when the safety app needed them, and the date
-range when the HR app did. The approval chain and the resource schedule were built here for the HR
-app, because several of the apps in APP-IDEAS.md need them; the HR app's browser test drives them.
+calendar, asset summary and meter reading in fleet; the risk matrix, five whys and corrective actions
+in whs; the leave balance, skills matrix and org chart in hr; the budget check and quote comparison in
+procurement. An element moves here when a second app needs it: the map, checklist and stat tiles came
+from fleet when the safety app needed them, the date range when the HR app did, and the line items
+when procurement did. [COMPONENTS.md](../COMPONENTS.md) lists every element with a picture and its
+options. The approval chain and the resource schedule were built here for the HR
+app, because several of the apps in APP-IDEAS.md need them; the HR app's browser test drives them, as
+fleet's and procurement's drive the line items.
 
 ## Layout
 
@@ -88,7 +95,7 @@ kit's `RelatedPicker`.
 pnpm install
 pnpm dev            # gallery on http://localhost:5180: dark mode, simulated rulesets, host writes
 pnpm typecheck
-pnpm test           # unit tests: filters, workflow rules, icon mapping, mock Elasticsearch, map geometry, photos, body map, time ranges and working days, approval chains, schedule maths (181)
+pnpm test           # unit tests: filters, workflow rules, icon mapping, mock Elasticsearch, map geometry, photos, body map, time ranges and working days, approval chains, schedule maths, line totals (186)
 pnpm test:browser   # builds, then drives the BUILT bundles in Chrome (127 checks)
 pnpm check          # all three
 pnpm build          # dist/<name>/<name>.js

@@ -18,6 +18,8 @@ export interface PhotoEntry {
   fileType?: string;
   basePath?: string;
   caption?: string;
+  /** What the document is ("Quote", "Invoice"), when the field lists `kinds`. */
+  kind?: string;
   takenDate?: string;
   takenByRel?: PersonRef[];
   width?: number;
@@ -128,11 +130,14 @@ export function withExtension(name: string, extension: string): string {
 }
 
 /**
- * The header's count: "No photos yet", "1 photo", "4 photos", "3 photos · 1 file".
+ * The header's count: "No photos yet", "1 photo", "4 photos", "3 photos · 1 file"; in the
+ * documents list, "2 documents".
  * @param entries - Stored files
+ * @param documents - Count them all as documents (the list layout)
  * @returns The text
  */
-export function countText(entries: readonly PhotoEntry[]): string {
+export function countText(entries: readonly PhotoEntry[], documents = false): string {
+  if (documents) return entries.length ? `${entries.length} document${entries.length === 1 ? '' : 's'}` : 'No documents yet';
   const images = entries.filter(isImageEntry).length;
   const files = entries.length - images;
   const parts = [images ? `${images} photo${images === 1 ? '' : 's'}` : '', files ? `${files} file${files === 1 ? '' : 's'}` : ''].filter(Boolean);
@@ -147,11 +152,12 @@ export function countText(entries: readonly PhotoEntry[]): string {
  */
 export function newEntry(
   stored: { fileNo: string; fileName: string; fileType?: string; basePath?: string },
-  extra: { takenDate: string; takenBy?: PersonRef; width?: number; height?: number },
+  extra: { takenDate: string; takenBy?: PersonRef; width?: number; height?: number; kind?: string },
 ): PhotoEntry {
   const entry: PhotoEntry = { fileNo: stored.fileNo, fileName: stored.fileName };
   if (stored.fileType) entry.fileType = stored.fileType;
   if (stored.basePath) entry.basePath = stored.basePath;
+  if (extra.kind) entry.kind = extra.kind;
   entry.takenDate = extra.takenDate;
   if (extra.takenBy) entry.takenByRel = [{ documentId: extra.takenBy.documentId, name: extra.takenBy.name }];
   if (extra.width && extra.height) {
@@ -169,15 +175,30 @@ export function newEntry(
  * @param patch - Fields to set; an empty caption is removed
  * @returns The new list, or the same list when nothing changed
  */
-export function patchEntry(list: readonly Record<string, unknown>[], fileNo: string, patch: { caption?: string }): Record<string, unknown>[] {
+export function patchEntry(list: readonly Record<string, unknown>[], fileNo: string, patch: { caption?: string; kind?: string }): Record<string, unknown>[] {
   const index = list.findIndex((entry) => entry.fileNo === fileNo);
   if (index < 0) return [...list];
   const next = { ...list[index] };
-  const caption = patch.caption?.trim();
-  if (caption) next.caption = caption;
-  else delete next.caption;
-  if ((next.caption ?? '') === (list[index].caption ?? '')) return [...list];
+  for (const key of ['caption', 'kind'] as const) {
+    if (!(key in patch)) continue;
+    const value = patch[key]?.trim();
+    if (value) next[key] = value;
+    else delete next[key];
+  }
+  if ((next.caption ?? '') === (list[index].caption ?? '') && (next.kind ?? '') === (list[index].kind ?? '')) return [...list];
   return list.map((entry, i) => (i === index ? next : entry));
+}
+
+/**
+ * Whether a stored file is a PDF (shown in the lightbox's own viewer).
+ * @param entry - A stored file
+ * @returns True for PDFs
+ */
+export function isPdfEntry(entry: PhotoEntry): boolean {
+  const contentType = entry.mimeDetailsObj?.contentType;
+  if (typeof contentType === 'string' && contentType.includes('/')) return contentType.toLowerCase() === 'application/pdf';
+  const fileType = typeof entry.fileType === 'string' ? entry.fileType.toLowerCase().replace(/^\./, '') : '';
+  return fileType === 'pdf' || fileType === 'application/pdf' || extensionOf(entry.fileName) === 'pdf';
 }
 
 /**

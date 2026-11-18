@@ -1,7 +1,7 @@
 import { describe, expect, it } from 'vitest';
 import { hireCost, hireHours, overlaps } from '../src/logic/booking';
 import { fuelCheck, meterProblems } from '../src/logic/meter';
-import { lineTotals } from '../src/logic/money';
+import { lineTotals } from '@solidjs-components/kit';
 import { nextServiceDue, serviceRemaining, serviceWarning } from '../src/logic/service';
 
 const at = (iso: string) => new Date(iso).toISOString();
@@ -90,7 +90,7 @@ describe('lineTotals', () => {
       { id: '3', kind: 'labour', description: 'Service labour', qty: 1.5, unit: 'h', unitCost: 120 },
       { id: '4', kind: 'other', description: 'Disposal', qty: 1, unitCost: 8 },
     ]);
-    expect(totals).toEqual({ parts: 90.5, labour: 180, other: 8, subtotal: 278.5, tax: 27.85, total: 306.35, labourHours: 1.5 });
+    expect(totals).toMatchObject({ parts: 90.5, labour: 180, other: 8, subtotal: 278.5, tax: 27.85, total: 306.35, labourHours: 1.5 });
     expect(lineTotals(null).total).toBe(0);
   });
 });

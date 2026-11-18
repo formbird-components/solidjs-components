@@ -1,0 +1,7 @@
+{
+  "name": "@solidjs-components-procurement/preview",
+  "version": "0.1.0",
+  "private": true,
+  "description": "Gallery of the procurement app's elements (and the shared ones it uses) against the in-memory Formbird host (pnpm dev). Plain DOM shell: it only sets element properties, like the real host.",
+  "type": "module"
+}

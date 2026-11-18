@@ -79,7 +79,7 @@
 }
 
 .li-part {
-  display: inline-block;
+  display: block;
   margin-top: 3px;
   color: var(--sj-text-subtle);
   font-family: var(--sj-font-mono);
@@ -161,4 +161,14 @@
   margin: 0;
   color: var(--sj-text-subtle);
   font-size: var(--sj-text-xs);
+}
+
+.li-subtotal {
+  padding-top: 4px;
+  border-top: 1px dashed var(--sj-border);
+  font-weight: 600;
+}
+
+.li-subtotal dt {
+  color: var(--sj-text);
 }

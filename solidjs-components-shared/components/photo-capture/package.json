@@ -1,8 +1,8 @@
 {
   "name": "@solidjs-components/photo-capture",
-  "version": "0.1.0",
+  "version": "0.2.0",
   "private": true,
-  "description": "<solid-photo-capture>: photos (and optionally other files) on a record: take, upload or drop them, each uploads straight away (large photos scaled down first), with captions, when and by whom, and a lightbox. Stores fieldtec-web file records, and shows fieldtec-web's own file references (mode view). Replaces sc-uploader for photos.",
+  "description": "<solid-photo-capture>: photos (or, with allowFiles, any files) on a record, taken or uploaded, downscaled, captioned, in a gallery with a lightbox; or, with layout \"list\", documents as rows with a type each (quote, invoice) and PDFs previewed in the lightbox.",
   "type": "module",
   "dependencies": {
     "@solidjs-components/kit": "workspace:*",

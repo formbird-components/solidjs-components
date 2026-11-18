@@ -11,9 +11,11 @@ script that builds a demo database telling a story relative to the day you run i
 | [solidjs-components-fleet](solidjs-components-fleet/README.md) | Fleet and asset management: bookings, the workshop, Daily Driver checks, maps | `solidjs-fleet-demo`, :3001 | `olivia.bennett@example.com` (`Fleet1234!`) |
 | [solidjs-components-whs](solidjs-components-whs/README.md) | Work health and safety: incidents, hazards, corrective actions, inspections | `solidjs-whs-demo`, :3002 | `priya.raman@example.com` (`Safety1234!`) |
 | [solidjs-components-hr](solidjs-components-hr/README.md) | HR: leave with balances, approvals and minimum staffing, certificates, onboarding, the org chart | `solidjs-hr-demo`, :3004 | `sarah.mitchell@example.com` (`People1234!`) |
+| [solidjs-components-procurement](solidjs-components-procurement/README.md) | Procurement: purchase requests, quotes compared, budgets per cost centre, approvals by amount, orders and invoice matching | `solidjs-procurement-demo`, :3005 | `lachlan.ward@example.com` (`Purchase1234!`) |
 
 [APP-IDEAS.md](APP-IDEAS.md) lists twelve apps this base suits, the elements each needs, and which to
-build next.
+build next. [COMPONENTS.md](COMPONENTS.md) lists every Solid element: its source and built bundle, a
+picture, and the options its componentDefinition takes.
 
 ## Run a demo
 
@@ -22,7 +24,7 @@ You need Node.js 22+ with pnpm, a built fieldtec-web checkout beside this folder
 Elasticsearch and Redis at the hosts in fieldtec-web's `server/config/development.json`.
 
 ```sh
-cd solidjs-components-hr        # or -internal, -fleet, -whs
+cd solidjs-components-hr        # or -internal, -fleet, -whs, -procurement
 pnpm db:setup                   # install, build, deploy into fieldtec-web, write its config, seed
 pnpm demo:server                # http://localhost:3004
 ```
@@ -33,6 +35,23 @@ of its elements against an in-memory host).
 
 The pictures below were taken from the running demos by a Playwright script, signed in as the person
 named. The recordings are GIFs at 6 frames a second.
+
+## Procurement
+
+Ironbark Engineering: purchase requests line by line, quotes compared side by side (three above
+$10,000), each cost centre's budget for the year with a finance override when a request goes over,
+approvers chosen by amount, and the order, delivery and invoice match. Signed in as Lachlan Ward,
+Finance Manager.
+
+![Procurement tour: the overview, my approvals, an over-budget request with its quotes and approvals, a chosen quote that isn't the cheapest, and an invoice uploaded and previewed](docs/media/procurement/tour.gif)
+
+| | |
+|---|---|
+| **Purchasing overview**: what waits, what is over budget, to order, overdue, waiting for the invoice; every budget ![Purchasing overview](docs/media/procurement/overview.png) | **My approvals**: the laptops wait for Lachlan's finance override ![My approvals](docs/media/procurement/approvals.png) |
+| **Budget check**: 20 laptops would take IT $8,420 over its budget ![Budget check on a request](docs/media/procurement/request-budget.png) | **Approvals by amount**: the manager, then Finance's override, then the senior manager above $5,000 ![Approval chain](docs/media/procurement/request-approval.png) |
+| **Quotes**: three for $18,900, the chosen one $650 dearer than the cheapest, with the reason ![Quote comparison](docs/media/procurement/quotes.png) | **Invoice**: 10% over what was approved, and the supplier's invoice in the documents list ![Invoice and documents](docs/media/procurement/documents.png) |
+| **A PDF previewed** in the documents' lightbox ![PDF preview](docs/media/procurement/pdf-preview.png) | **Orders**: to order, deliveries to chase, invoices to match ![Orders](docs/media/procurement/orders.png) |
+| **Budgets**: every cost centre against how far through the year it is ![Budgets](docs/media/procurement/budgets.png) | |
 
 ## HR
 
@@ -94,10 +113,14 @@ Morgan, Engineering Manager.
 ```
 README.md                      this page
 APP-IDEAS.md                   twelve apps for this base, the elements each needs, what to build next
+COMPONENTS.md                  every element: source, bundle, picture, componentDefinition options
+scripts/components-md.mjs      writes COMPONENTS.md (--shots: pictures it again from the browser tests)
 docs/media/<app>/              the screenshots and recordings above
+docs/media/components/         a picture of each element, for COMPONENTS.md
 solidjs-components-shared/     kit, generic elements, tooling, demo platform
 solidjs-components-internal/   issue tracker
 solidjs-components-fleet/      fleet
 solidjs-components-whs/        safety
 solidjs-components-hr/         HR
+solidjs-components-procurement/  procurement
 ```

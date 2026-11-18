@@ -51,6 +51,7 @@ export interface ResourceScheduleDefinition extends BaseDefinition {
   rowFilter?: string | Record<string, unknown>;
   /** Row name and second line (dot paths). Default the summary name and nothing. */
   rowLabelField?: string;
+  /** Second line under a row's name (dot path). */
   rowDetailField?: string;
   /** Group rows by this path ("teamRel.name"); each group shows who is left each day. */
   groupField?: string;
@@ -65,12 +66,15 @@ export interface ResourceScheduleDefinition extends BaseDefinition {
   rowField?: string;
   /** A record's first and last day (instants read in `timeZone`). Default "startDate" / "endDate". */
   startField?: string;
+  /** A record's last day (default "endDate"). */
   endField?: string;
   /** Boolean fields: the record starts / ends at midday. */
   startHalfField?: string;
+  /** Boolean field: the record ends at midday. */
   endHalfField?: string;
   /** What a bar says and its colour (dot paths; arrays are read through). */
   labelField?: string;
+  /** A bar's colour (default: a colour from its label). */
   colorField?: string;
   /** A record's status (dot path to its name), in the tooltip. */
   statusField?: string;
@@ -81,11 +85,13 @@ export interface ResourceScheduleDefinition extends BaseDefinition {
 
   /** Time zone the days are in. Default the browser's. */
   timeZone?: string;
+  /** Public holidays: shaded, and not counted as days off ("YYYY-MM-DD" or `{ date, name }`). */
   holidays?: (string | Holiday)[];
   /** Days of the week that are worked, 0 (Sunday) to 6. Default Monday to Friday. */
   workDays?: number[];
   /** Days shown, and the lengths offered. Default 14, [14, 28]. */
   days?: number;
+  /** The lengths, in days, offered as views (default [14, 28]). */
   views?: number[];
 
   /** Template of new records: drag across free days in a row to start one. */

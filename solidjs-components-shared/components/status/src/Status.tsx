@@ -55,6 +55,7 @@ export interface StatusDefinition extends BaseDefinition, StatusAppearanceOption
    * the same rule in a PreSaveServer ruleset: this only shapes the picker.
    */
   transitionKeys?: Record<string, string | string[]>;
+  /** A second step when moving into a done status: choose a resolution (or a cancellation reason). */
   resolution?: ResolutionStep;
   hideLabel?: boolean;
 }

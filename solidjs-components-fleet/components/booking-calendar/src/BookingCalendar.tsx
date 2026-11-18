@@ -39,7 +39,9 @@ export interface BookingCalendarDefinition extends BaseDefinition, CalendarSourc
   bookingTemplateId?: string;
   /** Fields a new booking (or, in field mode, this booking) keeps its asset and times in. */
   assetField?: string;
+  /** A booking's start (default "startDate"). */
   startField?: string;
+  /** A booking's end (default "endDate"). */
   endField?: string;
   /** "day" (default) or "week". */
   view?: CalendarView;

@@ -29,8 +29,11 @@ export interface OrgChartDefinition extends BaseDefinition {
   filter?: string | Record<string, unknown>;
   /** Paths on a person: their manager's id, title, team and the team's colour. */
   managerField?: string;
+  /** A person's title (default "jobTitle"). */
   titleField?: string;
+  /** A person's team (default "teamRel.name"). */
   teamField?: string;
+  /** The team's colour (default "teamRel.color"). */
   colorField?: string;
   /** Elasticsearch request for leave covering today; its people show "On leave". */
   awayFilter?: string | Record<string, unknown>;

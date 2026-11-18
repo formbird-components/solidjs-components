@@ -11,8 +11,12 @@ This folder holds the base for building apps on Formbird (fieldtec-web) with Sol
   incidents, hazards, corrective actions and inspections.
 - [solidjs-components-hr](solidjs-components-hr/README.md): HR, app 10 below: leave with balances,
   approvals and minimum staffing, certificates, onboarding and the org chart.
+- [solidjs-components-procurement](solidjs-components-procurement/README.md): procurement, app 9
+  below: purchase requests, quotes, budgets per cost centre, approvals by amount, orders and invoice
+  matching.
 
-Screenshots and recordings of every app are in the [README](README.md).
+Screenshots and recordings of every app are in the [README](README.md), and every element, with a
+picture and its options, in [COMPONENTS.md](COMPONENTS.md).
 
 Each app is the same kind of thing: templates and rulesets in a fieldtec-web database, SolidJS
 elements on the forms, and a seed script that builds a demo database. This document lists 12 other
@@ -40,6 +44,19 @@ App 10 (HR) is built: [solidjs-components-hr](solidjs-components-hr/README.md). 
 - gave the shared checklist answer labels (Done / Blocked / N/A for onboarding tasks);
 - kept the skills matrix, org chart and leave balance in the app.
 
+App 9 (procurement) is built: [solidjs-components-procurement](solidjs-components-procurement/README.md).
+Building it:
+- moved **line items** from fleet to shared, as recommended: kinds are now the app's own (fleet keeps
+  parts and labour; procurement has goods, services and freight), with totals per kind and a
+  subtotal; `lineTotals` moved from fleet-kit to shared's kit, and fleet's rules and seed use it from
+  there;
+- reused the **approval chain** as it is: procurement's rules plan the steps (approvers by amount, a
+  finance override over budget, a procurement step for a sole or unapproved supplier);
+- did the planned `solid-attachments` as **photo capture's list layout** instead of a new element:
+  documents as rows with a type each (quote, invoice) and PDFs previewed in the lightbox, with the
+  same upload, camera and storage code;
+- kept the budget check and the quote comparison in the app.
+
 ## What every app starts with
 
 Every app below would use the generic elements already in shared:
@@ -53,15 +70,15 @@ Every app below would use the generic elements already in shared:
 | `solid-table` | Lists records with typed columns, sorting and paging in Elasticsearch, search, CSV export |
 | `solid-comments` | Comments with safe Markdown, replies, edit history and votes |
 
-Most would also use some of the elements that started in fleet (the map, checklist and stat tiles
-are now in shared):
+Most would also use some of the elements that started in fleet (the map, checklist, stat tiles, date
+range and line items are now in shared):
 
 | Element | What it does |
 |---|---|
 | `solid-map` | Records from searches on an OpenLayers map: icons, boundaries, a layer panel, popups with quick actions |
 | `solid-checklist` | Check sheets: Pass, Fail or N/A per check, grouped by category, with the sheet's result |
 | `solid-stat-tiles` | Dashboard tiles with live counts from searches |
-| `solid-line-items` | Parts and labour lines with totals and tax |
+| `solid-line-items` | Lines with kinds of the app's own (parts and labour, goods and services), totals and tax (now in shared) |
 | `solid-date-range` | Start and end with duration and validation; in days mode, working days for leave (now in shared) |
 | `solid-asset-summary` | An asset's state, meter and next service at a glance |
 | `solid-meter-reading` | Odometer or hour-meter readings checked against the last one |
@@ -194,7 +211,9 @@ Stock on hand, receipts, picks and stocktakes.
 
 ### 9. Procurement and purchase approvals
 
-Purchase requests, quotes, approvals and orders.
+Purchase requests, quotes, approvals and orders. **Built:**
+[solidjs-components-procurement](solidjs-components-procurement/README.md) (the attachments became
+photo capture's list layout).
 
 - **Reuses:** line items, stat tiles.
 - **New, shared:** approval chain (approvers by amount, who's next, delegation).
@@ -274,7 +293,7 @@ with them:
 |---|---|
 | Map | `geo`, `ol` (OpenLayers access), `actions` |
 | Checklist | `logic/checklist` (the outcome) |
-| Line items | `logic/money` (totals and tax) |
+| Line items | `logic/money` (totals and tax): moved to shared's kit as `lineTotals` |
 | Date range | `logic/booking` (time checks), `time` |
 | Stat tiles | none |
 
@@ -288,14 +307,14 @@ These new elements come up in three or more of the apps above. Build each in sha
 an app needs it.
 
 Built so far: photo capture and image pins (for app 3), the approval chain and the resource schedule
-(for app 10).
+(for app 10). Photo capture's list layout (for app 9) covers documents and PDFs.
 
 | Element | Apps | What it does |
 |---|---|---|
-| `solid-photo-capture` | 1, 2, 3, 4, 5, 6, 7, 11 | Take or attach photos, with a caption each (**built**) |
+| `solid-photo-capture` | 1, 2, 3, 4, 5, 6, 7, 9, 11 | Take or attach photos, with a caption each; or documents with a type each, PDFs previewed (**built**) |
 | `solid-signature` | 1, 2, 5, 11, 12 | Sign on screen; saves the image, the name and the time |
 | `solid-resource-schedule` | 1, 10, 11, 12 | People or assets × time, drag to assign. The dispatch board, leave calendar, roster and hire availability are this element configured differently. Fleet's booking calendar could be rebuilt on it. (**Built**, by day; the dispatch board will need hours and dragging existing records.) |
-| `solid-approval-chain` | 5, 9, 10 | Approvers chosen by rules (amount, type), who's next, delegation, history (**built**) |
+| `solid-approval-chain` | 5, 9, 10 | Approvers chosen by rules (amount, type), who's next, delegation, history (**built**, used by apps 9 and 10) |
 | `solid-sla-clock` | 1, 4, 7 | Time left to respond and to resolve, counting business hours only |
 | `solid-image-pins` | 3, 4, 5 | Pins on an image. The body map, floor plan and drawing pins are this element with a different image. (**Built**) |
 | `solid-barcode-scan` | 4, 8, 11 | Scan a barcode or QR code with the camera to fill a field or open a record |
@@ -306,8 +325,8 @@ Built so far: photo capture and image pins (for app 3), the approval chain and t
 **Field service (app 1).** Of the 12, it still has the most to start from, and it builds the most
 for later apps:
 
-- It reuses five of fleet's elements: map, checklist, stat tiles, line items and date range. All but
-  line items are in shared now; building it moves line items too.
+- It reuses five of fleet's elements: map, checklist, stat tiles, line items and date range. All five
+  are in shared now.
 - Of the eight shared elements above it needs five: photo capture and the resource schedule exist
   (the schedule would gain hours and dragging a job onto a person, as the dispatch board); it builds
   the signature, the SLA clock and address lookup.
@@ -315,4 +334,4 @@ for later apps:
   order → completion), so the rulesets can follow the same pattern.
 
 After it, inspections (app 2) would need no new shared elements, and facilities (app 4) only barcode
-scan. Procurement (app 9) could now reuse the approval chain as it is, with approvers by amount.
+scan. Inventory (app 8) now has procurement to raise its purchase requests in.

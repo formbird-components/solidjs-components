@@ -8,9 +8,11 @@
 //
 //   SOLID_RUNTIME=/path/to/solid-vendor.umd.js   run on another Solid 2 runtime build (AMD simulation
 //                                                then off unless SIMULATE_AMD=1)
+//   ELEMENT_SHOTS=/path/to/dir                   instead of the checks: a PNG of each element as the
+//                                                page first shows it, and its componentDefinition (JSON)
 
 import http from 'node:http';
-import { existsSync, readFileSync } from 'node:fs';
+import { existsSync, mkdirSync, readFileSync, writeFileSync } from 'node:fs';
 import path from 'node:path';
 import { createRequire } from 'node:module';
 import { listComponents, sharedRoot } from './repo.mjs';
@@ -183,6 +185,13 @@ ${spec.pageScript}
       check(`<${tag}> sets fb-component-version=${expected}`, actual === expected, `got ${actual}`);
     }
 
+    // ELEMENT_SHOTS=<dir>: a picture of each element as the page first shows it, with the
+    // componentDefinition it was given (for COMPONENTS.md), instead of the checks.
+    if (process.env.ELEMENT_SHOTS) {
+      await elementShots(tab, spec.components, path.resolve(process.env.ELEMENT_SHOTS));
+      return true;
+    }
+
     await spec.run(kit);
 
     check('no console errors, warnings or page errors', problems.length === 0, problems.join('\n      '));
@@ -196,4 +205,38 @@ ${spec.pageScript}
   const failed = results.filter((r) => !r.ok);
   console.log(`\n${results.length - failed.length}/${results.length} checks passed`);
   return failed.length === 0;
+}
+
+/**
+ * Saves `<tag>--<id>.png` (the element) and `<tag>--<id>.json` (its componentDefinition) for every
+ * element of the spec on the page. The page gets Inter (the theme's font hook), as the README media do.
+ * @param {import('playwright').Page} tab
+ * @param {string[]} tags
+ * @param {string} dir
+ */
+async function elementShots(tab, tags, dir) {
+  mkdirSync(dir, { recursive: true });
+  await tab.addStyleTag({ url: 'https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap' }).catch(() => {});
+  await tab.addStyleTag({ content: "body { --sj-theme-font: 'Inter', sans-serif; font-family: 'Inter', sans-serif; background: #fff; }" });
+  await tab.waitForTimeout(2500);
+  const found = await tab.evaluate(
+    (list) =>
+      list.flatMap((tag) =>
+        [...document.querySelectorAll(tag)].map((el, i) => {
+          if (!el.id) el.id = `shot-${tag}-${i}`;
+          return { tag, id: el.id, definition: el.componentDefinition ?? null };
+        }),
+      ),
+    tags,
+  );
+  for (const { tag, id, definition } of found) {
+    const name = `${tag}--${id.replace(/^x-/, '')}`;
+    const el = tab.locator(`#${id}`);
+    await el.scrollIntoViewIfNeeded().catch(() => {});
+    const box = await el.boundingBox();
+    if (!box || box.width < 2 || box.height < 2) continue;
+    await el.screenshot({ path: path.join(dir, `${name}.png`) });
+    writeFileSync(path.join(dir, `${name}.json`), JSON.stringify(definition, null, 2));
+    console.log(`  shot ${name}`);
+  }
 }

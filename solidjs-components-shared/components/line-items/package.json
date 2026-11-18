@@ -1,0 +1,15 @@
+{
+  "name": "@solidjs-components/line-items",
+  "version": "0.2.0",
+  "private": true,
+  "description": "<solid-line-items>: costs line by line (a work order's parts and labour, a purchase's goods, services and freight): kinds, a catalogue to pick from, quantities and unit costs, totals per kind, subtotal, tax and total from the kit's lineTotals.",
+  "type": "module",
+  "dependencies": {
+    "@solidjs-components/kit": "workspace:*",
+    "@solidjs/web": "catalog:",
+    "solid-js": "catalog:"
+  },
+  "formbird": {
+    "tag": "solid-line-items"
+  }
+}

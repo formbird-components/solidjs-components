@@ -1,0 +1,358 @@
+/* <solid-budget-check>: a request's card (bar, figures, verdict), or a row per cost centre. */
+
+.bc {
+  --bc-spent: color-mix(in oklab, var(--sj-text) 62%, var(--sj-accent));
+  --bc-committed: color-mix(in oklab, var(--sj-accent) 70%, var(--sj-surface));
+  --bc-pending: var(--sj-warning);
+  --bc-amount: var(--sj-success);
+  --bc-over: var(--sj-danger);
+  display: grid;
+  gap: 10px;
+  min-width: 0;
+}
+
+.bc-hint {
+  margin: 0;
+  color: var(--sj-text-muted);
+  font-size: var(--sj-text-sm);
+}
+
+.bc-card {
+  display: grid;
+  gap: 10px;
+  padding: 12px 14px;
+  border: 1px solid var(--sj-border);
+  border-radius: var(--sj-radius-lg);
+  background: var(--sj-surface-raised);
+  box-shadow: var(--sj-shadow-sm);
+}
+
+.bc-head {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 4px 12px;
+}
+
+.bc-name {
+  display: inline-flex;
+  align-items: baseline;
+  gap: 8px;
+  font-weight: 650;
+}
+
+.bc-code {
+  padding: 1px 6px;
+  border-radius: var(--sj-radius-sm);
+  background: var(--sj-surface-sunken);
+  color: var(--sj-text-muted);
+  font-family: var(--sj-font-mono);
+  font-size: var(--sj-text-xs);
+  font-weight: 600;
+}
+
+.bc-fy {
+  color: var(--sj-text-muted);
+  font-size: var(--sj-text-sm);
+  font-variant-numeric: tabular-nums;
+}
+
+/* ------------------------------------------------------------------ the bar */
+
+.bc-bar {
+  position: relative;
+  display: flex;
+  height: 14px;
+  border-radius: var(--sj-radius-pill);
+  background: var(--sj-surface-sunken);
+  overflow: visible;
+}
+
+.bc-bar > span:not(.bc-bar__budget):not(.bc-bar__year) {
+  height: 100%;
+  transition: width var(--sj-medium) var(--sj-ease);
+}
+
+.bc-bar > span:first-child {
+  border-radius: var(--sj-radius-pill) 0 0 var(--sj-radius-pill);
+}
+
+.bc-bar__spent {
+  background: var(--bc-spent);
+}
+
+.bc-bar__committed {
+  background: var(--bc-committed);
+}
+
+.bc-bar__pending {
+  background: repeating-linear-gradient(135deg, color-mix(in oklab, var(--bc-pending) 55%, transparent) 0 4px, color-mix(in oklab, var(--bc-pending) 22%, transparent) 4px 8px);
+}
+
+.bc-bar__amount {
+  background: var(--bc-amount);
+}
+
+.bc-bar__over {
+  background: repeating-linear-gradient(135deg, var(--bc-over) 0 5px, color-mix(in oklab, var(--bc-over) 65%, white) 5px 10px);
+}
+
+/* The end of the budget (when the bar runs past it) and how far through the year it is. */
+.bc-bar__budget {
+  position: absolute;
+  top: -4px;
+  bottom: -4px;
+  width: 2px;
+  margin-left: -1px;
+  background: var(--sj-text);
+  border-radius: 1px;
+}
+
+.bc-bar__year {
+  position: absolute;
+  top: -3px;
+  bottom: -3px;
+  width: 0;
+  border-left: 2px dashed color-mix(in oklab, var(--sj-text-muted) 70%, transparent);
+}
+
+/* ------------------------------------------------------------------ figures */
+
+.bc-legend {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(110px, 1fr));
+  gap: 8px 14px;
+  margin: 0;
+}
+
+.bc-legend__item {
+  --bc-dot: var(--sj-text-subtle);
+  display: grid;
+  gap: 1px;
+}
+
+.bc-legend__item dt {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  color: var(--sj-text-muted);
+  font-size: var(--sj-text-xs);
+  font-weight: 600;
+  letter-spacing: 0.02em;
+  text-transform: uppercase;
+}
+
+.bc-legend__item dt::before {
+  content: '';
+  width: 9px;
+  height: 9px;
+  border-radius: 3px;
+  background: var(--bc-dot);
+}
+
+.bc-legend__item dd {
+  margin: 0;
+  font-size: var(--sj-text-lg);
+  font-weight: 700;
+  font-variant-numeric: tabular-nums;
+}
+
+.bc-legend__item--spent {
+  --bc-dot: var(--bc-spent);
+}
+
+.bc-legend__item--committed {
+  --bc-dot: var(--bc-committed);
+}
+
+.bc-legend__item--pending {
+  --bc-dot: var(--bc-pending);
+}
+
+.bc-legend__item--amount {
+  --bc-dot: var(--bc-amount);
+}
+
+.bc-legend__item--over {
+  --bc-dot: var(--bc-over);
+}
+
+.bc-legend__item--over dd {
+  color: var(--sj-danger);
+}
+
+.bc-legend__item--left dt::before {
+  background: var(--sj-surface-sunken);
+  box-shadow: inset 0 0 0 1px var(--sj-border-strong);
+}
+
+.bc-legend__item--negative dd {
+  color: var(--sj-danger);
+}
+
+.bc-verdict {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin: 0;
+  padding: 8px 10px;
+  border-radius: var(--sj-radius);
+  font-size: var(--sj-text-sm);
+}
+
+.bc-verdict--fits {
+  background: color-mix(in oklab, var(--sj-success) 10%, transparent);
+  color: color-mix(in oklab, var(--sj-success) 75%, var(--sj-text));
+}
+
+.bc-verdict--over {
+  background: color-mix(in oklab, var(--sj-danger) 10%, transparent);
+  color: color-mix(in oklab, var(--sj-danger) 80%, var(--sj-text));
+}
+
+/* ------------------------------------------------------------------ summary */
+
+.bc-summary-head {
+  display: flex;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 6px 16px;
+  color: var(--sj-text-muted);
+  font-size: var(--sj-text-sm);
+}
+
+.bc-key {
+  display: inline-flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 6px;
+}
+
+.bc-key__swatch {
+  display: inline-block;
+  width: 12px;
+  height: 10px;
+  margin-left: 8px;
+  border-radius: 3px;
+}
+
+.bc-key__swatch--spent {
+  background: var(--bc-spent);
+}
+
+.bc-key__swatch--committed {
+  background: var(--bc-committed);
+}
+
+.bc-key__swatch--pending {
+  background: color-mix(in oklab, var(--bc-pending) 45%, transparent);
+}
+
+.bc-key__year {
+  display: inline-block;
+  width: 0;
+  height: 12px;
+  margin-left: 8px;
+  border-left: 2px dashed var(--sj-text-muted);
+}
+
+.bc-rows {
+  display: grid;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  border: 1px solid var(--sj-border);
+  border-radius: var(--sj-radius-lg);
+  background: var(--sj-surface);
+  overflow: hidden;
+}
+
+.bc-row {
+  display: grid;
+  grid-template-columns: minmax(180px, 280px) minmax(0, 1fr) 48px 170px;
+  align-items: center;
+  gap: 14px;
+  padding: 10px 14px;
+  border-top: 1px solid var(--sj-border);
+}
+
+.bc-row:first-child {
+  border-top: 0;
+}
+
+.bc-row--over {
+  background: color-mix(in oklab, var(--sj-danger) 5%, var(--sj-surface));
+}
+
+.bc-row__name {
+  display: grid;
+  grid-template-columns: auto minmax(0, 1fr);
+  align-items: baseline;
+  gap: 2px 8px;
+  min-width: 0;
+  color: var(--sj-text);
+  font-weight: 600;
+  text-decoration: none;
+}
+
+.bc-row__name:hover .sj-truncate {
+  color: var(--sj-accent-text);
+  text-decoration: underline;
+}
+
+.bc-row__owner {
+  grid-column: 2;
+  color: var(--sj-text-subtle);
+  font-size: var(--sj-text-xs);
+  font-weight: 400;
+}
+
+.bc-row__used {
+  color: var(--sj-text-muted);
+  font-size: var(--sj-text-sm);
+  font-weight: 650;
+  text-align: right;
+  font-variant-numeric: tabular-nums;
+}
+
+.bc-row--ahead .bc-row__used {
+  color: var(--sj-warning);
+}
+
+.bc-row__left {
+  font-weight: 700;
+  text-align: right;
+  font-variant-numeric: tabular-nums;
+}
+
+.bc-row__left--negative {
+  color: var(--sj-danger);
+}
+
+.bc-row__of {
+  color: var(--sj-text-subtle);
+  font-size: var(--sj-text-xs);
+  font-weight: 500;
+}
+
+@media (max-width: 720px) {
+  .bc-row {
+    grid-template-columns: minmax(0, 1fr) auto;
+  }
+
+  .bc-row__bar {
+    grid-column: 1 / -1;
+    grid-row: 2;
+  }
+}
+
+.bc-empty {
+  margin: 0;
+  padding: var(--sj-space-4, 16px);
+  border: 1px dashed var(--sj-border);
+  border-radius: var(--sj-radius-md, 8px);
+  color: var(--sj-text-subtle);
+  font-size: var(--sj-text-sm);
+  text-align: center;
+}

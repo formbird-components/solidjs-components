@@ -24,6 +24,9 @@ files as file tiles with a download link.
 | `captions` | `true` | Show captions under the thumbnails and edit them in the lightbox. `false` hides them (stored captions are kept). |
 | `capture` | `"environment"` | The camera **Take photo** asks for: `"environment"` (the back camera) or `"user"` (the front one). `false` or `""` leaves `capture` off, so phones offer the photo library as well. |
 | `maxDimension` | `1920` | Photos longer than this on either side are scaled down to fit before they upload. `0` keeps originals. See **Scaling** below. |
+| `layout` | `"grid"` | `"list"`: documents as rows (an attachments list) instead of photo thumbnails. See **Documents** below. |
+| `kinds` | none | Document types to choose from for each file, stored as `kind`: strings (`["Quote", "Invoice"]`) or `{ value, label }` objects. Use objects when the same template has `solid-line-items`, whose `kinds` are objects: Elasticsearch can't index one field as both. |
+| `defaultKind` | the first of `kinds` | The type a new file gets. |
 | `hideLabel` | `false` | |
 | `mandatory` | `false` | Shows the required marker. fieldtec-web's own validation decides whether an empty list stops a save, and its messages show under the element, as with the other elements. |
 
@@ -106,3 +109,18 @@ Evidence that a corrective action was done, with documents too:
 ```json
 { "componentName": "solid-photo-capture", "name": "evidenceArr", "label": "Evidence", "allowFiles": true, "accept": "image/*,.pdf,.docx" }
 ```
+
+## Documents
+
+With `layout: "list"` the element is an attachments list (procurement's quotes and invoices):
+- each file is a row: an icon with its extension (PDFs red, images blue), its caption or name, "Added
+  3 Nov 2026, 9:12 am by Nadia Haddad", its type (a select while editing, a chip when not) and a
+  download button;
+- uploads show as rows with a spinner, refusals as rows with the server's message;
+- **Upload** and **Scan with the camera** sit under the list; files can be dropped on it too;
+- the header counts "2 documents";
+- clicking a row opens the lightbox, which shows a **PDF in the browser's own viewer** (in either
+  layout), images as photos, and other files with a download button. The lightbox shows the type.
+
+Typical use, with `allowFiles: true`, `accept: ".pdf,image/*"` and `kinds`.
+

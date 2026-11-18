@@ -21,6 +21,7 @@ import {
   countText,
   extensionOf,
   isImageEntry,
+  isPdfEntry,
   isStoredFile,
   newEntry,
   patchEntry,
@@ -45,6 +46,12 @@ export interface PhotoCaptureDefinition extends BaseDefinition {
   capture?: 'environment' | 'user' | false | '';
   /** Photos longer than this on either side are scaled down before upload (default 1920; 0 keeps originals). */
   maxDimension?: number;
+  /** "grid" (default): photo thumbnails; "list": documents as rows (attachments: quotes, invoices). */
+  layout?: 'grid' | 'list';
+  /** Document types to choose from for each file ("Quote", "Invoice"), stored as `kind`. */
+  kinds?: Array<string | { value: string; label?: string }>;
+  /** The type a new file gets (default: the first of `kinds`). */
+  defaultKind?: string;
   hideLabel?: boolean;
 }
 
@@ -182,6 +189,22 @@ function DownloadLink(props: { entry: PhotoEntry; class: string; label?: string;
   );
 }
 
+/** A PDF in the browser's own viewer, inside the lightbox. */
+function PdfFrame(props: { entry: PhotoEntry }) {
+  const source = useSource(() => props.entry);
+  createEffect(
+    () => props.entry.fileNo,
+    () => source.load(),
+  );
+  return (
+    <div class="pc-lb__pdf">
+      <Show when={source.src()} fallback={<Spinner label="Loading the document" />}>
+        {(src) => <iframe class="pc-lb__pdf-frame" src={src()} title={props.entry.fileName} />}
+      </Show>
+    </div>
+  );
+}
+
 /**
  * `<solid-photo-capture>`: photos (and, if allowed, other files) on a record: incident photos,
  * evidence that an action was done, before and after. Each file uploads as soon as it is chosen,
@@ -205,7 +228,15 @@ export function PhotoCapture(props: Props) {
     return mode === false || mode === '' ? undefined : mode === 'user' ? 'user' : 'environment';
   };
   const maxDimension = () => (typeof def().maxDimension === 'number' && def().maxDimension! >= 0 ? def().maxDimension! : DEFAULT_DIMENSION);
-  const noun = () => (def().allowFiles ? 'files' : 'photos');
+  const list = () => def().layout === 'list';
+  // `kinds` takes strings or { value, label } objects: objects keep the template indexable when the
+  // same template also has line items, whose `kinds` are objects.
+  const kindOptions = () =>
+    (Array.isArray(def().kinds) ? def().kinds! : [])
+      .map((k) => (typeof k === 'string' ? { value: k, label: k } : k && typeof k.value === 'string' ? { value: k.value, label: k.label || k.value } : null))
+      .filter((k): k is { value: string; label: string } => !!k && !!k.value.trim());
+  const kinds = () => kindOptions().map((k) => k.value);
+  const noun = () => (list() ? 'documents' : def().allowFiles ? 'files' : 'photos');
 
   const items = createMemo<Item[]>(() => {
     const seen = new Map<string, number>();
@@ -258,7 +289,8 @@ export function PhotoCapture(props: Props) {
       const stored = await uploadFile(prepared.file, owner);
       // Show it from the local copy instead of downloading what was just sent.
       if (prepared.file.type.startsWith('image/')) sources.set(stored.fileNo, Promise.resolve(URL.createObjectURL(prepared.file)));
-      const entry = newEntry(stored, { takenDate: new Date().toISOString(), takenBy: currentUser(), width: prepared.width, height: prepared.height });
+      const kind = untrack(() => def().defaultKind || kinds()[0] || '');
+      const entry = newEntry(stored, { takenDate: new Date().toISOString(), takenBy: currentUser(), width: prepared.width, height: prepared.height, kind });
       // Append to the value as it is now: another upload, or another user's change, may have
       // landed while this one was on its way.
       field.setValue([...latest(), entry]);
@@ -499,6 +531,16 @@ export function PhotoCapture(props: Props) {
     return `Taken${when ? ` ${when}` : ''}${who ? ` by ${who}` : ''}`;
   };
   const markBroken = (key: string) => setBroken((set) => new Set(set).add(key));
+  const addedText = (entry: PhotoEntry) => {
+    const when = formatDateTime(entry.takenDate);
+    const who = entry.takenByRel?.[0]?.name;
+    return [when && `Added ${when}`, who && `by ${who}`].filter(Boolean).join(' ');
+  };
+  const setKind = (fileNo: string, kind: string) => {
+    const current = latest();
+    const next = patchEntry(current, fileNo, { kind });
+    if (next.some((entry, i) => entry !== current[i])) field.setValue(next);
+  };
 
   const FileFace = (p: { entry: PhotoEntry; large?: boolean }) => (
     <span class={['pc-file', p.large && 'pc-file--large']}>
@@ -520,7 +562,7 @@ export function PhotoCapture(props: Props) {
         onDrop={onDrop}
       >
         <div class="pc-head">
-          <span class="pc-count">{countText(items().map((i) => i.entry))}</span>
+          <span class="pc-count">{countText(items().map((i) => i.entry), list())}</span>
           <Show when={uploading()}>
             <span class="pc-busy">
               <Spinner />
@@ -529,11 +571,108 @@ export function PhotoCapture(props: Props) {
           </Show>
           <Show when={editable()}>
             <span class="pc-hint" id={hintId}>
-              {full() ? `The most is ${maxPhotos()}.` : `Take, upload or drop ${noun()} here.`}
+              {full() ? `The most is ${maxPhotos()}.` : list() ? 'Upload, scan or drop documents here.' : `Take, upload or drop ${noun()} here.`}
             </span>
           </Show>
         </div>
 
+        <Show when={list()}>
+          <ul class="pc-list" aria-label={field.label() || 'Documents'}>
+            <For each={items()} keyed={(item) => item.key}>
+              {(item, index) => (
+                <li class="pc-row">
+                  <button
+                    type="button"
+                    class="pc-row__open"
+                    aria-label={`Open ${item().entry.fileName}, ${index() + 1} of ${items().length}`}
+                    aria-haspopup="dialog"
+                    onClick={(event) => openLightbox(index(), event.currentTarget)}
+                  >
+                    <span class={['pc-row__icon', isPdfEntry(item().entry) && 'pc-row__icon--pdf', item().image && 'pc-row__icon--image']} aria-hidden="true">
+                      <Glyph name={item().image ? 'image' : 'file'} size={18} />
+                      <span class="pc-row__ext">{extensionOf(item().entry.fileName) || 'file'}</span>
+                    </span>
+                    <span class="pc-row__text">
+                      <span class="pc-row__name sj-truncate">{item().entry.caption || item().entry.fileName}</span>
+                      <span class="pc-row__meta sj-truncate">
+                        {item().entry.caption ? `${item().entry.fileName} · ` : ''}
+                        {addedText(item().entry)}
+                      </span>
+                    </span>
+                  </button>
+                  <Show when={kinds().length}>
+                    <Show when={editable()} fallback={<Show when={item().entry.kind}><span class="pc-kind">{item().entry.kind}</span></Show>}>
+                      <select
+                        class="sj-input pc-row__kind"
+                        aria-label={`Type of ${item().entry.fileName}`}
+                        value={item().entry.kind ?? ''}
+                        onChange={(event) => setKind(untrack(item).entry.fileNo, event.currentTarget.value)}
+                      >
+                        <Show when={!item().entry.kind || !kinds().includes(item().entry.kind!)}>
+                          <option value={item().entry.kind ?? ''}>{item().entry.kind || 'Type…'}</option>
+                        </Show>
+                        <For each={kindOptions()}>{(kind) => <option value={kind.value}>{kind.label}</option>}</For>
+                      </select>
+                    </Show>
+                  </Show>
+                  <DownloadLink entry={item().entry} class="sj-icon-btn pc-row__download" label={`Download ${item().entry.fileName}`}>
+                    <Icon name="download" size={15} />
+                  </DownloadLink>
+                </li>
+              )}
+            </For>
+            <For each={uploads()} keyed={(upload) => upload.key}>
+              {(upload) => (
+                <li class={['pc-row', 'pc-row--upload', upload().error && 'pc-row--failed']} role={upload().error ? 'alert' : 'status'}>
+                  <span class="pc-row__icon" aria-hidden="true">
+                    <Show when={upload().error} fallback={<Spinner />}>
+                      <Icon name="alert" size={16} />
+                    </Show>
+                  </span>
+                  <span class="pc-row__text">
+                    <span class="pc-row__name sj-truncate">{upload().name}</span>
+                    <span class="pc-row__meta">{upload().error ?? 'Uploading…'}</span>
+                  </span>
+                  <Show when={upload().error}>
+                    <IconButton icon="x" size="sm" label={`Dismiss: ${upload().name}`} onClick={() => dismissUpload(untrack(upload).key)} />
+                  </Show>
+                </li>
+              )}
+            </For>
+          </ul>
+          <Show when={editable()}>
+            <div class={['pc-list-add', full() && 'pc-add--full']}>
+              <button
+                type="button"
+                class="sj-btn sj-btn--default sj-btn--sm"
+                ref={firstAddButton}
+                aria-disabled={full() ? 'true' : undefined}
+                aria-describedby={full() ? fullId : undefined}
+                onClick={() => pick(uploadInput)}
+              >
+                <Glyph name="upload" size={14} />
+                Upload
+              </button>
+              <button
+                type="button"
+                class="sj-btn sj-btn--subtle sj-btn--sm"
+                aria-disabled={full() ? 'true' : undefined}
+                aria-describedby={full() ? fullId : undefined}
+                onClick={() => pick(cameraInput)}
+              >
+                <Glyph name="camera" size={14} />
+                Scan with the camera
+              </button>
+              <Show when={full()}>
+                <span class="pc-add__full" id={fullId}>
+                  {maxPhotos()} of {maxPhotos()}: remove one to add another.
+                </span>
+              </Show>
+            </div>
+          </Show>
+        </Show>
+
+        <Show when={!list()}>
         <ul class="pc-grid" aria-label={field.label() || 'Photos'} ref={grid}>
           <For each={items()} keyed={(item) => item.key}>
             {(item, index) => {
@@ -632,6 +771,7 @@ export function PhotoCapture(props: Props) {
             </li>
           </Show>
         </ul>
+        </Show>
 
         <Show when={!items().length && !uploads().length && !editable()}>
           <p class="pc-empty">No {noun()}.</p>
@@ -694,6 +834,7 @@ export function PhotoCapture(props: Props) {
                       when={now().item.image && !broken().has(now().item.key) ? now().item.key : undefined}
                       keyed
                       fallback={
+                        <Show when={isPdfEntry(entry())} fallback={
                         <div class="pc-lb__file">
                           <FileFace entry={entry()} large />
                           <span>{entry().fileName}</span>
@@ -703,6 +844,9 @@ export function PhotoCapture(props: Props) {
                             Download
                           </DownloadLink>
                         </div>
+                        }>
+                          <PdfFrame entry={entry()} />
+                        </Show>
                       }
                     >
                       {(key) => <FileImage entry={entry()} alt={altOf(entry())} class="pc-lb__img" eager onBroken={() => markBroken(key)} />}
@@ -742,7 +886,12 @@ export function PhotoCapture(props: Props) {
                       </label>
                     </Show>
                     <div class="pc-lb__row">
-                      <span class="pc-lb__muted">{takenText(entry())}</span>
+                      <span class="pc-lb__muted">
+                        <Show when={entry().kind}>
+                          <span class="pc-kind">{entry().kind}</span>{' '}
+                        </Show>
+                        {list() ? addedText(entry()) : takenText(entry())}
+                      </span>
                       <Show when={editable()}>
                         <Show
                           when={confirming()}

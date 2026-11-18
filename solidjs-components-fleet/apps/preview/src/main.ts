@@ -10,7 +10,7 @@ import '../../../../solidjs-components-shared/components/map/src/main';
 import '../../../components/asset-summary/src/main';
 import '../../../../solidjs-components-shared/components/checklist/src/main';
 import '../../../components/meter-reading/src/main';
-import '../../../components/line-items/src/main';
+import '../../../../solidjs-components-shared/components/line-items/src/main';
 import './preview.css';
 
 const host = installMockHost({

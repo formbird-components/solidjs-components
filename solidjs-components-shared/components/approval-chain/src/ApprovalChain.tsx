@@ -37,6 +37,7 @@ export interface ApprovalChainDefinition extends BaseDefinition {
   commentOnReject?: boolean;
   /** Button texts. Default "Approve" and "Reject". */
   approveLabel?: string;
+  /** The reject button's text (default "Reject"). */
   rejectLabel?: string;
   /** Shown while the chain has no steps. Default "Approvers are chosen when the <noun> is saved." */
   emptyText?: string;

@@ -13,7 +13,7 @@ import { hireCost, hireHours, overlaps, UNRETURNED_BLOCK_MS } from '../../packag
 import { checklistOutcome } from '../../../solidjs-components-shared/packages/kit/src/domain/checklist.ts';
 import { timeRangeProblems } from '../../../solidjs-components-shared/packages/kit/src/domain/range.ts';
 import { fuelCheck, meterProblems } from '../../packages/fleet-kit/src/logic/meter.ts';
-import { lineTotals } from '../../packages/fleet-kit/src/logic/money.ts';
+import { lineTotals } from '../../../solidjs-components-shared/packages/kit/src/domain/money.ts';
 import { nextServiceDue, serviceWarning } from '../../packages/fleet-kit/src/logic/service.ts';
 import { IN_WORKSHOP, TRANSITIONS } from './catalog.mjs';
 import { BOOKING_MAX_TEXT, KEYS, MAX_BOOKING_HOURS, TIME_ZONE } from './model.mjs';

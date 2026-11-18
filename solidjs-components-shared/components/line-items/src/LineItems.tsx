@@ -18,9 +18,29 @@ import {
   type BaseDefinition,
   type ElementProps,
   type FormbirdElementProps,
+  lineTotals,
+  type LineItem,
   type PickerItem,
 } from '@solidjs-components/kit';
-import { lineTotals, type LineItem } from '../../../packages/fleet-kit/src/logic/money';
+
+/** A kind of line: a work order's part, labour and other; a purchase's goods, services, freight. */
+export interface LineKind {
+  value: string;
+  /** In the Type column. */
+  label: string;
+  /** Its row in the totals ("Parts"). Default: the label. */
+  total?: string;
+  /** Show its total even when it is zero (default: only when it isn't). */
+  alwaysTotal?: boolean;
+  /** Unit of a new line ("h"); hours are shown in the total when it is "h". Default "ea". */
+  unit?: string;
+  /** Unit cost a new line starts at. */
+  rate?: number;
+  /** Text of the button that adds an empty line of this kind ("Add labour"). Without it, no button. */
+  add?: string;
+  /** The button is subtle rather than outlined. */
+  subtle?: boolean;
+}
 
 export interface LineItemsDefinition extends BaseDefinition {
   /** ISO currency (default AUD). */
@@ -29,12 +49,26 @@ export interface LineItemsDefinition extends BaseDefinition {
   taxRate?: number;
   /** Default "GST". */
   taxLabel?: string;
-  /** Hourly rate new labour lines start at (default: none, the cost is left to fill in). */
+  /** Hourly rate new labour lines start at (default: none, the cost is left to fill in). Work order kinds only. */
   labourRate?: number;
-  /** Materials to pick parts from (any related-document filter). */
+  /** The kinds of line. Default: a work order's part, labour and other. */
+  kinds?: LineKind[];
+  /** A catalogue to pick lines from (materials, supplier items): any related-document filter. */
   materialFilter?: string | Record<string, unknown>;
-  /** Fields on material documents (defaults: partNo, unitCost, unit, qtyAvailable). */
+  /** Fields on catalogue documents (defaults: partNo, unitCost, unit, qtyAvailable). */
   materialFields?: { partNo?: string; unitCost?: string; unit?: string; stock?: string };
+  /** The kind a picked catalogue line gets (default "part"), and the pick button's text (default "Add part"). */
+  catalogKind?: string;
+  /** Text of the button that picks from the catalogue (default "Add part"). */
+  catalogLabel?: string;
+  /** What the catalogue holds, in its search ("parts"; "items"). */
+  catalogNoun?: string;
+  /** Column heading of the unit cost (default "Unit cost"). */
+  costLabel?: string;
+  /** Shown while there are no lines (default "No parts or labour yet."). */
+  emptyText?: string;
+  /** Under the totals while editing (default "Totals are stored with the work order when it is saved."). */
+  noteText?: string;
   hideLabel?: boolean;
 }
 
@@ -49,10 +83,11 @@ interface Material {
   stock: number | null;
 }
 
-const KINDS: { value: LineItem['kind']; label: string }[] = [
-  { value: 'part', label: 'Part' },
-  { value: 'labour', label: 'Labour' },
-  { value: 'other', label: 'Other' },
+/** A work order's kinds: the default. */
+const WORK_ORDER_KINDS: LineKind[] = [
+  { value: 'part', label: 'Part', total: 'Parts', alwaysTotal: true },
+  { value: 'labour', label: 'Labour', alwaysTotal: true, unit: 'h', add: 'Add labour' },
+  { value: 'other', label: 'Other', add: 'Other', subtle: true },
 ];
 
 const parseLines = (raw: unknown): LineItem[] => (Array.isArray(raw) ? (raw as LineItem[]).filter((l) => l && typeof l.id === 'string') : []);
@@ -64,9 +99,9 @@ const num = (text: string): number | null => {
 };
 
 /**
- * `<solid-line-items>`: the cost of a job, line by line. Parts come from the materials list with
- * their part number and unit cost; totals use the same function as the work order ruleset, which
- * stores them on save.
+ * `<solid-line-items>`: costs, line by line: a work order's parts and labour, a purchase's goods,
+ * services and freight. Lines can come from a catalogue with their part number and unit cost; totals
+ * use the kit's lineTotals, the same function the apps' rulesets run on save.
  * @param props - Formbird element properties
  */
 export function LineItems(props: Props) {
@@ -77,6 +112,13 @@ export function LineItems(props: Props) {
   let addPartButton: HTMLButtonElement | undefined;
 
   const lines = () => field.value();
+  const kinds = createMemo<LineKind[]>(() => {
+    const listed = (def().kinds ?? []).filter((k) => k && typeof k.value === 'string' && k.value);
+    if (listed.length) return listed;
+    return WORK_ORDER_KINDS.map((k) => (k.value === 'labour' ? { ...k, rate: def().labourRate } : k));
+  });
+  const kindOf = (value: string) => kinds().find((k) => k.value === value);
+  const catalogKind = () => def().catalogKind ?? 'part';
   const currency = () => def().currency ?? 'AUD';
   const totals = createMemo(() => lineTotals(lines(), def().taxRate ?? 0.1));
   const money = (value: number | null | undefined) => formatMoney(value ?? 0, currency());
@@ -119,7 +161,7 @@ export function LineItems(props: Props) {
     if (existing) update(existing.id, { qty: (Number(existing.qty) || 0) + 1 });
     else
       add({
-        kind: 'part',
+        kind: catalogKind(),
         description: material.name,
         materialRel: [{ documentId: material.documentId, name: material.name, partNo: material.partNo }],
         qty: 1,
@@ -165,7 +207,7 @@ export function LineItems(props: Props) {
                   Qty
                 </th>
                 <th scope="col" class="li-num">
-                  Unit cost
+                  {def().costLabel ?? 'Unit cost'}
                 </th>
                 <th scope="col" class="li-num">
                   Amount
@@ -183,7 +225,7 @@ export function LineItems(props: Props) {
                 fallback={
                   <tr>
                     <td colspan={6} class="li-empty">
-                      No parts or labour yet.
+                      {def().emptyText ?? 'No parts or labour yet.'}
                     </td>
                   </tr>
                 }
@@ -192,14 +234,17 @@ export function LineItems(props: Props) {
                   {(line) => (
                     <tr class={`li-row li-row--${line.kind}`}>
                       <td class="li-kind">
-                        <Show when={!field.disabled()} fallback={<span class="li-tag">{KINDS.find((k) => k.value === line.kind)?.label}</span>}>
+                        <Show when={!field.disabled()} fallback={<span class="li-tag">{kindOf(line.kind)?.label ?? line.kind}</span>}>
                           <select
                             class="sj-input li-select"
                             aria-label="Line type"
                             value={line.kind}
-                            onChange={(event) => update(line.id, { kind: event.currentTarget.value as LineItem['kind'] })}
+                            onChange={(event) => update(line.id, { kind: event.currentTarget.value })}
                           >
-                            <For each={KINDS}>{(kind) => <option value={kind.value}>{kind.label}</option>}</For>
+                            <Show when={!kindOf(line.kind)}>
+                              <option value={line.kind}>{line.kind}</option>
+                            </Show>
+                            <For each={kinds()}>{(kind) => <option value={kind.value}>{kind.label}</option>}</For>
                           </select>
                         </Show>
                       </td>
@@ -226,7 +271,7 @@ export function LineItems(props: Props) {
                               value={line.qty === null ? '' : String(line.qty)}
                               onChange={(event) => update(line.id, { qty: num(event.currentTarget.value) })}
                             />
-                            <span class="li-unit">{line.unit ?? (line.kind === 'labour' ? 'h' : 'ea')}</span>
+                            <span class="li-unit">{line.unit ?? kindOf(line.kind)?.unit ?? 'ea'}</span>
                           </div>
                         </Show>
                       </td>
@@ -260,34 +305,45 @@ export function LineItems(props: Props) {
             <div class="li-add">
               <Show when={def().materialFilter}>
                 <Button ref={addPartButton} size="sm" icon="plus" aria-haspopup="listbox" aria-expanded={picking() ? 'true' : 'false'} onClick={openPicker}>
-                  Add part
+                  {def().catalogLabel ?? 'Add part'}
                 </Button>
               </Show>
-              <Button
-                size="sm"
-                icon="plus"
-                onClick={() => add({ kind: 'labour', description: 'Labour', qty: 1, unit: 'h', unitCost: def().labourRate ?? null })}
-              >
-                Add labour
-              </Button>
-              <Button size="sm" variant="subtle" icon="plus" onClick={() => add({ kind: 'other', description: '', qty: 1, unit: 'ea', unitCost: null })}>
-                Other
-              </Button>
+              <For each={kinds().filter((k) => k.add)}>
+                {(kind) => (
+                  <Button
+                    size="sm"
+                    variant={kind.subtle ? 'subtle' : 'default'}
+                    icon="plus"
+                    onClick={() => add({ kind: kind.value, description: kind.value === 'labour' ? 'Labour' : '', qty: 1, unit: kind.unit ?? 'ea', unitCost: kind.rate ?? null })}
+                  >
+                    {kind.add}
+                  </Button>
+                )}
+              </For>
             </div>
           </Show>
           <dl class="li-totals">
-            <div>
-              <dt>Parts</dt>
-              <dd>{money(totals().parts)}</dd>
-            </div>
-            <div>
-              <dt>Labour{totals().labourHours ? ` (${formatNumber(totals().labourHours, 2)} h)` : ''}</dt>
-              <dd>{money(totals().labour)}</dd>
-            </div>
-            <Show when={totals().other}>
+            <For each={kinds().filter((k) => k.alwaysTotal || totals().byKind[k.value])}>
+              {(kind) => (
+                <div>
+                  <dt>
+                    {kind.total ?? kind.label}
+                    {kind.unit === 'h' && totals().qtyByKind[kind.value] ? ` (${formatNumber(totals().qtyByKind[kind.value], 2)} h)` : ''}
+                  </dt>
+                  <dd>{money(totals().byKind[kind.value] ?? 0)}</dd>
+                </div>
+              )}
+            </For>
+            <Show when={Object.keys(totals().byKind).some((k) => !kindOf(k))}>
               <div>
                 <dt>Other</dt>
-                <dd>{money(totals().other)}</dd>
+                <dd>{money(Object.entries(totals().byKind).filter(([k]) => !kindOf(k)).reduce((sum, [, v]) => sum + v, 0))}</dd>
+              </div>
+            </Show>
+            <Show when={kinds().length > 1 || totals().tax}>
+              <div class="li-subtotal">
+                <dt>Subtotal</dt>
+                <dd>{money(totals().subtotal)}</dd>
               </div>
             </Show>
             <div>
@@ -301,21 +357,21 @@ export function LineItems(props: Props) {
           </dl>
         </div>
 
-        <Popover open={picking()} anchor={() => addPartButton} onDismiss={() => setPicking(false)} minWidth={320} label="Materials">
+        <Popover open={picking()} anchor={() => addPartButton} onDismiss={() => setPicking(false)} minWidth={320} label={def().catalogLabel ?? 'Materials'}>
           <PickerPanel
-            label="Materials"
+            label={def().catalogLabel ?? 'Materials'}
             items={materialItems()}
             searchable
             query={materials.query()}
             onQuery={materials.setQuery}
-            searchPlaceholder="Search parts…"
+            searchPlaceholder={`Search ${def().catalogNoun ?? 'parts'}…`}
             loading={materials.loading()}
-            emptyText={materials.error() ? `Couldn't load materials: ${materials.error()}` : materials.loaded() ? 'No matching parts' : 'Loading…'}
+            emptyText={materials.error() ? `Couldn't load the ${def().catalogNoun ?? 'materials'}: ${materials.error()}` : materials.loaded() ? `No matching ${def().catalogNoun ?? 'parts'}` : 'Loading…'}
           />
         </Popover>
         <Show when={totals().total > 0 && !field.disabled()}>
           <p class="li-note">
-            <Icon name="info" size={13} /> Totals are stored with the work order when it is saved.
+            <Icon name="info" size={13} /> {def().noteText ?? 'Totals are stored with the work order when it is saved.'}
           </p>
         </Show>
       </div>
