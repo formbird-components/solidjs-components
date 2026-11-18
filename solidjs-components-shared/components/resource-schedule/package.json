@@ -1,0 +1,15 @@
+{
+  "name": "@solidjs-components/resource-schedule",
+  "version": "0.1.0",
+  "private": true,
+  "description": "<solid-resource-schedule>: people (or assets) by day: each row's records as bars across the days (leave, jobs, shifts), grouped by team with how many are left on each day against a minimum, weekends and public holidays shaded, figures per row (leave balances), and drag across free days to start a new record.",
+  "type": "module",
+  "dependencies": {
+    "@solidjs-components/kit": "workspace:*",
+    "@solidjs/web": "catalog:",
+    "solid-js": "catalog:"
+  },
+  "formbird": {
+    "tag": "solid-resource-schedule"
+  }
+}

@@ -68,6 +68,20 @@ export {
   dueText,
   daysUntil,
 } from './host/format';
+export {
+  MINUTE,
+  HOUR,
+  DAY,
+  startOfDay,
+  addDays,
+  roundUp,
+  roundTo,
+  toDateInput,
+  toTimeInput,
+  fromInputs,
+  dayLabel,
+  rangeLabel,
+} from './host/time';
 export { renderMarkdown, escapeHtml, safeUrl } from './host/markdown';
 export {
   getPath,
@@ -86,6 +100,8 @@ export {
 export * from './domain/status';
 export * from './domain/lookups';
 export * from './domain/checklist';
+export * from './domain/range';
+export * from './domain/approval';
 
 // UI
 export {

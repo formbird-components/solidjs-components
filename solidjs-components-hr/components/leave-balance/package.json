@@ -1,0 +1,10 @@
+{
+  "name": "@solidjs-components-hr/leave-balance",
+  "version": "0.1.0",
+  "private": true,
+  "description": "<solid-leave-balance>: leave balances worked out live from the opening balance, pro rata accrual and approved and pending requests. On a leave request: what is available on the first day, this request, and what is left after (writing the available days for the client rule). On a page: the signed-in person's balances as cards.",
+  "type": "module",
+  "formbird": {
+    "tag": "solid-leave-balance"
+  }
+}

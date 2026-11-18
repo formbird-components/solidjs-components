@@ -1,0 +1,30 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>HR elements</title>
+    <link rel="icon" href="data:," />
+  </head>
+  <body>
+    <header class="pv-bar">
+      <strong>HR elements</strong>
+      <span class="pv-sub">solidjs-components-hr · mock host · signed in as Sarah Mitchell (manager)</span>
+      <label class="pv-toggle"><input type="checkbox" id="dark" /> Dark</label>
+    </header>
+    <main class="pv">
+      <section class="pv-card pv-wide"><h2>Leave calendar</h2><div id="slot-calendar"></div></section>
+      <section class="pv-card"><h2>New leave request: when</h2><div id="slot-dates"></div></section>
+      <section class="pv-card"><h2>New leave request: balance</h2><div id="slot-balance"></div></section>
+      <section class="pv-card"><h2>Mei's request: approval (your turn)</h2><div id="slot-approval"></div></section>
+      <section class="pv-card"><h2>An approved request</h2><div id="slot-decided"></div></section>
+      <section class="pv-card pv-wide"><h2>My leave balances</h2><div id="slot-balances"></div></section>
+      <section class="pv-card pv-wide"><h2>Skills matrix</h2><div id="slot-matrix"></div></section>
+      <section class="pv-card pv-wide"><h2>Org chart</h2><div id="slot-org"></div></section>
+      <section class="pv-card"><h2>Sarah's profile: reporting line</h2><div id="slot-orgFocus"></div></section>
+      <section class="pv-card"><h2>Unpaid leave: balance</h2><div id="slot-unpaidBalance"></div></section>
+      <section class="pv-card pv-wide"><h2>Host log</h2><pre id="log"></pre></section>
+    </main>
+    <script type="module" src="./src/main.ts"></script>
+  </body>
+</html>

@@ -51,6 +51,10 @@ export interface ChecklistDefinition extends BaseDefinition {
   allowNa?: boolean;
   /** Let people add a one-off check (default false). */
   allowAdd?: boolean;
+  /** What the answers are called (default Pass, Fail, N/A): `{ "pass": "Done", "fail": "Blocked" }` for onboarding tasks. */
+  answerLabels?: { pass?: string; fail?: string; na?: string };
+  /** The sheet's result when every check is answered and none failed (default "Pass"). Display only: the stored outcome keeps "Pass". */
+  passLabel?: string;
   hideLabel?: boolean;
 }
 
@@ -305,6 +309,8 @@ function Answer(componentProps: { field: Binding; props: Props }) {
     return [...map.entries()].map(([name, list]) => ({ name, list }));
   });
 
+  const answerLabel = (value: Result) => def().answerLabels?.[value] || RESULTS.find((r) => r.value === value)!.label;
+  const resultText = () => (outcome().result === 'Pass' && def().passLabel ? def().passLabel! : outcome().result);
   const resultColor = () => (outcome().result === 'Pass' ? 'var(--sj-success)' : outcome().complete && outcome().failed ? 'var(--sj-danger)' : undefined);
   const sheetChanged = () => {
     const loaded = sheet()?.items ?? [];
@@ -343,19 +349,27 @@ function Answer(componentProps: { field: Binding; props: Props }) {
               </div>
             </div>
             <div class="cl-summary">
-              <span class="cl-count cl-count--pass">{outcome().passed} pass</span>
-              <span class="cl-count cl-count--fail">{outcome().failed} fail</span>
+              <span class="cl-count cl-count--pass">
+                {outcome().passed} {def().answerLabels?.pass ? answerLabel('pass').toLowerCase() : 'pass'}
+              </span>
+              <span class="cl-count cl-count--fail">
+                {outcome().failed} {def().answerLabels?.fail ? answerLabel('fail').toLowerCase() : 'fail'}
+              </span>
               <Show when={outcome().na}>
-                <span class="cl-count">{outcome().na} N/A</span>
+                <span class="cl-count">
+                  {outcome().na} {answerLabel('na')}
+                </span>
               </Show>
-              <Lozenge color={resultColor()}>{outcome().result}</Lozenge>
+              <Lozenge color={resultColor()}>{resultText()}</Lozenge>
             </div>
           </div>
 
           <Show when={!field.disabled() && outcome().answered < outcome().total}>
             <div class="cl-actions">
               <Button size="sm" variant="subtle" icon="check" onClick={passRemaining}>
-                Pass the remaining {outcome().total - outcome().answered}
+                <Show when={def().answerLabels?.pass} fallback={<>Pass the remaining {outcome().total - outcome().answered}</>}>
+                  Mark the remaining {outcome().total - outcome().answered} as {answerLabel('pass')}
+                </Show>
               </Button>
             </div>
           </Show>
@@ -419,7 +433,7 @@ function Answer(componentProps: { field: Binding; props: Props }) {
                                     disabled={field.disabled()}
                                     onClick={() => answer(item, option.value)}
                                   >
-                                    {option.label}
+                                    {answerLabel(option.value)}
                                   </button>
                                 )}
                               </For>

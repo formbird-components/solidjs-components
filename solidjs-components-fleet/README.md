@@ -13,8 +13,8 @@ The workflows and their wording follow Formbird FLEET: Asset Reserved → Hire C
 Open → Drop Off, Available For Hire / On Hire, "Tracker Device Must Be Unique"…
 
 This repo holds the fleet elements and a demo database, `solidjs-fleet-demo`. The generic elements
-(status, reference number, pickers, tables, comments, and the map, checklist and stat tiles that
-started here), the kit and the tooling are in
+(status, reference number, pickers, tables, comments, and the map, checklist, stat tiles and date
+range that started here), the kit and the tooling are in
 [solidjs-components-shared](../solidjs-components-shared/README.md), which this repo links to.
 
 | Element | Lives in | What it does |
@@ -23,7 +23,7 @@ started here), the kit and the tooling are in
 | [`<solid-map>`](../solidjs-components-shared/components/map/README.md) | shared | OpenLayers map. Layers show live searches (assets by type and hire status, sites with their boundaries) with popups and actions. Point and area modes edit a location or a boundary. |
 | [`<solid-stat-tiles>`](../solidjs-components-shared/components/stat-tiles/README.md) | shared | Dashboard tiles. Each is a live Elasticsearch count with a tone and a link to the list behind it. |
 | [`<solid-asset-summary>`](components/asset-summary/README.md) | this repo | An asset's header: lifecycle and hire status, meter, next service, registration, and quick actions (Book, Daily Driver, Report a fault). |
-| [`<solid-date-range>`](components/date-range/README.md) | this repo | Start and end, with quick durations and the booking time rules. |
+| [`<solid-date-range>`](../solidjs-components-shared/components/date-range/README.md) | shared | Start and end, with quick durations and the booking time rules (the kit's `timeRangeProblems`). It moved to shared when the HR app needed it for leave. |
 | [`<solid-meter-reading>`](components/meter-reading/README.md) | this repo | Odometer or engine hours, checked against the asset's meter and the start reading. |
 | [`<solid-checklist>`](../solidjs-components-shared/components/checklist/README.md) | shared | A check sheet answered Pass / Fail / N/A with comments (Daily Driver, service checks), or edited (check sheets, service plans). |
 | [`<solid-line-items>`](components/line-items/README.md) | this repo | A work order's parts (from the materials list) and labour, with GST and totals. |
@@ -35,7 +35,8 @@ The booking, Daily Driver, request and work order logic lives in `packages/fleet
 - totals;
 - next service due.
 
-The checklist outcome is in shared's kit, with the checklist element.
+The checklist outcome and the time range checks (`timeRangeProblems`) are in shared's kit, with the
+checklist and date range elements, as are the local-time helpers the booking calendar uses.
 
 The elements import these functions. The server rulesets embed the same functions' source, so a
 booking costs the same in the form as in the database.
@@ -286,8 +287,8 @@ test/browser.mjs       browser test of the built bundles
 pnpm install
 pnpm dev             # gallery on http://localhost:5181
 pnpm typecheck
-pnpm test            # unit tests: fleet-kit logic, calendar maths, the rulesets' validators (26)
-pnpm test:browser    # builds, then drives the BUILT bundles in Chrome (66 checks, shared's map, checklist and tiles included)
+pnpm test            # unit tests: fleet-kit logic, calendar maths, the rulesets' validators (25)
+pnpm test:browser    # builds, then drives the BUILT bundles in Chrome (66 checks, shared's map, checklist, tiles and date range included)
 pnpm check           # all three
 pnpm build           # dist/<name>/<name>.js (with shared's)
 pnpm db:setup        # build, copy into fieldtec-web, create the demo database (--reset to replace it)

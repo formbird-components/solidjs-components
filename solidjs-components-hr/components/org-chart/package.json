@@ -1,0 +1,10 @@
+{
+  "name": "@solidjs-components-hr/org-chart",
+  "version": "0.1.0",
+  "private": true,
+  "description": "<solid-org-chart>: the organisation as a tree of people by whom they report to: cards with team colour, title, reports and who is on leave today; expand and collapse, search that opens the reporting line, zoom, and on a person's form their line and direct reports.",
+  "type": "module",
+  "formbird": {
+    "tag": "solid-org-chart"
+  }
+}

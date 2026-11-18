@@ -1,0 +1,15 @@
+{
+  "name": "@solidjs-components/date-range",
+  "version": "0.2.0",
+  "private": true,
+  "description": "<solid-date-range>: when something starts and ends, bound to two fields. Date and time (bookings, workshop jobs): quick durations, the duration shown and the time range rules. Days (leave, rosters): first and last day, half days, working days counted without weekends and public holidays, shown as a strip of days.",
+  "type": "module",
+  "dependencies": {
+    "@solidjs-components/kit": "workspace:*",
+    "@solidjs/web": "catalog:",
+    "solid-js": "catalog:"
+  },
+  "formbird": {
+    "tag": "solid-date-range"
+  }
+}

@@ -1,4 +1,6 @@
-// Booking rules shared by the elements (in the browser) and the fleet rulesets (on the server).
+// Booking rules shared by the elements (in the browser) and the fleet rulesets (on the server). The
+// time range checks (end after start, minimum and maximum length) are the kit's timeRangeProblems
+// (solidjs-components-shared, packages/kit/src/domain/range.ts), which <solid-date-range> also uses.
 //
 // The rulesets embed these functions' source (`${hireCost}` in demo/lib/rules.mjs), so each one
 // must stand alone: no imports, no module-level helpers, only erasable TypeScript (Node strips the
@@ -105,47 +107,4 @@ export function hireCost(input: HireCostInput): number {
     total += cost;
   }
   return Math.round(total * 100) / 100;
-}
-
-/** A booking's time range, checked before it is saved. */
-export interface BookingTimesInput {
-  start: When | null | undefined;
-  end: When | null | undefined;
-  /** The asset's maximum booking duration in hours; falls back to `defaultMaxHours`. */
-  maxHours?: number | null;
-  defaultMaxHours?: number;
-  /** Shortest booking allowed, in minutes (default 15). */
-  minMinutes?: number;
-  /** What the range is of, in the messages (default "booking"; "job" on a workshop request). */
-  noun?: string;
-}
-
-/**
- * Problems with a booking's times, as messages for the person booking (empty when fine).
- * @param input - Start, end and limits
- * @returns Messages
- */
-export function bookingTimeProblems(input: BookingTimesInput): string[] {
-  const problems: string[] = [];
-  const noun = input.noun || 'booking';
-  if (!input.start || !input.end) {
-    problems.push(`Choose when the ${noun} starts and ends.`);
-    return problems;
-  }
-  const start = new Date(input.start).getTime();
-  const end = new Date(input.end).getTime();
-  if (Number.isNaN(start) || Number.isNaN(end)) {
-    problems.push(`The ${noun} times are not valid dates.`);
-    return problems;
-  }
-  if (end <= start) {
-    problems.push(`The ${noun} must end after it starts.`);
-    return problems;
-  }
-  const minutes = (end - start) / 60_000;
-  const minMinutes = input.minMinutes ?? 15;
-  if (minutes < minMinutes) problems.push(`The ${noun} must be at least ${minMinutes} minutes long.`);
-  const maxHours = Number(input.maxHours) || input.defaultMaxHours || 0;
-  if (maxHours && minutes > maxHours * 60) problems.push(`This asset can be booked for at most ${maxHours} hours at a time.`);
-  return problems;
 }

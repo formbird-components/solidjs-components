@@ -1,20 +1,22 @@
 // Fleet rulesets, in the structure SDMS and the internal demo use ({ #include …, ruleset: { ruleX } }).
 //
 // The business logic the elements also use (overlaps, hire cost, service due, checklist outcome,
-// meter and fuel checks, line totals) is not rewritten here: each ruleset carries those functions'
-// own source in `ruleset.lib` (JayRule only runs keys starting with "rule"), imported from
-// packages/fleet-kit/src/logic, so the browser and the server apply one implementation.
+// booking time checks, meter and fuel checks, line totals) is not rewritten here: each ruleset
+// carries those functions' own source in `ruleset.lib` (JayRule only runs keys starting with "rule"),
+// imported from packages/fleet-kit/src/logic and shared's kit, so the browser and the server apply
+// one implementation.
 //
 // The scaffolding (shared helpers, the async-callback guard, status transitions against `lastStatus`,
 // the client PreSave rule) comes from solidjs-components-shared's platform (packages/platform/rules.mjs).
 
-import { bookingTimeProblems, hireCost, hireHours, overlaps, UNRETURNED_BLOCK_MS } from '../../packages/fleet-kit/src/logic/booking.ts';
+import { hireCost, hireHours, overlaps, UNRETURNED_BLOCK_MS } from '../../packages/fleet-kit/src/logic/booking.ts';
 import { checklistOutcome } from '../../../solidjs-components-shared/packages/kit/src/domain/checklist.ts';
+import { timeRangeProblems } from '../../../solidjs-components-shared/packages/kit/src/domain/range.ts';
 import { fuelCheck, meterProblems } from '../../packages/fleet-kit/src/logic/meter.ts';
 import { lineTotals } from '../../packages/fleet-kit/src/logic/money.ts';
 import { nextServiceDue, serviceWarning } from '../../packages/fleet-kit/src/logic/service.ts';
 import { IN_WORKSHOP, TRANSITIONS } from './catalog.mjs';
-import { KEYS, MAX_BOOKING_HOURS, TIME_ZONE } from './model.mjs';
+import { BOOKING_MAX_TEXT, KEYS, MAX_BOOKING_HOURS, TIME_ZONE } from './model.mjs';
 import { clientPreSave, COMMON_LIB, functionsLib, rulesetDsl, whenLib } from '@solidjs-components/platform/rules';
 
 const json = (value) => JSON.stringify(value);
@@ -35,7 +37,7 @@ const FLEET_LIB = `
     }`;
 
 /** The logic functions, as their own source (type-stripped by Node when this module loads). */
-const LOGIC_LIB = functionsLib([overlaps, hireHours, hireCost, bookingTimeProblems, nextServiceDue, serviceWarning, checklistOutcome, meterProblems, fuelCheck, lineTotals]);
+const LOGIC_LIB = functionsLib([overlaps, hireHours, hireCost, timeRangeProblems, nextServiceDue, serviceWarning, checklistOutcome, meterProblems, fuelCheck, lineTotals]);
 
 /**
  * What makes a record invalid, checked the same way in the browser (client PreSave rule, which
@@ -53,7 +55,7 @@ const VALIDATE_LIB = `
       var asset = this.first(d.assetRel) || {};
       if (!asset.documentId) return 'Choose the asset to book.';
       if (status === 'Asset Reserved') {
-        var problems = this.bookingTimeProblems({ start: d.startDate, end: d.endDate, maxHours: asset.maxBookingHours, defaultMaxHours: ${MAX_BOOKING_HOURS} });
+        var problems = this.timeRangeProblems({ start: d.startDate, end: d.endDate, maxHours: asset.maxBookingHours, defaultMaxHours: ${MAX_BOOKING_HOURS}, maxText: ${json(BOOKING_MAX_TEXT)} });
         if (who.isManager) problems = problems.filter(function (p) { return p.indexOf('at most') === -1; });
         if (problems.length) return problems.join(' ');
       }

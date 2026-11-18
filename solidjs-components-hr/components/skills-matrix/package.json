@@ -1,0 +1,10 @@
+{
+  "name": "@solidjs-components-hr/skills-matrix",
+  "version": "0.1.0",
+  "private": true,
+  "description": "<solid-skills-matrix>: people × certificate types, each cell valid, expiring (days left), expired or missing against what the person's position requires, grouped by team, with compliance per person, per type and overall, a gaps-only view, search, CSV export, and a click to open or add the certificate.",
+  "type": "module",
+  "formbird": {
+    "tag": "solid-skills-matrix"
+  }
+}

@@ -1,0 +1,344 @@
+/* <solid-approval-chain>: where the chain stands, the steps as a vertical timeline, and the decision card. */
+
+.ac {
+  display: grid;
+  gap: 10px;
+  min-width: 0;
+}
+
+/* ------------------------------------------------------------------ headline */
+
+.ac-head {
+  --ac-tone: var(--sj-text-subtle);
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 8px;
+  padding: 8px 12px;
+  border-radius: var(--sj-radius);
+  background: color-mix(in oklab, var(--ac-tone) 10%, transparent);
+  border: 1px solid color-mix(in oklab, var(--ac-tone) 24%, transparent);
+}
+
+.ac-head--good {
+  --ac-tone: var(--sj-success);
+}
+
+.ac-head--bad {
+  --ac-tone: var(--sj-danger);
+}
+
+.ac-head--warn {
+  --ac-tone: var(--sj-warning);
+}
+
+.ac-head__icon {
+  display: grid;
+  place-items: center;
+  width: 22px;
+  height: 22px;
+  border-radius: 50%;
+  background: var(--ac-tone);
+  color: var(--sj-surface);
+}
+
+.ac-head__text {
+  flex: 1 1 auto;
+  font-weight: 650;
+  color: color-mix(in oklab, var(--ac-tone) 55%, var(--sj-text));
+}
+
+.ac-head__count {
+  color: var(--sj-text-muted);
+  font-size: var(--sj-text-sm);
+  font-variant-numeric: tabular-nums;
+}
+
+/* ------------------------------------------------------------------ steps */
+
+.ac-steps {
+  display: grid;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.ac-step {
+  --ac-step: var(--sj-border-strong);
+  position: relative;
+  display: grid;
+  grid-template-columns: 26px minmax(0, 1fr);
+  gap: 10px;
+  padding-bottom: 14px;
+}
+
+.ac-step:last-child {
+  padding-bottom: 0;
+}
+
+/* The line joining one marker to the next. */
+.ac-step:not(:last-child)::before {
+  content: '';
+  position: absolute;
+  left: 12px;
+  top: 28px;
+  bottom: 2px;
+  width: 2px;
+  border-radius: 1px;
+  background: var(--sj-border);
+}
+
+.ac-step--approved:not(:last-child)::before {
+  background: color-mix(in oklab, var(--sj-success) 50%, var(--sj-border));
+}
+
+.ac-step--approved {
+  --ac-step: var(--sj-success);
+}
+
+.ac-step--rejected {
+  --ac-step: var(--sj-danger);
+}
+
+.ac-step--current {
+  --ac-step: var(--sj-warning);
+}
+
+.ac-marker {
+  display: grid;
+  place-items: center;
+  width: 26px;
+  height: 26px;
+  border-radius: 50%;
+  border: 2px solid var(--ac-step);
+  background: var(--sj-surface);
+  color: var(--ac-step);
+  font-size: var(--sj-text-xs);
+  font-weight: 700;
+}
+
+.ac-step--approved .ac-marker,
+.ac-step--rejected .ac-marker {
+  background: var(--ac-step);
+  color: var(--sj-surface);
+}
+
+.ac-step--current .ac-marker {
+  box-shadow: 0 0 0 4px color-mix(in oklab, var(--sj-warning) 20%, transparent);
+  animation: ac-pulse 2.4s var(--sj-ease) infinite;
+}
+
+.ac-step--waiting .ac-marker,
+.ac-step--skipped .ac-marker {
+  color: var(--sj-text-subtle);
+}
+
+@keyframes ac-pulse {
+  50% {
+    box-shadow: 0 0 0 7px color-mix(in oklab, var(--sj-warning) 6%, transparent);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .ac-step--current .ac-marker {
+    animation: none;
+  }
+}
+
+.ac-step__body {
+  display: grid;
+  gap: 4px;
+  min-width: 0;
+  padding-top: 2px;
+}
+
+.ac-step--skipped .ac-step__body {
+  opacity: 0.6;
+}
+
+.ac-step__title {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+.ac-step__label {
+  font-weight: 650;
+}
+
+.ac-badge {
+  --ac-badge: var(--sj-text-subtle);
+  padding: 1px 7px;
+  border-radius: var(--sj-radius-pill);
+  background: color-mix(in oklab, var(--ac-badge) 14%, transparent);
+  color: color-mix(in oklab, var(--ac-badge) 70%, var(--sj-text));
+  font-size: var(--sj-text-xs);
+  font-weight: 650;
+  letter-spacing: 0.02em;
+}
+
+.ac-badge--approved {
+  --ac-badge: var(--sj-success);
+}
+
+.ac-badge--rejected {
+  --ac-badge: var(--sj-danger);
+}
+
+.ac-badge--current {
+  --ac-badge: var(--sj-warning);
+}
+
+.ac-step__reason {
+  margin: 0;
+  color: var(--sj-text-muted);
+  font-size: var(--sj-text-sm);
+}
+
+.ac-people {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px 12px;
+}
+
+.ac-person {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  font-size: var(--sj-text-sm);
+}
+
+.ac-person--me {
+  font-weight: 650;
+}
+
+.ac-person--none {
+  color: var(--sj-text-subtle);
+}
+
+.ac-person--delegate {
+  padding: 1px 8px 1px 4px;
+  border-radius: var(--sj-radius-pill);
+  background: var(--sj-accent-soft);
+}
+
+.ac-delegate-arrow {
+  color: var(--sj-accent-text);
+}
+
+.ac-decision {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-size: var(--sj-text-sm);
+}
+
+.ac-comment {
+  margin: 2px 0 0;
+  padding: 6px 10px;
+  border-left: 3px solid var(--ac-step);
+  border-radius: 0 var(--sj-radius-sm) var(--sj-radius-sm) 0;
+  background: var(--sj-surface-sunken);
+  color: var(--sj-text);
+  font-size: var(--sj-text-sm);
+  white-space: pre-wrap;
+}
+
+.ac-muted {
+  color: var(--sj-text-muted);
+  font-weight: 400;
+}
+
+.ac-unsaved {
+  color: var(--sj-warning);
+  font-weight: 600;
+}
+
+/* ------------------------------------------------------------------ decision card */
+
+.ac-action {
+  display: grid;
+  gap: 8px;
+  padding: 12px;
+  border: 1px solid color-mix(in oklab, var(--sj-warning) 35%, var(--sj-border));
+  border-radius: var(--sj-radius-lg);
+  background: color-mix(in oklab, var(--sj-warning) 5%, var(--sj-surface-raised));
+  box-shadow: var(--sj-shadow-sm);
+}
+
+.ac-action__head {
+  display: flex;
+  align-items: baseline;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+.ac-comment-box {
+  height: auto;
+  min-height: 56px;
+  padding: 8px 10px;
+  resize: vertical;
+  line-height: 1.4;
+}
+
+.ac-action__buttons {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 6px;
+}
+
+.ac-spacer {
+  flex: 1;
+}
+
+.ac-approve {
+  background: var(--sj-success);
+}
+
+.ac-approve:hover:not(:disabled) {
+  background: color-mix(in oklab, var(--sj-success) 86%, black);
+}
+
+.ac-reject:hover:not(:disabled) {
+  color: var(--sj-danger);
+  border-color: color-mix(in oklab, var(--sj-danger) 45%, transparent);
+}
+
+.ac-problem {
+  margin: 0;
+  color: var(--sj-danger);
+  font-size: var(--sj-text-sm);
+}
+
+.ac-delegate {
+  display: grid;
+  gap: 6px;
+  padding-top: 8px;
+  border-top: 1px dashed var(--sj-border);
+}
+
+.ac-delegate__hint {
+  margin: 0;
+  font-size: var(--sj-text-sm);
+}
+
+.ac-saved-note {
+  align-items: center;
+}
+
+.ac-link {
+  padding: 0;
+  border: 0;
+  background: none;
+  color: var(--sj-accent-text);
+  font-weight: 600;
+  text-decoration: underline;
+  cursor: pointer;
+}
+
+.ac-pending {
+  margin: 0;
+  font-size: var(--sj-text-sm);
+}

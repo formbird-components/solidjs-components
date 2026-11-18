@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest';
-import { bookingTimeProblems, hireCost, hireHours, overlaps } from '../src/logic/booking';
+import { hireCost, hireHours, overlaps } from '../src/logic/booking';
 import { fuelCheck, meterProblems } from '../src/logic/meter';
 import { lineTotals } from '../src/logic/money';
 import { nextServiceDue, serviceRemaining, serviceWarning } from '../src/logic/service';
@@ -35,18 +35,6 @@ describe('hire', () => {
     // An overdue return keeps counting
     expect(hireCost({ start: '2026-11-03T22:00Z', end: '2026-11-03T23:00Z', closed: '2026-11-04T00:00Z', hourlyRate: 20, timeZone: SYD })).toBe(40);
     expect(hireCost({ start: '2026-11-03T22:00Z', end: '2026-11-03T23:00Z', timeZone: SYD })).toBe(0);
-  });
-
-  it('checks a booking time range', () => {
-    expect(bookingTimeProblems({ start: at('2026-11-04T09:00Z'), end: at('2026-11-04T10:00Z') })).toEqual([]);
-    expect(bookingTimeProblems({ start: null, end: null })).toEqual(['Choose when the booking starts and ends.']);
-    expect(bookingTimeProblems({ start: at('2026-11-04T10:00Z'), end: at('2026-11-04T09:00Z') })).toEqual(['The booking must end after it starts.']);
-    expect(bookingTimeProblems({ start: at('2026-11-04T09:00Z'), end: at('2026-11-04T09:10Z') })).toEqual(['The booking must be at least 15 minutes long.']);
-    expect(bookingTimeProblems({ start: at('2026-11-04T10:00Z'), end: at('2026-11-04T09:00Z'), noun: 'job' })).toEqual(['The job must end after it starts.']);
-    expect(bookingTimeProblems({ start: at('2026-11-04T09:00Z'), end: at('2026-11-06T09:00Z'), maxHours: 24 })).toEqual([
-      'This asset can be booked for at most 24 hours at a time.',
-    ]);
-    expect(bookingTimeProblems({ start: at('2026-11-04T09:00Z'), end: at('2026-11-06T09:00Z'), defaultMaxHours: 72 })).toEqual([]);
   });
 });
 

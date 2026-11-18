@@ -1,0 +1,171 @@
+/* <solid-leave-balance>: a request's figures and bar, or balance cards. */
+
+.lb {
+  display: grid;
+  gap: 10px;
+  min-width: 0;
+}
+
+.lb-hint {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  margin: 0;
+  color: var(--sj-text-muted);
+  font-size: var(--sj-text-sm);
+}
+
+/* ------------------------------------------------------------------ request */
+
+.lb-request {
+  display: grid;
+  gap: 10px;
+  padding: 12px 14px;
+  border: 1px solid var(--sj-border);
+  border-radius: var(--sj-radius-lg);
+  background: var(--sj-surface-raised);
+  box-shadow: var(--sj-shadow-sm);
+}
+
+.lb-figures {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 12px;
+}
+
+.lb-figure {
+  display: grid;
+  gap: 2px;
+}
+
+.lb-figure__label {
+  color: var(--sj-text-muted);
+  font-size: var(--sj-text-xs);
+  font-weight: 600;
+  letter-spacing: 0.03em;
+  text-transform: uppercase;
+}
+
+.lb-figure__value {
+  font-size: var(--sj-text-xl);
+  font-weight: 700;
+  letter-spacing: -0.02em;
+  font-variant-numeric: tabular-nums;
+}
+
+.lb-figure__value--taking {
+  color: var(--sj-accent-text);
+}
+
+.lb-figure--over .lb-figure__value {
+  color: var(--sj-danger);
+}
+
+.lb-bar {
+  --lb-color: var(--sj-accent);
+  display: flex;
+  height: 10px;
+  overflow: hidden;
+  border-radius: var(--sj-radius-pill);
+  background: var(--sj-surface-sunken);
+}
+
+.lb-bar__taking {
+  background: repeating-linear-gradient(135deg, var(--lb-color) 0 5px, color-mix(in oklab, var(--lb-color) 70%, white) 5px 10px);
+  transition: width var(--sj-medium) var(--sj-ease);
+}
+
+.lb-bar__taking--over {
+  background: repeating-linear-gradient(135deg, var(--sj-danger) 0 5px, color-mix(in oklab, var(--sj-danger) 70%, white) 5px 10px);
+}
+
+.lb-bar__left {
+  background: color-mix(in oklab, var(--lb-color) 35%, transparent);
+  transition: width var(--sj-medium) var(--sj-ease);
+}
+
+.lb-detail {
+  margin: 0;
+  color: var(--sj-text-subtle);
+  font-size: var(--sj-text-xs);
+  font-variant-numeric: tabular-nums;
+}
+
+/* ------------------------------------------------------------------ summary cards */
+
+.lb-cards {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(210px, 1fr));
+  gap: 12px;
+}
+
+.lb-card {
+  --lb-color: var(--sj-accent);
+  position: relative;
+  display: grid;
+  gap: 8px;
+  padding: 14px 16px;
+  overflow: hidden;
+  border: 1px solid var(--sj-border);
+  border-radius: var(--sj-radius-lg);
+  background: linear-gradient(160deg, color-mix(in oklab, var(--lb-color) 9%, var(--sj-surface-raised)), var(--sj-surface-raised) 60%);
+  box-shadow: var(--sj-shadow-sm);
+}
+
+.lb-card__head {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.lb-dot {
+  width: 9px;
+  height: 9px;
+  border-radius: 50%;
+  background: var(--lb-color);
+}
+
+.lb-card__name {
+  color: var(--sj-text-muted);
+  font-size: var(--sj-text-sm);
+  font-weight: 650;
+}
+
+.lb-card__value {
+  display: flex;
+  align-items: baseline;
+  gap: 6px;
+  color: var(--sj-text-muted);
+  font-size: var(--sj-text-sm);
+}
+
+.lb-card__value strong {
+  color: var(--sj-text);
+  font-size: 30px;
+  font-weight: 750;
+  letter-spacing: -0.03em;
+  line-height: 1;
+  font-variant-numeric: tabular-nums;
+}
+
+.lb-card__facts {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 4px 12px;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  color: var(--sj-text-subtle);
+  font-size: var(--sj-text-xs);
+}
+
+.lb-card__pending {
+  color: color-mix(in oklab, var(--sj-warning) 80%, var(--sj-text));
+  font-weight: 600;
+}
+
+@media (max-width: 480px) {
+  .lb-figures {
+    grid-template-columns: 1fr 1fr;
+  }
+}

@@ -1,8 +1,8 @@
 // Timeline maths for the booking calendar: the visible window, positions, lanes for overlapping
 // bars, and which assets are free for a period.
 
+import { addDays, HOUR, startOfDay } from '@solidjs-components/kit';
 import { overlaps, UNRETURNED_BLOCK_MS } from './logic/booking';
-import { addDays, HOUR, startOfDay } from './time';
 
 export type CalendarView = 'day' | 'week';
 

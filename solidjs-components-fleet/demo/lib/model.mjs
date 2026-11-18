@@ -110,3 +110,6 @@ export const LABOUR_RATE = 120;
 
 /** System-wide maximum booking length, hours (an asset's own maximum wins). */
 export const MAX_BOOKING_HOURS = 72;
+
+/** What the booking form and rules say when a booking is longer than its asset allows (`{max}`: the hours). */
+export const BOOKING_MAX_TEXT = 'This asset can be booked for at most {max} hours at a time.';

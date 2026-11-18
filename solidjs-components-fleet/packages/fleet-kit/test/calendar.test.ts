@@ -1,6 +1,6 @@
 import { describe, expect, it } from 'vitest';
 import { assignLanes, axisTicks, blockedUntil, clashes, FOREVER, shiftAnchor, windowFor, xOf } from '../src/calendar';
-import { fromInputs, rangeLabel, roundUp, toDateInput, toTimeInput } from '../src/time';
+import { fromInputs, rangeLabel, roundUp, toDateInput, toTimeInput } from '@solidjs-components/kit';
 
 const H = 3_600_000;
 const local = (y: number, m: number, d: number, h = 0, min = 0) => new Date(y, m - 1, d, h, min).getTime();

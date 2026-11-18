@@ -1,0 +1,15 @@
+{
+  "name": "@solidjs-components/approval-chain",
+  "version": "0.1.0",
+  "private": true,
+  "description": "<solid-approval-chain>: the people who must approve a record, in order, chosen by the app's rules (a line manager, then a second approver): who is next, approve or reject with a comment, delegation to someone else, and the decisions made. The rules check every change with the kit's approvalProblems.",
+  "type": "module",
+  "dependencies": {
+    "@solidjs-components/kit": "workspace:*",
+    "@solidjs/web": "catalog:",
+    "solid-js": "catalog:"
+  },
+  "formbird": {
+    "tag": "solid-approval-chain"
+  }
+}

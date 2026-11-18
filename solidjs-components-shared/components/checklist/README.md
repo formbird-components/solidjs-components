@@ -16,6 +16,8 @@ themselves instead (a check sheet, or a service plan's tasks).
 | `failLabel` | `"Defects found"` | The sheet's result when a check failed: "Hazards found" on a safety inspection. |
 | `allowNa` | `true` | Offer N/A. |
 | `allowAdd` | `false` | Adds an **Add a check…** box for one-off checks. They go under "Added checks" with `adhoc: true`. With `itemsFrom`, the box appears only once there are checks. |
+| `answerLabels` | Pass, Fail, N/A | What the answers are called: `{ "pass": "Done", "fail": "Blocked" }` for onboarding tasks. The counts and the "mark the rest" button follow ("Mark the remaining 4 as Done"). Stored answers stay `pass`, `fail` and `na`. |
+| `passLabel` | `"Pass"` | The result shown when every check is answered and none failed ("Complete"). Display only: `checklistOutcome` still returns "Pass". |
 | `hideLabel` | `false` | |
 
 **`itemsFrom`.**

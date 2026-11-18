@@ -9,7 +9,7 @@ import {
 } from '@solidjs-components/platform/form-parts';
 import { ASSET_KINDS } from '../../../solidjs-components-shared/packages/kit/src/domain/lookups.ts';
 import { IN_WORKSHOP, STATUSES, TRANSITIONS } from './catalog.mjs';
-import { ASSET_VALUE_FIELDS, COUNTERS, KEYS, LABOUR_RATE, LOOKUPS, MAX_BOOKING_HOURS, T } from './model.mjs';
+import { ASSET_VALUE_FIELDS, BOOKING_MAX_TEXT, COUNTERS, KEYS, LABOUR_RATE, LOOKUPS, MAX_BOOKING_HOURS, T } from './model.mjs';
 
 const { docs: fleetDocs, lookupFilter, tags, lookup, status } = appParts('fleet', { transitions: TRANSITIONS });
 export { q, lookupFilter };
@@ -361,7 +361,7 @@ export function templateComponents() {
       person('requestedByRel', 'Requested by', { mandatory: true }),
       {
         componentName: 'solid-date-range', name: 'startDate', label: 'When', endField: 'endDate', mandatory: true, fullWidth: true,
-        startLabel: 'Booking Start', endLabel: 'Booking Completion', maxHours: MAX_BOOKING_HOURS, maxHoursFrom: 'assetRel.0.maxBookingHours',
+        startLabel: 'Booking Start', endLabel: 'Booking Completion', maxHours: MAX_BOOKING_HOURS, maxHoursFrom: 'assetRel.0.maxBookingHours', maxText: BOOKING_MAX_TEXT,
       },
       {
         componentName: 'solid-booking-calendar', name: 'availability', label: 'Availability', mode: 'field', fullWidth: true, disableSave: true,

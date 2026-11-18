@@ -1,8 +1,7 @@
-// Local-time helpers for the booking calendar and date ranges: days, slots and labels in the
-// viewer's time zone (what they see on screen), as opposed to the company time zone the rulesets
-// use for charging.
+// Local-time helpers for date ranges, calendars and schedules: days, slots and labels in the
+// viewer's time zone (what they see on screen), as opposed to the company time zone rulesets use.
 
-import { toDate } from '@solidjs-components/kit';
+import { toDate } from './format';
 
 export const MINUTE = 60_000;
 export const HOUR = 60 * MINUTE;

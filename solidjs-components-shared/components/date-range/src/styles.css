@@ -1,0 +1,280 @@
+/* <solid-date-range>: date and time rows with quick durations; or first and last day with a strip of days. */
+
+.dr {
+  display: grid;
+  gap: 8px;
+}
+
+.dr-row {
+  display: grid;
+  grid-template-columns: var(--dr-label, 56px) minmax(0, 1fr) 118px;
+  align-items: center;
+  gap: 8px;
+}
+
+.dr-row__label {
+  color: var(--sj-text-muted);
+  font-size: var(--sj-text-sm);
+  font-weight: 600;
+}
+
+.dr-time {
+  padding-right: 4px;
+}
+
+.dr-meta {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+  padding-left: calc(var(--dr-label, 56px) + 8px);
+}
+
+.dr-presets {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 4px;
+}
+
+.dr-preset {
+  height: 24px;
+  padding: 0 8px;
+  border: 1px solid var(--sj-border);
+  border-radius: var(--sj-radius-pill);
+  background: var(--sj-surface);
+  color: var(--sj-text-muted);
+  font-size: var(--sj-text-xs);
+  font-weight: 600;
+  cursor: pointer;
+  transition: background-color var(--sj-fast) var(--sj-ease), color var(--sj-fast) var(--sj-ease), border-color var(--sj-fast) var(--sj-ease);
+}
+
+.dr-preset:hover {
+  background: var(--sj-accent-soft);
+  border-color: color-mix(in oklab, var(--sj-accent) 35%, transparent);
+  color: var(--sj-accent-text);
+}
+
+.dr-preset:focus-visible {
+  outline: none;
+  box-shadow: var(--sj-ring);
+}
+
+.dr-duration {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  color: var(--sj-text-muted);
+  font-size: var(--sj-text-sm);
+  font-weight: 600;
+  font-variant-numeric: tabular-nums;
+}
+
+.dr-max {
+  color: var(--sj-text-subtle);
+  font-weight: 500;
+}
+
+.dr-readonly {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 8px;
+  min-height: var(--sj-control-h);
+  color: var(--sj-text);
+}
+
+.dr-readonly .dr-duration {
+  padding: 1px 8px;
+  border-radius: var(--sj-radius-pill);
+  background: var(--sj-surface-sunken);
+}
+
+/* ------------------------------------------------------------------ days mode */
+
+.dr--days {
+  gap: 10px;
+}
+
+.dr-days {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto minmax(0, 1fr);
+  align-items: start;
+  gap: 8px;
+}
+
+.dr-day {
+  display: grid;
+  gap: 6px;
+  min-width: 0;
+}
+
+.dr-arrow {
+  display: grid;
+  place-items: center;
+  height: var(--sj-control-h);
+  margin-top: 22px;
+  color: var(--sj-text-subtle);
+}
+
+/* A half-day switch: a small toggle and its text. */
+.dr-half {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  width: fit-content;
+  color: var(--sj-text-muted);
+  font-size: var(--sj-text-sm);
+  cursor: pointer;
+  user-select: none;
+}
+
+.dr-half input {
+  position: absolute;
+  opacity: 0;
+  width: 1px;
+  height: 1px;
+}
+
+.dr-half__switch {
+  position: relative;
+  flex: none;
+  width: 28px;
+  height: 16px;
+  border-radius: var(--sj-radius-pill);
+  background: var(--sj-border-strong);
+  transition: background-color var(--sj-fast) var(--sj-ease);
+}
+
+.dr-half__switch::after {
+  content: '';
+  position: absolute;
+  top: 2px;
+  left: 2px;
+  width: 12px;
+  height: 12px;
+  border-radius: 50%;
+  background: var(--sj-surface-raised);
+  box-shadow: var(--sj-shadow-sm);
+  transition: transform var(--sj-fast) var(--sj-ease);
+}
+
+.dr-half input:checked + .dr-half__switch {
+  background: var(--sj-accent);
+}
+
+.dr-half input:checked + .dr-half__switch::after {
+  transform: translateX(12px);
+}
+
+.dr-half input:focus-visible + .dr-half__switch {
+  box-shadow: var(--sj-ring);
+}
+
+.dr-half input:disabled + .dr-half__switch {
+  opacity: 0.5;
+}
+
+.dr-half:has(input:disabled) {
+  cursor: default;
+}
+
+/* The days of the range: work days in the accent, weekends muted, holidays hatched, halves split. */
+.dr-strip {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 4px;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.dr-strip__day {
+  --dr-day: var(--sj-accent);
+  position: relative;
+  display: grid;
+  justify-items: center;
+  align-content: center;
+  width: 30px;
+  height: 38px;
+  border-radius: var(--sj-radius-sm);
+  overflow: hidden;
+  background: color-mix(in oklab, var(--dr-day) 16%, transparent);
+  color: color-mix(in oklab, var(--dr-day) 70%, var(--sj-text));
+  font-variant-numeric: tabular-nums;
+  line-height: 1.1;
+}
+
+.dr-strip__day--off {
+  --dr-day: var(--sj-text-subtle);
+  background: var(--sj-surface-sunken);
+  color: var(--sj-text-subtle);
+}
+
+.dr-strip__day--holiday {
+  --dr-day: var(--sj-warning);
+  background: repeating-linear-gradient(135deg, color-mix(in oklab, var(--dr-day) 18%, transparent) 0 4px, transparent 4px 8px);
+  color: color-mix(in oklab, var(--dr-day) 75%, var(--sj-text));
+}
+
+/* Half days: the half not taken is left blank. */
+.dr-strip__day--pm {
+  background: linear-gradient(90deg, var(--sj-surface-sunken) 50%, color-mix(in oklab, var(--dr-day) 16%, transparent) 50%);
+}
+
+.dr-strip__day--am {
+  background: linear-gradient(90deg, color-mix(in oklab, var(--dr-day) 16%, transparent) 50%, var(--sj-surface-sunken) 50%);
+}
+
+.dr-strip__dow {
+  font-size: 10px;
+  font-weight: 600;
+  text-transform: uppercase;
+  opacity: 0.8;
+}
+
+.dr-strip__date {
+  font-size: var(--sj-text-sm);
+  font-weight: 700;
+}
+
+.dr-strip__more {
+  display: grid;
+  place-items: center;
+  height: 38px;
+  padding: 0 8px;
+  color: var(--sj-text-subtle);
+  font-size: var(--sj-text-sm);
+  font-weight: 600;
+}
+
+.dr-meta--days {
+  padding-left: 0;
+}
+
+.dr-days-count {
+  color: var(--sj-text);
+}
+
+@media (max-width: 420px) {
+  .dr-row {
+    grid-template-columns: minmax(0, 1fr) 104px;
+  }
+
+  .dr-row__label {
+    grid-column: 1 / -1;
+  }
+
+  .dr-meta {
+    padding-left: 0;
+  }
+
+  .dr-days {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  .dr-arrow {
+    display: none;
+  }
+}

@@ -1,0 +1,359 @@
+/* <solid-org-chart>: a toolbar and a top-down tree of cards joined by lines. */
+
+.oc {
+  display: grid;
+  gap: 10px;
+  min-width: 0;
+}
+
+/* ------------------------------------------------------------------ toolbar */
+
+.oc-toolbar {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 6px;
+}
+
+.oc-search {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  flex: 0 1 300px;
+  height: var(--sj-control-h);
+  padding: 0 10px;
+  border: 1px solid var(--sj-border);
+  border-radius: var(--sj-radius);
+  background: var(--sj-surface);
+  color: var(--sj-text-subtle);
+}
+
+.oc-search:focus-within {
+  border-color: var(--sj-accent);
+  box-shadow: var(--sj-ring);
+}
+
+.oc-search input {
+  flex: 1;
+  min-width: 0;
+  border: 0;
+  outline: none;
+  background: transparent;
+}
+
+.oc-search__count {
+  color: var(--sj-text-subtle);
+  font-size: var(--sj-text-xs);
+  white-space: nowrap;
+}
+
+.oc-spacer {
+  flex: 1;
+}
+
+.oc-zoom {
+  display: inline-flex;
+  align-items: center;
+  gap: 2px;
+  padding: 2px;
+  border: 1px solid var(--sj-border);
+  border-radius: var(--sj-radius);
+}
+
+.oc-zoom__out {
+  font-size: 16px;
+  line-height: 1;
+}
+
+.oc-zoom__value {
+  min-width: 40px;
+  color: var(--sj-text-muted);
+  font-size: var(--sj-text-xs);
+  font-weight: 600;
+  text-align: center;
+  font-variant-numeric: tabular-nums;
+}
+
+/* ------------------------------------------------------------------ viewport */
+
+.oc-viewport {
+  overflow: auto;
+  min-height: 160px;
+  border: 1px solid var(--sj-border);
+  border-radius: var(--sj-radius-lg);
+  background:
+    radial-gradient(circle at 1px 1px, color-mix(in oklab, var(--sj-text-subtle) 25%, transparent) 1px, transparent 0) 0 0 / 18px 18px,
+    var(--sj-surface-sunken);
+}
+
+.oc-viewport--focus {
+  min-height: 0;
+  background: var(--sj-surface-sunken);
+}
+
+.oc-canvas {
+  width: max-content;
+  min-width: 100%;
+  padding: 24px;
+}
+
+.oc-loading,
+.oc-empty {
+  display: grid;
+  place-items: center;
+  min-height: 140px;
+  margin: 0;
+  color: var(--sj-text-subtle);
+}
+
+/* ------------------------------------------------------------------ tree: lines from each parent to its children */
+
+.oc-tree,
+.oc-children {
+  display: flex;
+  justify-content: center;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.oc-children {
+  position: relative;
+  padding-top: 22px;
+}
+
+/* The line down from the parent. */
+.oc-children::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 50%;
+  height: 22px;
+  border-left: 2px solid var(--sj-border-strong);
+}
+
+.oc-node {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 22px 8px 0;
+}
+
+.oc-tree > .oc-node {
+  padding-top: 0;
+}
+
+/* The bar across siblings and the line down to each. */
+.oc-children > .oc-node::before,
+.oc-children > .oc-node::after {
+  content: '';
+  position: absolute;
+  top: 0;
+  width: 50%;
+  height: 22px;
+  border-top: 2px solid var(--sj-border-strong);
+}
+
+.oc-children > .oc-node::before {
+  right: 50%;
+}
+
+.oc-children > .oc-node::after {
+  left: 50%;
+  border-left: 2px solid var(--sj-border-strong);
+}
+
+.oc-children > .oc-node:first-child::before,
+.oc-children > .oc-node:last-child::after {
+  border-top: 0;
+}
+
+.oc-children > .oc-node:first-child::after {
+  border-top-left-radius: 8px;
+}
+
+.oc-children > .oc-node:last-child::before {
+  right: 50%;
+  border-right: 2px solid var(--sj-border-strong);
+  border-top-right-radius: 8px;
+}
+
+.oc-children > .oc-node:only-child::before {
+  display: none;
+}
+
+.oc-children > .oc-node:only-child::after {
+  border-top: 0;
+  border-radius: 0;
+}
+
+/* ------------------------------------------------------------------ cards */
+
+/* Cards sit above the connector lines below them: hovering one (a transform) makes it a stacking
+   context, and without this the next row would cover the bottom half of its toggle. */
+.oc-card {
+  --oc-team: var(--sj-border-strong);
+  position: relative;
+  z-index: 1;
+  display: grid;
+  justify-items: center;
+  gap: 2px;
+  width: 176px;
+  padding: 14px 12px 16px;
+  border: 1px solid var(--sj-border);
+  border-top: 4px solid var(--oc-team);
+  border-radius: var(--sj-radius-lg);
+  background: var(--sj-surface-raised);
+  box-shadow: var(--sj-shadow-sm);
+  text-align: center;
+  transition: box-shadow var(--sj-medium) var(--sj-ease), transform var(--sj-medium) var(--sj-ease);
+}
+
+.oc-card:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 10px 24px -12px rgb(16 16 40 / 0.35);
+}
+
+.oc-card:focus {
+  outline: none;
+}
+
+.oc-card--me {
+  background: linear-gradient(180deg, color-mix(in oklab, var(--sj-accent) 10%, var(--sj-surface-raised)), var(--sj-surface-raised));
+}
+
+.oc-card--focus {
+  box-shadow: 0 0 0 2px var(--sj-accent), var(--sj-shadow-sm);
+}
+
+.oc-card--match {
+  box-shadow: 0 0 0 2px color-mix(in oklab, var(--sj-warning) 55%, transparent);
+}
+
+.oc-card--hit {
+  box-shadow: 0 0 0 3px var(--sj-warning), 0 12px 28px -12px color-mix(in oklab, var(--sj-warning) 60%, transparent);
+}
+
+.oc-card__top {
+  position: relative;
+  margin-bottom: 4px;
+}
+
+.oc-card .sj-avatar {
+  --sj-avatar-size: 44px;
+  font-size: 15px;
+}
+
+.oc-away {
+  display: inline-block;
+  padding: 1px 7px;
+  border-radius: var(--sj-radius-pill);
+  background: color-mix(in oklab, var(--sj-warning) 18%, var(--sj-surface));
+  color: color-mix(in oklab, var(--sj-warning) 80%, var(--sj-text));
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: 0.02em;
+  white-space: nowrap;
+}
+
+.oc-card__top .oc-away {
+  position: absolute;
+  bottom: -6px;
+  left: 50%;
+  transform: translateX(-50%);
+  box-shadow: 0 0 0 2px var(--sj-surface-raised);
+}
+
+.oc-name {
+  max-width: 100%;
+  overflow: hidden;
+  color: var(--sj-text);
+  font-weight: 650;
+  text-decoration: none;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.oc-name:hover {
+  color: var(--sj-accent-text);
+  text-decoration: underline;
+}
+
+.oc-title {
+  color: var(--sj-text-muted);
+  font-size: var(--sj-text-xs);
+  line-height: 1.3;
+}
+
+.oc-team {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  margin-top: 4px;
+  padding: 1px 8px;
+  border-radius: var(--sj-radius-pill);
+  background: color-mix(in oklab, var(--oc-team) 14%, transparent);
+  color: color-mix(in oklab, var(--oc-team) 60%, var(--sj-text));
+  font-size: 10px;
+  font-weight: 650;
+}
+
+.oc-team__dot {
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: var(--oc-team);
+}
+
+.oc-toggle {
+  position: absolute;
+  bottom: -12px;
+  left: 50%;
+  z-index: 1;
+  display: inline-flex;
+  align-items: center;
+  gap: 3px;
+  height: 22px;
+  padding: 0 8px;
+  transform: translateX(-50%);
+  border: 1px solid var(--sj-border);
+  border-radius: var(--sj-radius-pill);
+  background: var(--sj-surface-raised);
+  color: var(--sj-text-muted);
+  font-size: var(--sj-text-xs);
+  font-weight: 650;
+  font-variant-numeric: tabular-nums;
+  cursor: pointer;
+  box-shadow: var(--sj-shadow-sm);
+}
+
+.oc-toggle:hover {
+  color: var(--sj-text);
+  border-color: var(--sj-border-strong);
+}
+
+.oc-toggle:focus-visible {
+  outline: none;
+  box-shadow: var(--sj-ring);
+}
+
+.oc-toggle__all {
+  color: var(--sj-text-subtle);
+  font-weight: 500;
+}
+
+.oc-note {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin: 0;
+  color: var(--sj-text-muted);
+  font-size: var(--sj-text-sm);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .oc-card {
+    transition: none;
+  }
+}

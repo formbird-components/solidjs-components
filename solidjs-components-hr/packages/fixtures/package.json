@@ -1,0 +1,7 @@
+{
+  "name": "@solidjs-components-hr/fixtures",
+  "version": "0.1.0",
+  "private": true,
+  "description": "A small HR data set (people in two teams with managers, leave types and statuses, leave with balances, certificate types and certificates, positions) and component definitions for the preview and the browser test, in the demo's data model. Built as a test-only bundle (global HrFixtures); never deployed.",
+  "type": "module"
+}

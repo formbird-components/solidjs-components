@@ -1,0 +1,7 @@
+{
+  "name": "@solidjs-components-hr/hr-kit",
+  "version": "0.1.0",
+  "private": true,
+  "description": "HR logic shared by this repo's elements, its rulesets (embedded as source) and the demo seed: leave balances and accrual, minimum staffing, who approves, certificate expiry, onboarding readiness, and (elements only) the org tree and the skills matrix.",
+  "type": "module"
+}

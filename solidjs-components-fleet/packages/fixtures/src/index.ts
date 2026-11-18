@@ -290,6 +290,7 @@ export const definitions: Record<string, ComponentDef> = {
     endField: 'endDate',
     mandatory: true,
     maxHoursFrom: 'assetRel.0.maxBookingHours',
+    maxText: 'This asset can be booked for at most {max} hours at a time.',
   },
   map: {
     componentName: 'solid-map',

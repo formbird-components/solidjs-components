@@ -5,7 +5,7 @@ import '../../../../solidjs-components-shared/packages/test-openlayers/index';
 import * as fixtures from '../../../packages/fixtures/src/index';
 import '../../../../solidjs-components-shared/components/stat-tiles/src/main';
 import '../../../components/booking-calendar/src/main';
-import '../../../components/date-range/src/main';
+import '../../../../solidjs-components-shared/components/date-range/src/main';
 import '../../../../solidjs-components-shared/components/map/src/main';
 import '../../../components/asset-summary/src/main';
 import '../../../../solidjs-components-shared/components/checklist/src/main';

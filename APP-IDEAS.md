@@ -9,6 +9,10 @@ This folder holds the base for building apps on Formbird (fieldtec-web) with Sol
   bookings, the workshop, Daily Driver checks and maps.
 - [solidjs-components-whs](solidjs-components-whs/README.md): work health and safety, app 3 below:
   incidents, hazards, corrective actions and inspections.
+- [solidjs-components-hr](solidjs-components-hr/README.md): HR, app 10 below: leave with balances,
+  approvals and minimum staffing, certificates, onboarding and the org chart.
+
+Screenshots and recordings of every app are in the [README](README.md).
 
 Each app is the same kind of thing: templates and rulesets in a fieldtec-web database, SolidJS
 elements on the forms, and a seed script that builds a demo database. This document lists 12 other
@@ -24,6 +28,17 @@ Building it did what the sections below recommend:
 - the risk matrix, five whys and corrective actions stayed in the app;
 - the template building blocks, ruleset scaffolding, seed helpers and end-to-end test harness that
   fleet and the safety app both need moved to shared's platform.
+
+App 10 (HR) is built: [solidjs-components-hr](solidjs-components-hr/README.md). Building it:
+- moved the **date range** from fleet to shared, with a new days mode (first and last day, half days,
+  working days without weekends and public holidays, in the company's time zone); its time range rule
+  and fleet's local-time helpers moved to shared's kit, and fleet's booking rules now use them from
+  there;
+- built two of the shared elements below in shared: the **approval chain** (steps planned by the
+  rules, decisions and delegation checked against the saved version) and the **resource schedule**
+  (as the leave calendar: people by day, teams with who is left against a minimum, drag to request);
+- gave the shared checklist answer labels (Done / Blocked / N/A for onboarding tasks);
+- kept the skills matrix, org chart and leave balance in the app.
 
 ## What every app starts with
 
@@ -47,7 +62,7 @@ are now in shared):
 | `solid-checklist` | Check sheets: Pass, Fail or N/A per check, grouped by category, with the sheet's result |
 | `solid-stat-tiles` | Dashboard tiles with live counts from searches |
 | `solid-line-items` | Parts and labour lines with totals and tax |
-| `solid-date-range` | Start and end with duration and validation |
+| `solid-date-range` | Start and end with duration and validation; in days mode, working days for leave (now in shared) |
 | `solid-asset-summary` | An asset's state, meter and next service at a glance |
 | `solid-meter-reading` | Odometer or hour-meter readings checked against the last one |
 | `solid-booking-calendar` | Bookings on a timeline, one row per asset, by day or week |
@@ -272,28 +287,32 @@ there.
 These new elements come up in three or more of the apps above. Build each in shared the first time
 an app needs it.
 
+Built so far: photo capture and image pins (for app 3), the approval chain and the resource schedule
+(for app 10).
+
 | Element | Apps | What it does |
 |---|---|---|
-| `solid-photo-capture` | 1, 2, 3, 4, 5, 6, 7, 11 | Take or attach photos, with a caption each |
+| `solid-photo-capture` | 1, 2, 3, 4, 5, 6, 7, 11 | Take or attach photos, with a caption each (**built**) |
 | `solid-signature` | 1, 2, 5, 11, 12 | Sign on screen; saves the image, the name and the time |
-| `solid-resource-schedule` | 1, 10, 11, 12 | People or assets × time, drag to assign. The dispatch board, leave calendar, roster and hire availability are this element configured differently. Fleet's booking calendar could be rebuilt on it. |
-| `solid-approval-chain` | 5, 9, 10 | Approvers chosen by rules (amount, type), who's next, delegation, history |
+| `solid-resource-schedule` | 1, 10, 11, 12 | People or assets × time, drag to assign. The dispatch board, leave calendar, roster and hire availability are this element configured differently. Fleet's booking calendar could be rebuilt on it. (**Built**, by day; the dispatch board will need hours and dragging existing records.) |
+| `solid-approval-chain` | 5, 9, 10 | Approvers chosen by rules (amount, type), who's next, delegation, history (**built**) |
 | `solid-sla-clock` | 1, 4, 7 | Time left to respond and to resolve, counting business hours only |
-| `solid-image-pins` | 3, 4, 5 | Pins on an image. The body map, floor plan and drawing pins are this element with a different image. |
+| `solid-image-pins` | 3, 4, 5 | Pins on an image. The body map, floor plan and drawing pins are this element with a different image. (**Built**) |
 | `solid-barcode-scan` | 4, 8, 11 | Scan a barcode or QR code with the camera to fill a field or open a record |
 | `solid-address-lookup` | 1, 7, 12 | Address autocomplete that also stores the map coordinates |
 
 ## Recommended next
 
-**Field service (app 1).** Of the 12, it has the most to start from, and it builds the most for later
-apps:
+**Field service (app 1).** Of the 12, it still has the most to start from, and it builds the most
+for later apps:
 
-- It reuses five of fleet's elements: map, checklist, stat tiles, line items and date range.
-- Building it moves those five into shared.
-- It builds five of the eight shared elements above: photo capture, signature, resource schedule, SLA
-  clock and address lookup.
+- It reuses five of fleet's elements: map, checklist, stat tiles, line items and date range. All but
+  line items are in shared now; building it moves line items too.
+- Of the eight shared elements above it needs five: photo capture and the resource schedule exist
+  (the schedule would gain hours and dragging a job onto a person, as the dispatch board); it builds
+  the signature, the SLA clock and address lookup.
 - Its workflow (job → visit → completion → invoice) is close to fleet's (workshop request → work
   order → completion), so the rulesets can follow the same pattern.
 
-After it, inspections (app 2) would need no new shared elements, and facilities (app 4) only two:
-image pins and barcode scan.
+After it, inspections (app 2) would need no new shared elements, and facilities (app 4) only barcode
+scan. Procurement (app 9) could now reuse the approval chain as it is, with approvers by amount.

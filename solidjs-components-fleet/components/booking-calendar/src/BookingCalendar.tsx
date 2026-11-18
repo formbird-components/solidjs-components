@@ -1,19 +1,26 @@
 import { createEffect, createMemo, createSignal, For, onCleanup, Show, untrack } from 'solid-js';
 import {
+  addDays,
   Button,
   createDocumentField,
   createFieldBinding,
   FieldShell,
   formatDuration,
+  dayLabel,
   formatTime,
   getService,
+  HOUR,
   Icon,
   IconButton,
   LookupIcon,
+  MINUTE,
   openDocument,
   openNewDocument,
   Popover,
+  rangeLabel,
+  roundUp,
   Spinner,
+  startOfDay,
   toDate,
   toRelatedList,
   uid,
@@ -23,7 +30,6 @@ import {
   type FormbirdElementProps,
 } from '@solidjs-components/kit';
 import { assignLanes, axisTicks, clashes, shiftAnchor, windowFor, xOf, type CalendarView, type TimeWindow } from '../../../packages/fleet-kit/src/calendar';
-import { addDays, dayLabel, HOUR, MINUTE, rangeLabel, roundUp, startOfDay } from '../../../packages/fleet-kit/src/time';
 import { loadAssets, loadItems, type CalendarAsset, type CalendarItem, type CalendarSources } from './data';
 
 export interface BookingCalendarDefinition extends BaseDefinition, CalendarSources {
