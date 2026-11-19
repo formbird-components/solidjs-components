@@ -1,0 +1,21 @@
+{
+  "name": "@solidjs-components/storybook",
+  "version": "0.1.0",
+  "private": true,
+  "description": "Storybook of every Solid element in the solidjs-components repos, on the in-memory Formbird host with each app's fixtures.",
+  "type": "module",
+  "scripts": {
+    "elements": "node scripts/elements.mjs",
+    "storybook": "node scripts/elements.mjs && storybook dev -p 6006 --no-open",
+    "build": "node scripts/elements.mjs && storybook build -o dist --quiet",
+    "typecheck": "node scripts/elements.mjs && tsc -p tsconfig.json"
+  },
+  "devDependencies": {
+    "@solidjs-components/tools": "link:../solidjs-components-shared/packages/tools",
+    "@storybook/addon-docs": "10.6.7",
+    "@storybook/html-vite": "10.6.7",
+    "storybook": "10.6.7",
+    "typescript": "~5.9.3",
+    "vite": "6.4.3"
+  }
+}

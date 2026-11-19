@@ -29,6 +29,9 @@ pnpm db:setup                   # install, build, deploy into fieldtec-web, writ
 pnpm demo:server                # http://localhost:3004
 ```
 
+[storybook/](storybook/README.md) is a Storybook of all of the elements, on each app's fixtures: `cd storybook &&
+pnpm install && pnpm storybook` (port 6006). The portal serves its static build at `/storybook/`.
+
 To run all of them behind one port, with a home page listing each app's start pages and sample
 accounts: `portal/run.sh up`, then open http://localhost:8080 (in a Coder workspace, the URL it
 prints). The apps are under `/issues/`, `/fleet/`, `/safety/`, `/hr/` and `/procurement/`; see

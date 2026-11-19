@@ -47,7 +47,10 @@ for (const app of apps) {
 }
 
 // ------------------------------------------------------------------------------------ home page
-writeFileSync(path.join(dist, 'index.html'), renderPage(apps, { port }));
+// The Storybook of every element (storybook/: pnpm build), served at /storybook/ when it is built.
+const storybookDist = path.join(root, 'storybook/dist');
+const storybook = existsSync(path.join(storybookDist, 'index.html'));
+writeFileSync(path.join(dist, 'index.html'), renderPage(apps, { port, storybook }));
 
 // ---------------------------------------------------------------------------------------- nginx
 // The five servers run at / on one fieldtec-web checkout and share its server/public/index.html, so
@@ -118,6 +121,13 @@ http {
             alias ${dist}/_home/;
             expires 1h;
         }
+
+        # The Storybook's static build (storybook/: pnpm build). Its links are relative.
+        location = /storybook { return 301 /storybook/; }
+        location /storybook/ {
+            alias ${storybookDist}/;
+            add_header Cache-Control "no-cache";
+        }
 ${apps.map((a) => `
         # ${a.portal.name}: ${a.config}, port ${a.port}
         location = /${a.basePath} { return 301 /${a.basePath}/; }
@@ -144,3 +154,4 @@ writeFileSync(path.join(dist, 'nginx.conf'), nginx);
 
 console.log(`Wrote ${path.relative(root, dist)}/index.html and nginx.conf (port ${port}):`);
 for (const a of apps) console.log(`  /${a.basePath.padEnd(12)} -> 127.0.0.1:${a.port}  ${a.portal.name}, ${a.people.length} accounts`);
+console.log(`  /storybook/    -> storybook/dist ${storybook ? '' : '(not built yet: cd storybook && pnpm install && pnpm build)'}`);

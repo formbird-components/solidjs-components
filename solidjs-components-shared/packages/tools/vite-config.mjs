@@ -20,6 +20,13 @@ import path from 'node:path';
 import { sharedRoot } from './repo.mjs';
 
 /** Globals set by formbird-sc-components' solid-vendor (Solid 2 build). */
+/**
+ * The Solid compiler as every build and preview here uses it. HMR refresh is off: it is dev-only and
+ * would inject a solid-js/refresh import. Also used by the Storybook (solidjs-components/storybook).
+ * @returns {import('vite').Plugin[]}
+ */
+export const solidPlugin = () => solid({ refresh: { disabled: true } });
+
 export const SOLID_GLOBALS = {
   'solid-js': 'SolidJS',
   '@solidjs/web': 'SolidJSWeb',
@@ -87,8 +94,7 @@ function libraryConfig({ name, root, entry, outDir, globals = {}, globalName = t
     root,
     configFile: false,
     logLevel: 'warn',
-    // HMR refresh is dev-only and would inject a solid-js/refresh import into the bundle.
-    plugins: [solid({ refresh: { disabled: true } })],
+    plugins: [solidPlugin()],
     define: { 'process.env.NODE_ENV': JSON.stringify('production') },
     build: {
       outDir,
@@ -155,7 +161,7 @@ export function previewConfig({ repoRoot, port = 5180 }) {
   return defineConfig({
     root: path.join(repoRoot, 'apps/preview'),
     configFile: false,
-    plugins: [solid({ refresh: { disabled: true } })],
+    plugins: [solidPlugin()],
     resolve: { alias: sharedAliases(), dedupe: Object.keys(SOLID_GLOBALS) },
     server: { port, host: true, allowedHosts: true, fs: { allow: [repoRoot, sharedRoot] } },
   });

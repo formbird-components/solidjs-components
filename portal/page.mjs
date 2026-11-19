@@ -76,10 +76,10 @@ const appSection = (app) => {
  * @param {(import('../solidjs-components-shared/packages/platform/setup.mjs').AppSetup & {
  *   image?: string, password: string, urls: Record<string, string>,
  *   people: { name: string, email: string, role?: string, title?: string }[] })[]} apps
- * @param {{ port: number }} o - The port nginx listens on
+ * @param {{ port: number, storybook?: boolean }} o - The port nginx listens on; whether the Storybook is built
  * @returns {string} The HTML
  */
-export function renderPage(apps, { port }) {
+export function renderPage(apps, { port, storybook = false }) {
   const accounts = apps.reduce((n, a) => n + a.people.length, 0);
   const built = new Date().toISOString().slice(0, 10);
   return `<!doctype html>
@@ -230,6 +230,7 @@ export function renderPage(apps, { port }) {
         <li><a href="#running">Running the demos</a></li>
         <li><a href="#reseeding">Re-seeding and changes</a></li>
         <li><a href="#proxy">How the proxy works</a></li>
+        <li><a href="#components">Components (Storybook)</a></li>
         <li><a href="#troubleshooting">Troubleshooting</a></li>
       </ul>
     </nav>
@@ -308,6 +309,19 @@ ${apps.map(appSection).join('\n')}
         <li><strong>Accounts and pages on this page:</strong> they come from each app's seed (<code>demo/lib/build.mjs</code>),
           so this page always matches a fresh seed. App names and descriptions are in each app's <code>demo/app.mjs</code>.</li>
       </ul>
+    </section>
+
+    <section id="components">
+      <h2><a class="anchor" href="#components">Components (Storybook)</a></h2>
+      <p>The Storybook shows every Solid element in the repos on its own, with each app's fixtures on the in-memory
+        fieldtec-web host: its variants, its componentDefinition options as controls, and what it writes to the document
+        in the Actions panel. Use it to see what an element can do, or to work on one without a running demo.</p>
+      ${storybook
+        ? `<p><a href="storybook/">Open the Storybook ${svg(EXTERNAL, 12)}</a></p>`
+        : '<div class="callout"><p>The Storybook isn\'t built on this server yet. Build it with the commands below, then run <code>portal/run.sh up</code>.</p></div>'}
+      ${code(`cd storybook\npnpm install\npnpm build        # static build, served here at /storybook/\npnpm storybook    # or the dev server with live reload, on port 6006`)}
+      <p class="note">The stories are in <code>storybook/stories/&lt;app&gt;/</code>. A new element needs a stories file there; see
+        the Introduction page in the Storybook.</p>
     </section>
 
     <section id="proxy">

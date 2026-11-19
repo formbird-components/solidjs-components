@@ -1,0 +1,45 @@
+import { Meta } from '@storybook/addon-docs/blocks';
+
+<Meta title="Introduction" />
+
+# solidjs-components
+
+Every Solid custom element in the solidjs-components repos: the generic ones in
+`solidjs-components-shared` and each app's own (issue tracker, fleet, work health and safety, HR,
+procurement). They are the elements the Formbird demo apps use on their forms and pages.
+
+## How the stories run
+
+- **Mounted like fieldtec-web does it.** A story creates the element and sets its properties
+  (`document`, `template`, `componentDefinition`, `fieldName`…) the way fieldtec-web's
+  ComponentService does. Nothing is passed as attributes.
+- **On the in-memory host.** Each story installs the mock fieldtec-web host from
+  `@solidjs-components/testing` with one app's fixtures: the same documents, forms and definitions as
+  that app's preview and browser test. Searches, lookups and saves run against those documents.
+- **From source.** The elements are compiled from their `src/` with the same Solid compiler, Solid
+  2.0 runtime and aliases as the repos' own builds, so a story shows the code as it is now.
+
+## Using it
+
+- **Controls** are the element's componentDefinition. The options and their descriptions come from
+  the element's TypeScript definition interface (the same source as `COMPONENTS.md`). Change one and
+  the element is mounted again with it.
+- **Actions** shows what the element did: each field it changed on the document, and what it asked
+  of the host (notifications, navigation, modals, new records, uploads).
+- **Theme** in the toolbar switches fieldtec-web's dark theme (`body.dark-theme`), which the
+  elements follow.
+- Shared elements have a story for each app that uses them, for example the date range as a fleet
+  booking (date and time) and as HR leave (days).
+
+## Running and adding stories
+
+```sh
+cd storybook
+pnpm install
+pnpm storybook      # http://localhost:6006
+pnpm build          # static build in storybook/dist
+```
+
+A new element needs a `stories/<app>/<element>.stories.ts` with `elementMeta('<tag>')` and one
+`elementStory()` per variant, from its app's fixtures (`src/apps.ts`). Its options are picked up by
+`pnpm elements`, which runs before `storybook` and `build`.

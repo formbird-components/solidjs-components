@@ -1,0 +1,5 @@
+node_modules/
+dist/
+# Written by scripts/elements.mjs before every run
+generated/
+*.log

@@ -1,0 +1,6 @@
+{
+  // The shared compiler settings (Solid runtime, kit and mock host from solidjs-components-shared), as
+  // the app repos use them. Type-checks the stories and, through their imports, the element sources.
+  "extends": "../solidjs-components-shared/tsconfig.base.json",
+  "include": ["stories", "src", ".storybook"]
+}
