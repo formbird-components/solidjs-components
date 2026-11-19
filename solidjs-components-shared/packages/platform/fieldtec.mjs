@@ -1,7 +1,7 @@
 // fieldtec-web's side of a demo: its server config for the demo database, and starting it.
 
 import { spawn } from 'node:child_process';
-import { copyFileSync, createWriteStream, existsSync, readFileSync, writeFileSync } from 'node:fs';
+import { copyFileSync, createWriteStream, existsSync, mkdirSync, readdirSync, readFileSync, rmSync, writeFileSync } from 'node:fs';
 import path from 'node:path';
 import { fileURLToPath } from 'node:url';
 import { fieldtecRoot } from '@solidjs-components/tools/repo';
@@ -20,13 +20,40 @@ export function developmentConfig() {
 export const serverBuilt = () => existsSync(path.join(fieldtecRoot, 'server/ServerApp.js'));
 
 /**
+ * Copies an app's background pictures (`login-*.jpg|png|webp` and `app.*`) into fieldtec-web's
+ * server/public/backgrounds/<name>/, which the server serves as static files and the client build
+ * leaves alone (it runs with --delete-output-path=false).
+ * @param {{ name: string, sourceDir: string }} o - Config name, folder holding the pictures
+ * @returns {{ loginPage?: { backgroundImageList: string[] }, backgroundImage?: string } | undefined}
+ *   The clientConfiguration fields that show them, or undefined when the folder has none
+ */
+export function deployBackgrounds({ name, sourceDir }) {
+  if (!existsSync(sourceDir)) return undefined;
+  const isImage = (file) => /\.(jpe?g|png|webp)$/i.test(file);
+  const files = readdirSync(sourceDir).filter(isImage).sort();
+  if (!files.length) return undefined;
+  const target = path.join(fieldtecRoot, 'server/public/backgrounds', name);
+  rmSync(target, { recursive: true, force: true });
+  mkdirSync(target, { recursive: true });
+  for (const file of files) copyFileSync(path.join(sourceDir, file), path.join(target, file));
+  const url = (file) => `backgrounds/${name}/${file}`;
+  const login = files.filter((file) => file.startsWith('login-')).map(url);
+  const app = files.find((file) => /^app\./.test(file));
+  return {
+    ...(login.length ? { loginPage: { backgroundImageList: login } } : {}),
+    ...(app ? { backgroundImage: url(app) } : {}),
+  };
+}
+
+/**
  * Writes server/config/<name>.json (and <name>_log.json) from the development config: same
  * Mongo/Elasticsearch hosts, the demo database and index, its own port and Redis database, and
  * local email/password sign-in only (no SSO providers).
- * @param {{ name: string, db: string, port: number, redisDb: number }} o
+ * @param {{ name: string, db: string, port: number, redisDb: number, clientConfiguration?: object }} o
+ *   `clientConfiguration` fields (e.g. from deployBackgrounds) are merged into the client's config
  * @returns {string} The config file written
  */
-export function writeServerConfig({ name, db, port, redisDb }) {
+export function writeServerConfig({ name, db, port, redisDb, clientConfiguration }) {
   const config = developmentConfig();
   for (const service of ['default', 'systemTypeComponent']) {
     if (config.dataServices?.[service]) config.dataServices[service].db = db;
@@ -41,6 +68,7 @@ export function writeServerConfig({ name, db, port, redisDb }) {
   delete config.authenticationProviders;
   delete config.keycloakAdmin;
   if (config.scim && typeof config.scim === 'object') config.scim.enabled = false;
+  if (clientConfiguration) config.clientConfiguration = { ...config.clientConfiguration, ...clientConfiguration };
 
   const file = path.join(configDir, `${name}.json`);
   writeFileSync(file, `${JSON.stringify(config, null, 4)}\n`);

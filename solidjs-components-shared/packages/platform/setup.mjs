@@ -4,7 +4,8 @@
 //   2. check fieldtec-web, MongoDB, Elasticsearch and Redis; stop if the database already has data
 //   3. build shared's and the app's bundles
 //   4. copy them into fieldtec-web
-//   5. write fieldtec-web's server config for the demo (own port and Redis database)
+//   5. write fieldtec-web's server config for the demo (own port and Redis database), with the
+//      app's sign-in and page backgrounds (demo/backgrounds) copied into fieldtec-web
 //   6. create the database and index, then flush the demo's Redis database
 //
 // The app's setup-db.mjs imports this file by relative path, before anything is installed, so only
@@ -35,6 +36,9 @@ function fail(message) {
  * @property {string} config - fieldtec-web config name (server/config/<config>.json)
  * @property {number} port - fieldtec-web port for this demo
  * @property {number} redisDb - Redis database for this demo's caches and sessions
+ * @property {string} [basePath] - Path nginx serves the demo under (e.g. "fleet"; see solidjs-components/portal)
+ * @property {{ name: string, company: string, tagline: string, accent: string }} [portal] - How the
+ *   home page (solidjs-components/portal) shows it
  * @property {string} buildModule - Module (relative to appRoot) exporting `buildDemo({ now, urlRoot })`
  *   → `{ documents, people: { name, email, title?, role? }[], urls: Record<string, string>, password }`
  */
@@ -44,10 +48,11 @@ function fail(message) {
  * @param {AppSetup} app
  */
 export async function runSetup(app) {
-  const usage = `Usage: pnpm db:setup [--reset] [--db <name>]
+  const usage = `Usage: pnpm db:setup [--reset] [--db <name>] [--config-only]
 
   (no options)   create the database and Elasticsearch index "${app.db}"
   --reset        replace them if they already exist (drops the database first)
+  --config-only  only rewrite fieldtec-web's server config and backgrounds (no install, build or seed)
   --db <name>    use another name for the database and index
 
 fieldtec-web and solidjs-components-shared must be checked out next to this repo. MongoDB,
@@ -59,9 +64,11 @@ Elasticsearch and Redis are the ones in fieldtec-web's server/config/development
     return;
   }
   let reset = false;
+  let configOnly = false;
   let db = app.db;
   for (let i = 0; i < args.length; i++) {
     if (args[i] === '--reset') reset = true;
+    else if (args[i] === '--config-only') configOnly = true;
     else if (args[i] === '--db') db = args[++i];
     else fail(`Unknown option "${args[i]}".\n\n${usage}`);
   }
@@ -80,6 +87,13 @@ Elasticsearch and Redis are the ones in fieldtec-web's server/config/development
   const nodeMajor = Number(process.versions.node.split('.')[0]);
   if (nodeMajor < 22) fail(`Node.js 22 or newer is needed (this is ${process.versions.node}).`);
   if (!existsSync(path.join(sharedRoot, 'package.json'))) fail(`solidjs-components-shared not found at ${sharedRoot}.`);
+
+  if (configOnly) {
+    step(`Write fieldtec-web's server config (server/config/${app.config}.json)`);
+    const fieldtec = await import('./fieldtec.mjs');
+    writeConfig(fieldtec, app, db);
+    return;
+  }
 
   step('Install dependencies');
   run('pnpm', ['install', '--frozen-lockfile'], sharedRoot);
@@ -131,8 +145,7 @@ Elasticsearch and Redis are the ones in fieldtec-web's server/config/development
   run(process.execPath, [cli, 'deploy'], app.appRoot);
 
   step(`Write fieldtec-web's server config (server/config/${app.config}.json)`);
-  const configFile = fieldtec.writeServerConfig({ name: app.config, db, port: app.port, redisDb: app.redisDb });
-  ok(`${configFile}: database and index "${db}", port ${app.port}, Redis database ${app.redisDb}`);
+  writeConfig(fieldtec, app, db);
 
   step(mongo.documents ? `Replace database and index "${db}"` : `Create database and index "${db}"`);
   const { buildDemo } = await import(pathToFileURL(path.join(app.appRoot, app.buildModule)).href);
@@ -157,4 +170,20 @@ Elasticsearch and Redis are the ones in fieldtec-web's server/config/development
   if (!fieldtec.serverBuilt()) console.log(`   Build fieldtec-web's server:  (cd ${fieldtecRoot}/projects/server && node build.mjs)`);
   console.log(`   Start fieldtec-web on it:     pnpm demo:server   (restart it if it's already running)`);
   console.log(`   Then open ${urlRoot} and sign in. After a re-seed, reload the page once more.`);
+}
+
+/**
+ * Copies the app's backgrounds (demo/backgrounds) into fieldtec-web and writes its server config.
+ * @param {typeof import('./fieldtec.mjs')} fieldtec
+ * @param {AppSetup} app
+ * @param {string} db
+ */
+function writeConfig(fieldtec, app, db) {
+  const clientConfiguration = fieldtec.deployBackgrounds({ name: app.config, sourceDir: path.join(app.appRoot, 'demo/backgrounds') });
+  const configFile = fieldtec.writeServerConfig({ name: app.config, db, port: app.port, redisDb: app.redisDb, clientConfiguration });
+  ok(`${configFile}: database and index "${db}", port ${app.port}, Redis database ${app.redisDb}`);
+  if (clientConfiguration) {
+    const logins = clientConfiguration.loginPage?.backgroundImageList.length ?? 0;
+    ok(`Backgrounds: ${logins} for the sign-in page${clientConfiguration.backgroundImage ? ', one for the pages' : ''} (server/public/backgrounds/${app.config})`);
+  }
 }

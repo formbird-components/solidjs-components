@@ -29,6 +29,18 @@ pnpm db:setup                   # install, build, deploy into fieldtec-web, writ
 pnpm demo:server                # http://localhost:3004
 ```
 
+To run all of them behind one port, with a home page listing each app's start pages and sample
+accounts: `portal/run.sh up`, then open http://localhost:8080 (in a Coder workspace, the URL it
+prints). The apps are under `/issues/`, `/fleet/`, `/safety/`, `/hr/` and `/procurement/`; see
+[portal/README.md](portal/README.md).
+
+Each app's sign-in page rotates through `demo/backgrounds/login-*.jpg`, and `demo/backgrounds/app.jpg`
+sits behind its pages (photos from Pexels, credited in that folder's `CREDITS.md`). `pnpm db:setup`
+copies them to fieldtec-web's `server/public/backgrounds/<config>/` and sets `loginPage.backgroundImageList`
+and `backgroundImage` in the config's `clientConfiguration`. After changing them, or
+fieldtec-web's `development.json`, run `pnpm db:setup --config-only` to rewrite the config without
+reseeding.
+
 Each app's README has its people, its story, its pages and its rules. Every repo also runs
 `pnpm check` (types, unit tests, and a browser test of the built bundles) and `pnpm dev` (a gallery
 of its elements against an in-memory host).
